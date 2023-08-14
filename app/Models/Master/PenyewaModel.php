@@ -9,7 +9,7 @@ class PenyewaModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'm_penyewa';
+    protected $table = 'master_penyewa';
     protected $fillable = [
         'nama_perusahaan',
         'alamat',

@@ -42,7 +42,7 @@ class PenyewaController extends Controller
         if (isset($request->validator) && $request->validator->fails()) {
             return response()->json([
                     'status' => 'error',
-                    'message' => $request->validator->errors()->first()->all()
+                    'message' => $request->validator->errors()->all()
                 ]
             );
         }
