@@ -15,7 +15,7 @@ class CreateMPenyewaTable extends Migration
     {
         Schema::create('master_penyewa', function (Blueprint $table) {
             $table->id();
-            $table->string('nama perusahaan', 100);
+            $table->string('nama_perusahaan', 100);
             $table->text('alamat');
             $table->string('penanggung_jawab',100);
             $table->string('contact_person',15);
