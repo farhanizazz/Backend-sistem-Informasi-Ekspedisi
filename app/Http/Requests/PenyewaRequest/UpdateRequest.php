@@ -29,7 +29,7 @@ class UpdateRequest extends FormRequest
             "nama_perusahaan" => "required",
             "alamat" => "required",
             "penanggung_jawab" => "required",
-            "kontak" => "required",
+            "contact_person" => "required",
         ];
     }
 
@@ -39,7 +39,7 @@ class UpdateRequest extends FormRequest
             "nama_perusahaan.required" => "Nama Perusahaan harus diisi",
             "alamat.required" => "Alamat harus diisi",
             "penanggung_jawab.required" => "Penanggung Jawab harus diisi",
-            "kontak.required" => "Kontak harus diisi",
+            "contact_person.required" => "Contact Person harus diisi",
         ];
     }
 
