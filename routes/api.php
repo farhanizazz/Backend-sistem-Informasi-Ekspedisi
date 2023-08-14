@@ -27,4 +27,11 @@ Route::group(['prefix' => 'master'],function(){
         Route::put("/{id}", [PenyewaController::class, "update"]);
         Route::delete("/{id}", [PenyewaController::class, "destroy"]);
     });
+    Route::group(['prefix' =>"sopir"],function(){
+        Route::get("/", [PenyewaController::class, "index"]);
+        Route::post("/", [PenyewaController::class, "store"]);
+        Route::get("/{id}", [PenyewaController::class, "show"]);
+        Route::put("/{id}", [PenyewaController::class, "update"]);
+        Route::delete("/{id}", [PenyewaController::class, "destroy"]);
+    });
 });
