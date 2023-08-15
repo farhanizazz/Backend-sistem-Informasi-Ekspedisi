@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Master\ArmadaController;
 use App\Http\Controllers\Api\Master\PenyewaController;
 use App\Http\Controllers\Api\Master\SopirController;
 use Illuminate\Http\Request;
@@ -34,5 +35,12 @@ Route::group(['prefix' => 'master'],function(){
         Route::get("/{id}", [SopirController::class, "show"]);
         Route::put("/{id}", [SopirController::class, "update"]);
         Route::delete("/{id}", [SopirController::class, "destroy"]);
+    });
+    Route::group(['prefix' =>"armada"],function(){
+        Route::get("/", [ArmadaController::class, "index"]);
+        Route::post("/", [ArmadaController::class, "store"]);
+        Route::get("/{id}", [ArmadaController::class, "show"]);
+        Route::put("/{id}", [ArmadaController::class, "update"]);
+        Route::delete("/{id}", [ArmadaController::class, "destroy"]);
     });
 });
