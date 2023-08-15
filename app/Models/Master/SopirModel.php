@@ -12,10 +12,10 @@ class SopirModel extends Model
     protected $fillable =[
         'nama',
         'alamat',
-        'KTP',
-        'SIM',
+        'ktp',
+        'sim',
         'keterangan',
         'tanggal_gabung',
-        'phone_number'   
+        'nomor_hp'   
     ];
 }

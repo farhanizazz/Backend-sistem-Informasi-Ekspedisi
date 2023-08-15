@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
 {
+    public $validator = null;
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -28,9 +29,9 @@ class UpdateRequest extends FormRequest
             //
             "nama" => "required",
             "alamat" => "required",
-            "KTP" => "required",
-            "SIM" => "required",
-            "phone_number" => "required",
+            "ktp" => "required",
+            "sim" => "required",
+            "nomor_hp" => "required",
             "tanggal_gabung" => "required",
 
         ];
@@ -42,9 +43,9 @@ class UpdateRequest extends FormRequest
         return [
             "nama.required" => "Nama harus diisi",
             "alamat.required" => "Alamat harus diisi",
-            "KTP.required" => "KTP harus diisi",
-            "SIM.required" => "SIM harus diisi",
-            "phone_number.required" => "Nomer HP harus diisi",
+            "ktp.required" => "ktp harus diisi",
+            "sim.required" => "SIM harus diisi",
+            "nomor_hp.required" => "Nomer HP harus diisi",
             "tanggal_gabung.required" => "Tanggal Gabung harus diisi",
         ];
     }
