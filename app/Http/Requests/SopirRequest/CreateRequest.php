@@ -31,7 +31,7 @@ class CreateRequest extends FormRequest
             'ktp' => 'required',
             'sim' => 'required',
             'nomor_hp' => 'required',
-            
+            'tanggal_gabung' => 'required',
 
         ];
     }
@@ -46,7 +46,7 @@ class CreateRequest extends FormRequest
             'ktp.required' => 'ktp harus diisi',
             'sim.required' => 'SIM harus diisi',
             'nomor_hp.required' => 'Nomer HP harus diisi',
-            
+            'tanggal_gabung.required' => 'Tanggal Gabung harus diisi',
         ];
     }   
 }
