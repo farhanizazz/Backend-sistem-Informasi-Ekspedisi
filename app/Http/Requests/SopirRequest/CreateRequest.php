@@ -28,7 +28,7 @@ class CreateRequest extends FormRequest
             'nama' => 'required',
             'alamat' => 'required',
             'ktp' => 'required',
-            'SIM' => 'required',
+            'sim' => 'required',
             'nomor_hp' => 'required',
             'tanggal_gabung' => 'required',
 
@@ -43,7 +43,7 @@ class CreateRequest extends FormRequest
             'nama.required' => 'Nama harus diisi',
             'alamat.required' => 'Alamat harus diisi',
             'ktp.required' => 'ktp harus diisi',
-            'SIM.required' => 'SIM harus diisi',
+            'sim.required' => 'SIM harus diisi',
             'nomor_hp.required' => 'Nomer HP harus diisi',
             'tanggal_gabung.required' => 'Tanggal Gabung harus diisi',
         ];
