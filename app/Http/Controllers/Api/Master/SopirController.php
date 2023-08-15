@@ -32,8 +32,9 @@ class SopirController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Store a newly created resource in storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(CreateRequest $request)
@@ -41,7 +42,7 @@ class SopirController extends Controller
         if (isset($request->validator) && $request->validator->fails()) {
             return response()->json([
                     'status' => 'error',
-                    'message' => $request->validator->errors()->all()
+                    'message' => $request->validator->errors()
                 ]
             );
         }
