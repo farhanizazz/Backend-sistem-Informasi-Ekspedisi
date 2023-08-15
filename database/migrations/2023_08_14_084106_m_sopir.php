@@ -22,6 +22,7 @@ class MSopir extends Migration
             $table->string('phone_number',13);
             $table->text('keterangan')->nullable();
             $table->date('tanggal_gabung')->nullable();
+            $table->timestamps();
         });
     }
 
