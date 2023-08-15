@@ -13,7 +13,7 @@ class SopirModel extends Model
         'nama',
         'alamat',
         'ktp',
-        'SIM',
+        'sim',
         'keterangan',
         'tanggal_gabung',
         'nomor_hp'   
