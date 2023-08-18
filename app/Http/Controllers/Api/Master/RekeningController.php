@@ -36,10 +36,10 @@ class RekeningController extends Controller
      */
     public function store(CreateRequest $request)
     {
-        $rekening = RekeningModel::select('biaya_kuli', 'biaya akomodasi', 'claim', 'brg_rusak', 'biaya_tol')->get();
+        $rekening = RekeningModel::select('biaya_kuli', 'biaya_akomodasi', 'claim', 'brg_rusak', 'biaya_tol')->get();
         $total = 0;
         foreach ($rekening as $row) {
-            $total += $row->biaya_kuli + $row->biaya akomodasi - $row->claim - $row->brg_rusak + $row->biaya_tol;
+            $total += $row->biaya_kuli + $row->biaya_akomodasi - $row->claim - $row->brg_rusak + $row->biaya_tol;
         }
         if (isset($request->validator) && $request->validator->fails()) {
             return response()->json([

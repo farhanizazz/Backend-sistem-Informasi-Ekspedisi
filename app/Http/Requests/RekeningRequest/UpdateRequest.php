@@ -28,7 +28,7 @@ class UpdateRequest extends FormRequest
         return [
             //
             'biaya_kuli' => 'required|integer',
-            'biaya akomodasi' => 'required|integer',
+            'biaya_akomodasi' => 'required|integer',
             'claim' => 'required|integer',
             'brg_rusak' => 'required|integer',
             'biaya_tol' => 'required|integer',
@@ -41,7 +41,7 @@ class UpdateRequest extends FormRequest
     {
         return [
             'biaya_kuli.required' => 'Biaya Kuli harus diisi',
-            'biaya akomodasi.required' => 'Biaya Inap harus diisi',
+            'biaya_akomodasi.required' => 'Biaya Inap harus diisi',
             'claim.required' => 'Claim harus diisi',
             'brg_rusak.required' => 'Barang Rusak harus diisi',
             'biaya_tol.required' => 'Biaya Tol harus diisi',
