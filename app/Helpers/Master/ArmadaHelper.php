@@ -5,7 +5,7 @@ namespace App\Helpers\Master;
 class ArmadaHelper{
   protected $armadaModel;
   private $TIDAKAKTIF = 'nonaktif';
-  private $AKTIF = 'aktif'; 
+  private $AKTIF = 'aktif';
 
   public function __construct()
   {
@@ -31,5 +31,5 @@ class ArmadaHelper{
   }
 
 
-    
+
 }
