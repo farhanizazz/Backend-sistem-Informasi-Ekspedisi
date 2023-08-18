@@ -11,7 +11,7 @@ class RekeningModel extends Model
     protected $table='master_rekening';
     protected $fillable=[
         'biaya_kuli',
-        'biaya_inap',
+        'biaya akomodasi',
         'claim',
         'brg_rusak',
         'biaya_tol',

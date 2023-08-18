@@ -16,7 +16,7 @@ class CreateMRekeningTable extends Migration
         Schema::create('master_rekening', function (Blueprint $table) {
             $table->id();
             $table->integer('biaya_kuli');
-            $table->integer('biaya_inap');
+            $table->integer('biaya akomodasi');
             $table->integer('biaya_tol');
             $table->integer('claim');
             $table->date('tgl_transaksi')->nullable();
