@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Master\ArmadaController;
 use App\Http\Controllers\Api\Master\PenyewaController;
+use App\Http\Controllers\Api\Master\RekeningController;
 use App\Http\Controllers\Api\Master\SopirController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
@@ -45,5 +46,12 @@ Route::group(['prefix' => 'master'],function(){
         Route::get("/{id}", [ArmadaController::class, "show"]);
         Route::put("/{id}", [ArmadaController::class, "update"]);
         Route::delete("/{id}", [ArmadaController::class, "destroy"]);
+    });
+    Route::group(['prefix' =>"rekening"],function(){
+        Route::get("/", [RekeningController::class, "index"]);
+        Route::post("/", [RekeningController::class, "store"]);
+        Route::get("/{id}", [RekeningController::class, "show"]);
+        Route::put("/{id}", [RekeningController::class, "update"]);
+        Route::delete("/{id}", [RekeningController::class, "destroy"]);
     });
 });
