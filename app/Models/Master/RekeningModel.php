@@ -15,5 +15,6 @@ class RekeningModel extends Model
         'claim',
         'brg_rusak',
         'biaya_tol',
+        'total'
     ];
 }

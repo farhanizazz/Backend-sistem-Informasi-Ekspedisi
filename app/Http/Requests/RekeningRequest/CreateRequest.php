@@ -32,6 +32,7 @@ class CreateRequest extends FormRequest
             'claim' => 'required|integer',
             'brg_rusak' => 'required|integer',
             'biaya_tol' => 'required|integer',
+
         ];
     }
         public function failedValidation(Validator $validator){
