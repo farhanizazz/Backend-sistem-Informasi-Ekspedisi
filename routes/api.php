@@ -52,6 +52,7 @@ Route::group(['prefix' => 'master'],function(){
         Route::post("/", [RekeningController::class, "store"]);
         Route::get("/{id}", [RekeningController::class, "show"]);
         Route::put("/{id}", [RekeningController::class, "update"]);
+        Route::put("/total", [RekeningController::class, "total"]);
         Route::delete("/{id}", [RekeningController::class, "destroy"]);
     });
 });
