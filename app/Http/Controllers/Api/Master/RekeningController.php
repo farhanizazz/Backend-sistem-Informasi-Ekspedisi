@@ -22,7 +22,10 @@ class RekeningController extends Controller
     }
     public function index()
     {
+        $total = RekeningModel::selectRaw('SUM(biaya_kuli + biaya_akomodasi - claim - brg_rusak + biaya_tol) as total')->value('total');
+
         return response()->json([
+            'total'=> $total,
             'status' => 'success',
             'data' => $this->rekeningModel->all()
         ]);
@@ -81,6 +84,7 @@ class RekeningController extends Controller
             'status' => 'success',
             'data' => $total
         ]);
+        return $total;
     }
     public function show($id)
     {
