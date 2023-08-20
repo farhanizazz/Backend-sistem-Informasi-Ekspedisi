@@ -38,7 +38,7 @@ class CreateRequest extends FormRequest
         public function failedValidation(Validator $validator){
             $this->validator = $validator;
         }
-        public function message()
+        public function messages()
         {
             return [
                 'biaya_kuli.required' => 'Biaya Kuli harus diisi',
