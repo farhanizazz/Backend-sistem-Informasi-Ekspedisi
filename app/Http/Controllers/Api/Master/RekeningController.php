@@ -36,7 +36,13 @@ class RekeningController extends Controller
      */
     public function store(CreateRequest $request)
     {
-
+        if (isset($request->validator) && $request->validator->fails()) {
+            return response()->json([
+                    'status' => 'error',
+                    'message' => $request->validator->errors()
+                ]
+            );
+        }
         $total2 = RekeningModel::selectRaw('SUM(biaya_kuli + biaya_akomodasi - claim - brg_rusak + biaya_tol) as total')->value('total');
 
         $this->rekeningModel->create([
@@ -48,13 +54,7 @@ class RekeningController extends Controller
             'total' => $request->total
         ]);
 
-        if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json([
-                    'status' => 'error',
-                    'message' => $request->validator->errors()
-                ]
-            );
-        }
+
 
 
         return response()->json([
@@ -70,6 +70,13 @@ class RekeningController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function total(){
+        $total = RekeningModel::selectRaw('SUM(biaya_kuli + biaya_akomodasi - claim - brg_rusak + biaya_tol) as total')->value('total');
+        return response()->json([
+            'status' => 'success',
+            'data' => $total
+        ]);
+    }
     public function show($id)
     {
         try {

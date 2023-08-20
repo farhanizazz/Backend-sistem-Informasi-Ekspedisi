@@ -35,9 +35,9 @@ class CreateRequest extends FormRequest
             'total' => 'required|integer',
         ];
     }
-        public function failedValidation(Validator $validator){
-            $this->validator = $validator;
-        }
+    public function failedValidation(Validator $validator){
+        $this->validator = $validator;
+    }
         public function message()
         {
             return [
