@@ -36,11 +36,30 @@ class RekeningController extends Controller
      */
     public function store(CreateRequest $request)
     {
-        $rekening = RekeningModel::select('biaya_kuli', 'biaya_akomodasi', 'claim', 'brg_rusak', 'biaya_tol')->get();
-        $total = 0;
+        $rekening = RekeningModel::select('biaya_kuli', 'biaya_akomodasi', 'claim', 'brg_rusak', 'biaya_tol','total')->get();
+
+        $total=0;
         foreach ($rekening as $row) {
-            $total += $row->biaya_kuli + $row->biaya_akomodasi - $row->claim - $row->brg_rusak + $row->biaya_tol;
+
+            $total = $row->biaya_kuli + $row->biaya_akomodasi - $row->claim - $row->brg_rusak + $row->biaya_tol;
+            $row->total = $total;
+
         }
+        // $rekening= RekeningModel::where('id', $request->master_rekening_id)->first();
+
+        // $total = $rekening->biaya_kuli + $rekening->biaya_akomodasi - $rekening->claim - $rekening->brg_rusak + $rekening->biaya_tol;
+        // $rekening->total = $total;
+        $total2 = RekeningModel::selectRaw('SUM(biaya_kuli + biaya_akomodasi - claim - brg_rusak + biaya_tol) as total')->value('total');
+
+        $this->rekeningModel->create([
+            'biaya_kuli' => $request->biaya_kuli,
+            'biaya_akomodasi' => $request->biaya_akomodasi,
+            'claim' => $request->claim,
+            'brg_rusak' => $request->brg_rusak,
+            'biaya_tol'=>$request->biaya_tol,
+            'total' => $total
+        ]);
+
         if (isset($request->validator) && $request->validator->fails()) {
             return response()->json([
                     'status' => 'error',
@@ -49,9 +68,10 @@ class RekeningController extends Controller
             );
         }
 
-        $this->rekeningModel->create($request->all() );
+
         return response()->json([
             'total' => $total,
+            'total2' => $total2,
             'status' => 'success',
             'message' => 'Data berhasil ditambahkan'
         ]);

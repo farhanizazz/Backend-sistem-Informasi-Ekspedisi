@@ -19,7 +19,6 @@ class CreateMRekeningTable extends Migration
             $table->integer('biaya_akomodasi');
             $table->integer('biaya_tol');
             $table->integer('claim');
-            $table->date('tgl_transaksi')->nullable();
             $table->integer('brg_rusak');
             $table->integer('total')->nullable();
             $table->timestamps();
