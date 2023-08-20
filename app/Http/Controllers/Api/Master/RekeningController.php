@@ -38,7 +38,13 @@ class RekeningController extends Controller
     {
 
         $total2 = RekeningModel::selectRaw('SUM(biaya_kuli + biaya_akomodasi - claim - brg_rusak + biaya_tol) as total')->value('total');
-
+        if (isset($request->validator) && $request->validator->fails()) {
+            return response()->json([
+                    'status' => 'error',
+                    'message' => $request->validator->errors()
+                ]
+            );
+        }
         $this->rekeningModel->create([
             'biaya_kuli' => $request->biaya_kuli,
             'biaya_akomodasi' => $request->biaya_akomodasi,
@@ -48,13 +54,7 @@ class RekeningController extends Controller
             'total' => $request->total
         ]);
 
-        if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json([
-                    'status' => 'error',
-                    'message' => $request->validator->errors()
-                ]
-            );
-        }
+        
 
 
         return response()->json([
