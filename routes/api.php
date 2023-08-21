@@ -49,10 +49,10 @@ Route::group(['prefix' => 'master'],function(){
     });
     Route::group(['prefix' =>"rekening"],function(){
         Route::get("/", [RekeningController::class, "index"]);
-        Route::post("/", [RekeningController::class, "store"]);
+        Route::get("/total", [RekeningController::class, "total"]);
         Route::get("/{id}", [RekeningController::class, "show"]);
+        Route::post("/", [RekeningController::class, "store"]);
         Route::put("/{id}", [RekeningController::class, "update"]);
-        Route::put("/total", [RekeningController::class, "total"]);
         Route::delete("/{id}", [RekeningController::class, "destroy"]);
     });
 });
