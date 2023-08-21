@@ -55,4 +55,11 @@ Route::group(['prefix' => 'master'],function(){
         Route::put("/total", [RekeningController::class, "total"]);
         Route::delete("/{id}", [RekeningController::class, "destroy"]);
     });
+    Route::group(['prefix' =>"subkon"],function(){
+        Route::get("/", [SubkonController::class, "index"]);
+        Route::post("/", [SubkonController::class, "store"]);
+        Route::get("/{id}", [SubkonController::class, "show"]);
+        Route::put("/{id}", [SubkonController::class, "update"]);
+        Route::delete("/{id}", [SubkonController::class, "destroy"]);
+    });
 });
