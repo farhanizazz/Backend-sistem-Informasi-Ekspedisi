@@ -29,7 +29,7 @@ class CreateRequest extends FormRequest
             "nama_perusahaan" =>"required",
             "alamat" => "required",
             "ket" => "required",
-            "penanggung jawab" => "required"
+            "penanggung_jawab" => "required"
 
         ];
     }
@@ -42,7 +42,7 @@ class CreateRequest extends FormRequest
             "alamat.required" => "Alamat tidak boleh kosong",
             "ket.required" => "Keterangan tidak boleh kosong",
             "penanggung jawab.required" => "Penanggung Jawab tidak boleh kosong"
-            
+
         ];
     }
 

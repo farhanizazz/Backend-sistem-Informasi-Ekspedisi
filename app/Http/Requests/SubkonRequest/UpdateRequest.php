@@ -31,7 +31,7 @@ class UpdateRequest extends FormRequest
                 "nama_perusahaan" =>"required",
                 "alamat" => "required",
                 "ket" => "required",
-                "penanggung jawab" => "required"
+                "penanggung_jawab" => "required"
         ];
     }
     public function failedValidation(Validator $validator){
