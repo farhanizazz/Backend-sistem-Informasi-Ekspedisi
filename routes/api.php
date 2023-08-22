@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Master\ArmadaController;
 use App\Http\Controllers\Api\Master\PenyewaController;
 use App\Http\Controllers\Api\Master\RekeningController;
 use App\Http\Controllers\Api\Master\SopirController;
+use App\Http\Controllers\Api\Master\SubkonController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
