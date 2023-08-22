@@ -10,7 +10,7 @@ class SubkonModel extends Model
     use HasFactory;
     protected $table = "master_subkon";
     protected $fillable = [
-        "Nama Perusahaan",
+        "nama_Perusahaan",
         "alamat",
         "penanggung_jawab",
         "ket"
