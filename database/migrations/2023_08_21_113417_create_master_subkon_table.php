@@ -17,7 +17,7 @@ class CreateMasterSubkonTable extends Migration
         Schema::create('master_subkon', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string("Nama Perusahaan");
+            $table->string("nama_Perusahaan");
             $table->string("alamat");
             $table->string("penanggung_jawab");
             $table->string("ket");
