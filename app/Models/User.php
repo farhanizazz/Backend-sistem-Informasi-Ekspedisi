@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Master\RoleModel;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -18,8 +20,10 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name','username', 'email','m_role_id', 'password',
     ];
+    
+    protected $with = ['role'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -52,5 +56,20 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+        /**
+     * Always encrypt password when it is updated.
+     *
+     * @param $value
+     * @return string
+     */
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function role(): BelongsTo{
+        return $this->belongsTo(RoleModel::class, 'm_role_id', 'id');
     }
 }

@@ -45,5 +45,6 @@ class CekTenggatWaktu extends Command
         foreach ($data as $key => $value) {
             $this->armadaHelper->cekTanggalBerlaku($value);
         }
+        log("Cek tenggat waktu uji kir dan stnk kendaraan");
     }
 }

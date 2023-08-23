@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest\LoginRequest;
+use App\Http\Resources\User\UserResource;
+use App\Http\Traits\GlobalTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth as FacadesJWTAuth;
 
 class AuthController extends Controller
 {
+    use GlobalTrait;
         /**
      * Create a new AuthController instance.
      *
@@ -34,15 +37,15 @@ class AuthController extends Controller
             );
         }
 
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('username', 'password');
 
         if ($token = FacadesJWTAuth::attempt($credentials)) {
             // dd(JWTAuth::attempt($credentials));
             $user =$this->guard()->user();
-            return response()->json(['status' => true, 'data' => ($this->respondWithToken($token, $user))->original], 200);
+            return response()->json(['status' => 'success', 'data' => ($this->respondWithToken($token, $user))->original], 200);
         }
 
-        return response()->json(['status' => false, 'message' => 'Email dan Password anda salah'], 401);
+        return response()->json(['status' => 'error', 'message' => 'Username dan Password anda salah'], 401);
     }
 
     /**
@@ -63,7 +66,7 @@ class AuthController extends Controller
     public function logout() {
         auth()->logout();
 
-        return response()->json(['message' => 'User successfully signed out']);
+        return response()->json(['status' => 'success','message' => 'User successfully signed out']);
     }
 
     /**
@@ -88,7 +91,7 @@ class AuthController extends Controller
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' =>auth('api')->factory()->getTTL() * 60,
-            'user' => $user
+            'user' => new UserResource($user)
         ]);
     }
 

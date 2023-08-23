@@ -4,7 +4,9 @@ use App\Http\Controllers\Api\Master\ArmadaController;
 use App\Http\Controllers\Api\Master\PenyewaController;
 use App\Http\Controllers\Api\Master\RekeningController;
 use App\Http\Controllers\Api\Master\SopirController;
+use App\Http\Controllers\Api\Master\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +25,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post("/login",[AuthController::class,"login"]);
+Route::post("/login",   [AuthController::class,"login"]);
+Route::post("/register",[UserController::class,"store"]);
 
 Route::group(['prefix' => 'master'],function(){
     Route::group(['prefix' =>"penyewa"],function(){
