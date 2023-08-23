@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Master\PenyewaController;
 use App\Http\Controllers\Api\Master\RekeningController;
 use App\Http\Controllers\Api\Master\SopirController;
 use App\Http\Controllers\Api\Master\UserController;
+use App\Http\Controllers\Api\Master\SubkonController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
@@ -52,9 +53,17 @@ Route::group(['prefix' => 'master'],function(){
     });
     Route::group(['prefix' =>"rekening"],function(){
         Route::get("/", [RekeningController::class, "index"]);
-        Route::post("/", [RekeningController::class, "store"]);
+        Route::get("/total", [RekeningController::class, "total"]);
         Route::get("/{id}", [RekeningController::class, "show"]);
+        Route::post("/", [RekeningController::class, "store"]);
         Route::put("/{id}", [RekeningController::class, "update"]);
         Route::delete("/{id}", [RekeningController::class, "destroy"]);
+    });
+    Route::group(['prefix' =>"subkon"],function(){
+        Route::get("/", [SubkonController::class, "index"]);
+        Route::post("/", [SubkonController::class, "store"]);
+        Route::get("/{id}", [SubkonController::class, "show"]);
+        Route::put("/{id}", [SubkonController::class, "update"]);
+        Route::delete("/{id}", [SubkonController::class, "destroy"]);
     });
 });

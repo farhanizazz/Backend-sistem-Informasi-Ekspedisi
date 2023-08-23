@@ -4,24 +4,24 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMRekeningTable extends Migration
+class CreateMasterSubkonTable extends Migration
 {
     /**
      * Run the migrations.
      *
+
      * @return void
      */
     public function up()
     {
-        Schema::create('master_rekening', function (Blueprint $table) {
+        Schema::create('master_subkon', function (Blueprint $table) {
             $table->id();
-            $table->integer('biaya_kuli');
-            $table->integer('biaya_akomodasi');
-            $table->integer('biaya_tol');
-            $table->integer('claim');
-            $table->integer('brg_rusak');
-            $table->integer('total')->nullable();
             $table->timestamps();
+            $table->string("nama_Perusahaan");
+            $table->string("alamat");
+            $table->string("penanggung_jawab");
+            $table->string("ket");
+
         });
     }
 
@@ -32,6 +32,6 @@ class CreateMRekeningTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('master_rekening');
+        Schema::dropIfExists('master_subkon');
     }
 }

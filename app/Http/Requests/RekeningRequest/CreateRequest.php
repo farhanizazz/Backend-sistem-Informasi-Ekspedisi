@@ -32,12 +32,13 @@ class CreateRequest extends FormRequest
             'claim' => 'required|integer',
             'brg_rusak' => 'required|integer',
             'biaya_tol' => 'required|integer',
+            'total' => 'required|integer',
         ];
     }
-        public function failedValidation(Validator $validator){
-            $this->validator = $validator;
-        }
-        public function message()
+    public function failedValidation(Validator $validator){
+        $this->validator = $validator;
+    }
+        public function messages()
         {
             return [
                 'biaya_kuli.required' => 'Biaya Kuli harus diisi',
