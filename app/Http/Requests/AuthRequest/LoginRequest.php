@@ -26,14 +26,14 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required',
+            'username' => 'required',
             'password' => 'required',
         ];
     }
 
     public function messages(){
         return [
-            'email.required' => 'Email harus diisi',
+            'username.required' => 'Username harus diisi',
             'password.required' => 'Password harus diisi',
         ];
     }
