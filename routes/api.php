@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Master\RekeningController;
 use App\Http\Controllers\Api\Master\SopirController;
 use App\Http\Controllers\Api\Master\UserController;
 use App\Http\Controllers\Api\Master\SubkonController;
+use App\Http\Controllers\Api\Transaksi\HutangSopirController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
@@ -26,8 +27,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post("/login",   [AuthController::class,"login"]);
-Route::post("/register",[UserController::class,"store"]);
+Route::post("/login",   [AuthController::class, "login"]);
+Route::post("/register", [UserController::class, "store"]);
 
 Route::middleware('jwt.verify')->group(function() {
     Route::group(['prefix' => 'master'],function(){
@@ -67,5 +68,14 @@ Route::middleware('jwt.verify')->group(function() {
             Route::put("/{id}", [SubkonController::class, "update"]);
             Route::delete("/{id}", [SubkonController::class, "destroy"]);
         });
+    });
+});
+Route::group(['prefix' => 'transaksi'], function () {
+    Route::group(['prefix' => 'hutang_sopir'], function () {
+        Route::get("/", [HutangSopirController::class, "index"]);
+        Route::post("/", [HutangSopirController::class, "store"]);
+        Route::get("/{id}", [HutangSopirController::class, "show"]);
+        Route::put("/{id}", [HutangSopirController::class, "update"]);
+        Route::delete("/{id}", [HutangSopirController::class, "destroy"]);
     });
 });

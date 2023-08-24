@@ -63,8 +63,6 @@ class RekeningController extends Controller
             'total' => $request->total
         ]);
 
-
-
         return response()->json([
             'total2' => $total2,
             'status' => 'success',
