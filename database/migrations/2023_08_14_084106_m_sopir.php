@@ -19,8 +19,8 @@ class MSopir extends Migration
             $table->text('alamat');
             $table->string('ktp', 16);
             $table->string('sim', 12);
-            $table->string('nomor_hp',13);
-            $table->text('keterangan')->nullable();
+            $table->string('nomor_hp', 13);
+            $table->text('keterangan')->default('Tidak ada keterangan');
             $table->date('tanggal_gabung')->nullable();
             $table->timestamps();
         });

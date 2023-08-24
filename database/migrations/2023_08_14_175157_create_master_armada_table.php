@@ -22,7 +22,7 @@ class CreateMasterArmadaTable extends Migration
             $table->date("tgl_uji_kir");
             $table->enum("status_stnk", ["aktif", "nonaktif"])->default("aktif");
             $table->enum("status_uji_kir", ["aktif", "nonaktif"])->default("aktif");
-            $table->text("keterangan")->nullable();
+            $table->text("keterangan")->default('Tidak ada keterangan');
             $table->timestamps();
         });
     }
