@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AuthRequest\LoginRequest;
 use App\Http\Resources\User\UserResource;
 use App\Http\Traits\GlobalTrait;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth as FacadesJWTAuth;
@@ -17,8 +18,10 @@ class AuthController extends Controller
      *
      * @return void
      */
+    private $userModel;
     public function __construct()
     {
+        $this->userModel = new User();
         $this->middleware('auth:api', ['except' => ['login']]);
     }
 
@@ -54,7 +57,14 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function userProfile() {
-        return response()->json(auth()->user());
+        try {
+            $user = auth()->user();
+            return response()->json(['status'=> 'success', 'data'=>$user]);
+            // return response()->json(['status'=> 'successs', 'data'=>($)])
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['status' => 'error', 'message' => $th->getMessage()], 404);
+        }
     }
 
 

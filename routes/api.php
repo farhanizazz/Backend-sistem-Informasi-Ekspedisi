@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Master\ArmadaController;
 use App\Http\Controllers\Api\Master\PenyewaController;
 use App\Http\Controllers\Api\Master\RekeningController;
+use App\Http\Controllers\Api\Master\RoleController;
 use App\Http\Controllers\Api\Master\SopirController;
 use App\Http\Controllers\Api\Master\UserController;
 use App\Http\Controllers\Api\Master\SubkonController;
@@ -31,6 +32,10 @@ Route::post("/login",   [AuthController::class, "login"]);
 Route::post("/register", [UserController::class, "store"]);
 
 Route::middleware('jwt.verify')->group(function() {
+    Route::get("/getProfile", [AuthController::class, "userProfile"]);
+
+
+    // Route Master
     Route::group(['prefix' => 'master'],function(){
         Route::group(['prefix' =>"penyewa"],function(){
             Route::get("/", [PenyewaController::class, "index"]);
@@ -67,6 +72,14 @@ Route::middleware('jwt.verify')->group(function() {
             Route::get("/{id}", [SubkonController::class, "show"]);
             Route::put("/{id}", [SubkonController::class, "update"]);
             Route::delete("/{id}", [SubkonController::class, "destroy"]);
+        });
+
+        Route::group(["prefix" => "roles"],function(){
+            Route::get("/", [RoleController::class, "index"]);
+            Route::post("/", [RoleController::class, "store"]);
+            Route::get("/{id}", [RoleController::class, "show"]);
+            Route::put("/{id}", [RoleController::class, "update"]);
+            Route::delete("/{id}", [RoleController::class, "destroy"]);
         });
     });
     Route::group(['prefix' => 'transaksi'], function () {
