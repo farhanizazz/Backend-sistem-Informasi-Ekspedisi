@@ -3,26 +3,25 @@
 namespace App\Http\Controllers\Api\Transaksi;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\HutangSopirRequest\CreateRequest;
-use App\Http\Requests\HutangSopirRequest\UpdateRequest;
-use App\Models\Transaksi\HutangSopirModel;
-use Illuminate\Http\Request;
+use App\Http\Requests\PengeluaranRequest\CreateRequest;
+use App\Http\Requests\PengeluaranRequest\UpdateRequest;
+use App\Models\Transaksi\PengeluaranModel;
 
-class HutangSopirController extends Controller
+class PengeluaranContoller extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    private $hutangSopirModel;
+    private $pengeluaranModel;
     public function __construct()
     {
-        $this->hutangSopirModel = new HutangSopirModel();
+        $this->pengeluaranModel = new PengeluaranModel();
     }
     public function index()
     {
-        $data = HutangSopirModel::with('master_sopir')->get();
+        $data = PengeluaranModel::with('master_armada:nopol')->get();
 
         return response()->json(
             [
@@ -37,11 +36,7 @@ class HutangSopirController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
 
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -52,6 +47,7 @@ class HutangSopirController extends Controller
     public function store(CreateRequest $request)
     {
         //
+
         if (isset($request->validator) && $request->validator->fails()) {
             return response()->json(
                 [
@@ -60,7 +56,7 @@ class HutangSopirController extends Controller
                 ]
             );
         }
-        $this->hutangSopirModel->create($request->all());
+        $this->pengeluaranModel->create($request->all());
 
         return response()->json(
             [
@@ -84,7 +80,7 @@ class HutangSopirController extends Controller
             return response()->json(
                 [
                     'status' => 'success',
-                    'data' => $this->hutangSopirModel->with('master_sopir')->findOrFail($id)
+                    'data' => $this->pengeluaranModel->with('master_armada:nopol')->findOrFail($id)
                 ]
             );
         } catch (\Throwable $th) {
@@ -104,10 +100,7 @@ class HutangSopirController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
-    }
+
 
     /**
      * Update the specified resource in storage.
@@ -131,7 +124,7 @@ class HutangSopirController extends Controller
                 );
             }
 
-            $response = $this->hutangSopirModel->findOrFail($id)->update($request->all());
+            $response = $this->pengeluaranModel->findOrFail($id)->update($request->all());
             if (!$response) {
                 return response()->json(
                     [
@@ -168,7 +161,7 @@ class HutangSopirController extends Controller
         //
 
         try {
-            $this->hutangSopirModel->findOrfail($id)->delete();
+            $this->pengeluaranModel->findOrfail($id)->delete();
             return response()->json(
                 [
                     'status' => 'success',
