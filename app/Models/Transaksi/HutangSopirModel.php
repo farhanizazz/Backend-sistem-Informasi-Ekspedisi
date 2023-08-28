@@ -21,5 +21,9 @@ class HutangSopirModel extends Model
     {
         return $this->belongsTo(SopirModel::class);
     }
+
+    public function getKetTransAttribute(){
+        return $this->attributes['ket_trans'] ?? 'Tidak ada keterangan';
+    }
     
 }

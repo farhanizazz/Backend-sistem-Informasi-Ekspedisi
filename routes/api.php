@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Master\SubkonController;
 use App\Http\Controllers\Api\Transaksi\HutangSopirController;
 use App\Http\Controllers\Api\Transaksi\PengeluaranContoller;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,8 +35,6 @@ Route::post("/register", [UserController::class, "store"]);
 
 Route::middleware('jwt.verify')->group(function () {
     Route::get("/getProfile", [AuthController::class, "userProfile"]);
-
-
     // Route Master
     Route::group(['prefix' => 'master'], function () {
         Route::group(['prefix' => "penyewa"], function () {
@@ -91,12 +90,18 @@ Route::middleware('jwt.verify')->group(function () {
             Route::put("/{id}", [HutangSopirController::class, "update"]);
             Route::delete("/{id}", [HutangSopirController::class, "destroy"]);
         });
-        Route::group(['prefix' => 'pengeluaran'], function () {
-            Route::get("/", [PengeluaranContoller::class, "index"]);
-            Route::post("/", [PengeluaranContoller::class, "store"]);
-            Route::get("/{id}", [PengeluaranContoller::class, "show"]);
-            Route::put("/{id}", [PengeluaranContoller::class, "update"]);
-            Route::delete("/{id}", [PengeluaranContoller::class, "destroy"]);
-        });
+
+    });
+     
+    Route::group(['prefix' => 'notifikasi'], function(){
+        Route::get("/getReminderPajak", [NotifikasiController::class, "getReminderPajak"]);
+    });
+
+    Route::group(['prefix' => 'pengeluaran'], function () {
+        Route::get("/", [PengeluaranContoller::class, "index"]);
+        Route::post("/", [PengeluaranContoller::class, "store"]);
+        Route::get("/{id}", [PengeluaranContoller::class, "show"]);
+        Route::put("/{id}", [PengeluaranContoller::class, "update"]);
+        Route::delete("/{id}", [PengeluaranContoller::class, "destroy"]);
     });
 });

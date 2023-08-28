@@ -20,7 +20,7 @@ class CreateMasterSubkonTable extends Migration
             $table->string("nama_perusahaan");
             $table->string("alamat");
             $table->string("penanggung_jawab");
-            $table->text("ket")->default('Tidak ada keterangan');
+            $table->text("ket")->nullable(true);
         });
     }
 

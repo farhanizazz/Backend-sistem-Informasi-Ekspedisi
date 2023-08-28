@@ -20,9 +20,9 @@ class CreateMasterArmadaTable extends Migration
             $table->string("jenis", 50);
             $table->date("tgl_stnk");
             $table->date("tgl_uji_kir");
-            $table->enum("status_stnk", ["aktif", "nonaktif"])->default("aktif");
-            $table->enum("status_uji_kir", ["aktif", "nonaktif"])->default("aktif");
-            $table->text("keterangan")->default('Tidak ada keterangan');
+            $table->enum('status_stnk',['aktif','nonaktif','pra-nonaktif'])->default('aktif')->comment('Aktif adalah status stnk yang masih aktif, nonaktif adalah status stnk yang sudah tidak aktif, pra-nonaktif adalah status stnk yang akan segera tidak aktif');
+            $table->enum('status_uji_kir',['aktif','nonaktif','pra-nonaktif'])->default('aktif')->comment('Aktif adalah status kir yang masih aktif, nonaktif adalah status kir yang sudah tidak aktif, pra-nonaktif adalah status kir yang akan segera tidak aktif');
+            $table->text("keterangan")->nullable(true);
             $table->timestamps();
         });
     }

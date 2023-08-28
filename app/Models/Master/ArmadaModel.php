@@ -20,4 +20,16 @@ class ArmadaModel extends Model
         'status_uji_kir',
         'keterangan',
     ];
+
+    public function getKeteranganAttribute(){
+        return $this->attributes['keterangan'] ?? 'Tidak ada keterangan';
+    }
+
+    public function getArmadaPajakStnkByTime($time){
+        return $this->where('tgl_stnk', '<=', $time)->orderBy('tgl_stnk')->get();
+    }
+
+    public function getArmadaPajakKirByTime($time){
+        return $this->where('tgl_uji_kir', '<=', $time)->orderBy('tgl_uji_kir')->get();
+    }
 }

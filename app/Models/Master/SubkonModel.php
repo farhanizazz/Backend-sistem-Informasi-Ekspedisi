@@ -15,4 +15,8 @@ class SubkonModel extends Model
         "penanggung_jawab",
         "ket"
     ];
+
+    public function getKetAttribute(){
+        return $this->attributes['ket'] ?? 'Tidak ada keterangan';
+    }
 }
