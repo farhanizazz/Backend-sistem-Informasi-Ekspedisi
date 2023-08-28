@@ -18,4 +18,8 @@ class SopirModel extends Model
         'tanggal_gabung',
         'nomor_hp'   
     ];
+
+    public function getKeteranganAttribute(){
+        return $this->attributes['keterangan'] ?? 'Tidak ada keterangan';
+    }
 }

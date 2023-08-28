@@ -19,7 +19,7 @@ class CreateHutangSopirTable extends Migration
             $table->date('tgl_transaksi');
             $table->foreignId('master_sopir_id')->constrained('master_sopir');
             $table->integer('nominal_trans');
-            $table->text('ket_trans')->default('Tidak ada keterangan');
+            $table->text('ket_trans')->nullable(true);
         });
     }
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Master\UserController;
 use App\Http\Controllers\Api\Master\SubkonController;
 use App\Http\Controllers\Api\Transaksi\HutangSopirController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,8 +34,6 @@ Route::post("/register", [UserController::class, "store"]);
 
 Route::middleware('jwt.verify')->group(function() {
     Route::get("/getProfile", [AuthController::class, "userProfile"]);
-
-
     // Route Master
     Route::group(['prefix' => 'master'],function(){
         Route::group(['prefix' =>"penyewa"],function(){
@@ -90,5 +89,11 @@ Route::middleware('jwt.verify')->group(function() {
             Route::put("/{id}", [HutangSopirController::class, "update"]);
             Route::delete("/{id}", [HutangSopirController::class, "destroy"]);
         });
-});
+
+    });
+     
+    Route::group(['prefix' => 'notifikasi'], function(){
+        Route::get("/getReminderPajak", [NotifikasiController::class, "getReminderPajak"]);
+    });
+
 });
