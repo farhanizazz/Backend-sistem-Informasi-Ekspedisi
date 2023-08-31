@@ -26,7 +26,7 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:m_role,name' . $this->name,
+            'name' => 'required|unique:m_role,name,' .$this->id.',id',
             'akses'=> 'required'
         ];
     }
