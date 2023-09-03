@@ -44,6 +44,9 @@ Route::middleware('jwt.verify')->group(function () {
             Route::put("/{id}", [PenyewaController::class, "update"]);
             Route::delete("/{id}", [PenyewaController::class, "destroy"]);
         });
+        Route::group(['prefix' => "user"], function () {
+            Route::get("/", [UserController::class, "index"]);
+        });
         Route::group(['prefix' => "sopir"], function () {
             Route::get("/", [SopirController::class, "index"]);
             Route::post("/", [SopirController::class, "store"]);
