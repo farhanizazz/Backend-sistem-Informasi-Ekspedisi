@@ -40,4 +40,20 @@ class UserController extends Controller
         ];
         
     }
+
+    public function index(){
+        $response = $this->userModel->all();
+        if ($response) {
+            return [
+                'status' => 'success',
+                'message' => 'User berhasil ditambahkan',
+                'data' => $response
+            ];
+        }
+        return [
+            'status' => 'error',
+            'message' => 'User gagal ditambahkan',
+            'data' => $response
+        ];
+    }
 }
