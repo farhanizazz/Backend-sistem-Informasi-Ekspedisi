@@ -25,7 +25,7 @@ class RekeningController extends Controller
         $total = RekeningModel::selectRaw('SUM(biaya_kuli + biaya_akomodasi - claim - brg_rusak + biaya_tol) as total')->value('total');
 
         return response()->json([
-            'total'=> $total,
+            'total' => $total,
             'status' => 'success',
             'data' => $this->rekeningModel->all()
         ]);
@@ -39,44 +39,35 @@ class RekeningController extends Controller
      */
     public function store(CreateRequest $request)
     {
+
         if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => $request->validator->errors()
                 ]
             );
         }
-        $total2 = RekeningModel::selectRaw('SUM(biaya_kuli + biaya_akomodasi - claim - brg_rusak + biaya_tol) as total')->value('total');
-        if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json([
-                    'status' => 'error',
-                    'message' => $request->validator->errors()
-                ]
-            );
-        }
-        $this->rekeningModel->create([
-            'biaya_kuli' => $request->biaya_kuli,
-            'biaya_akomodasi' => $request->biaya_akomodasi,
-            'claim' => $request->claim,
-            'brg_rusak' => $request->brg_rusak,
-            'biaya_tol'=>$request->biaya_tol,
-            'total' => $request->total
-        ]);
+        $this->rekeningModel->create($request->all());
+
+        $total = RekeningModel::selectRaw('SUM(nominal) as total')->value('total');
+
 
         return response()->json([
-            'total2' => $total2,
+            'total' => $total,
             'status' => 'success',
             'message' => 'Data berhasil ditambahkan'
         ]);
     }
 
-        /**
+    /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function total(){
+    public function total()
+    {
         $total = RekeningModel::selectRaw('SUM(biaya_kuli + biaya_akomodasi - claim - brg_rusak + biaya_tol) as total')->value('total');
         return response()->json([
             'status' => 'success',
@@ -88,14 +79,16 @@ class RekeningController extends Controller
     {
         try {
             //code...
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'success',
                     'data' => $this->rekeningModel->findOrFail($id)
                 ]
             );
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => 'Data tidak ditemukan'
                 ]
@@ -114,30 +107,34 @@ class RekeningController extends Controller
     {
         try {
             //code...
-        if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json([
-                    'status' => 'error',
-                    'message' => $request->validator->errors()
-                ]
-            );
-        }
+            if (isset($request->validator) && $request->validator->fails()) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => $request->validator->errors()
+                    ]
+                );
+            }
 
-        $response = $this->rekeningModel->findOrFail($id)->update($request->all());
-        if (!$response) {
-            return response()->json([
-                    'status' => 'error',
-                    'message' => 'Data gagal diubah'
+            $response = $this->rekeningModel->findOrFail($id)->update($request->all());
+            if (!$response) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Data gagal diubah'
+                    ]
+                );
+            }
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Data berhasil diubah'
                 ]
             );
-        }
-        return response()->json([
-                'status' => 'success',
-                'message' => 'Data berhasil diubah'
-            ]
-        );
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => 'Data tidak ditemukan'
                 ]
@@ -155,13 +152,15 @@ class RekeningController extends Controller
     {
         try {
             $this->rekeningModel->findOrfail($id)->delete();
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'success',
                     'message' => 'Data berhasil dihapus'
                 ]
             );
         } catch (\Throwable $th) {
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => 'Data tidak ditemukan'
                 ]
