@@ -28,13 +28,14 @@ use App\Models\Notifikasi;
 
       $data = [];
       foreach ($pajakStnk as $key => $value) {
+        $status = date('Y-m-d') > $value->tgl_stnk ? 'telah' : 'akan';
         $data[] = [
           'id' => $value->id,
           'jenis' => 'STNK',
           'nopol' => $value->nopol,
           'tgl' => $value->tgl_stnk,
           'selisih' => $this->tanggalKeLisan($value->tgl_stnk),
-          'message' => 'Armada dengan nopol '.$value->nopol.' akan jatuh tempo pajak STNK pada tanggal '.date('d-m-Y', strtotime($value->tgl_stnk)).'. Segera lakukan pembayaran pajak STNK.',
+          'message' => 'Armada dengan nopol '.$value->nopol." $status jatuh tempo pajak STNK pada tanggal ".date('d-m-Y', strtotime($value->tgl_stnk)).'. Segera lakukan pembayaran pajak STNK.',
         ];
       }
 
@@ -45,7 +46,7 @@ use App\Models\Notifikasi;
           'nopol' => $value->nopol,
           'tgl' => $value->tgl_uji_kir,
           'selisih' => $this->tanggalKeLisan($value->tgl_uji_kir),
-          'message' => 'Armada dengan nopol '.$value->nopol.' akan jatuh tempo pajak KIR pada tanggal '.date('d-m-Y',strtotime($value->tgl_uji_kir)).'. Segera lakukan pembayaran pajak KIR.',
+          'message' => 'Armada dengan nopol '.$value->nopol." $status jatuh tempo pajak KIR pada tanggal ".date('d-m-Y',strtotime($value->tgl_uji_kir)).'. Segera lakukan pembayaran pajak KIR.',
         ];
       }
 

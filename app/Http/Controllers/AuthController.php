@@ -85,8 +85,13 @@ class AuthController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function refresh() {
-        return $this->createNewToken(auth()->refresh());
+        try {
+            return $this->respondWithToken(FacadesJWTAuth::refresh(), auth()->user());
+        } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['status' => 'error', 'message' => 'Token is invalid'], 401);
+        }
     }
+    
 
     /**
      * Get the token array structure.
