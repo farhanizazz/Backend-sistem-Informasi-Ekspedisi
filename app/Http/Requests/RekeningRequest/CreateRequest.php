@@ -27,27 +27,20 @@ class CreateRequest extends FormRequest
     {
         return [
             //
-            'biaya_kuli' => 'required|integer',
-            'biaya_akomodasi' => 'required|integer',
-            'claim' => 'required|integer',
-            'brg_rusak' => 'required|integer',
-            'biaya_tol' => 'required|integer',
-            'total' => 'required|integer',
+            'nama' => ['required'],
+            'nominal' => ['required'],
+
         ];
     }
-    public function failedValidation(Validator $validator){
+    public function failedValidation(Validator $validator)
+    {
         $this->validator = $validator;
     }
-        public function messages()
-        {
-            return [
-                'biaya_kuli.required' => 'Biaya Kuli harus diisi',
-                'biaya_akomodasi.required' => 'Biaya Inap harus diisi',
-                'claim.required' => 'Claim harus diisi',
-                'brg_rusak.required' => 'Barang Rusak harus diisi',
-                'biaya_tol.required' => 'Biaya Tol harus diisi',
-            ];
-
-        }
+    public function messages()
+    {
+        return [
+            'nama.required' => 'Nama Rekening tidak boleh kosong',
+            'nominal.required' => 'Nominal tidak boleh kosong',
+        ];
     }
-
+}

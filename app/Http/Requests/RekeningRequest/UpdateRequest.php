@@ -27,25 +27,19 @@ class UpdateRequest extends FormRequest
     {
         return [
             //
-            'biaya_kuli' => 'required|integer',
-            'biaya_akomodasi' => 'required|integer',
-            'claim' => 'required|integer',
-            'brg_rusak' => 'required|integer',
-            'biaya_tol' => 'required|integer',
+            'nama' => ['required'],
+            'nominal' => ['required'],
         ];
     }
-    public function failedValidation(Validator $validator){
+    public function failedValidation(Validator $validator)
+    {
         $this->validator = $validator;
     }
     public function message()
     {
         return [
-            'biaya_kuli.required' => 'Biaya Kuli harus diisi',
-            'biaya_akomodasi.required' => 'Biaya Inap harus diisi',
-            'claim.required' => 'Claim harus diisi',
-            'brg_rusak.required' => 'Barang Rusak harus diisi',
-            'biaya_tol.required' => 'Biaya Tol harus diisi',
+            'nama.required' => 'Nama Rekening tidak boleh kosong',
+            'nominal.required' => 'Nominal tidak boleh kosong',
         ];
-
     }
 }
