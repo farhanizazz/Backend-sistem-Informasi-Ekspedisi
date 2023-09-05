@@ -35,6 +35,7 @@ Route::post("/register", [UserController::class, "store"]);
 
 Route::middleware('jwt.verify')->group(function () {
     Route::get("/getProfile", [AuthController::class, "userProfile"]);
+    
     // Route Master
     Route::group(['prefix' => 'master'], function () {
         Route::group(['prefix' => "penyewa"], function () {
@@ -46,6 +47,10 @@ Route::middleware('jwt.verify')->group(function () {
         });
         Route::group(['prefix' => "user"], function () {
             Route::get("/", [UserController::class, "index"]);
+            Route::get("/{id}", [UserController::class, "show"]);
+            Route::put("/{id}", [UserController::class, "update"]);
+            Route::delete("/{id}", [UserController::class, "destroy"]);
+            Route::post("/", [UserController::class, "create"]);
         });
         Route::group(['prefix' => "sopir"], function () {
             Route::get("/", [SopirController::class, "index"]);
