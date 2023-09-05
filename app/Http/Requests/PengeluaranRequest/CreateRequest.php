@@ -31,6 +31,7 @@ class CreateRequest extends FormRequest
             'category' => 'required|in:servis,lain_lain',
             'master_armada_id' => 'required',
             'tgl_transaksi' => 'required',
+            'status' => 'required',
             // Add more validation rules as needed for common fields
 
             // Category-specific fields for "kategori_servis"
@@ -43,6 +44,7 @@ class CreateRequest extends FormRequest
             'nominal' => 'required_if:category,lain_lain',
             'jumlah' => 'required_if:category,lain_lain',
             'total' => 'required_if:category,lain_lain',
+
         ];
     }
     public function failedValidation(Validator $validator)
@@ -53,6 +55,7 @@ class CreateRequest extends FormRequest
     {
         return [
             "category.required" => "Kategori tidak boleh kosong",
+            "status.required" => "Status tidak boleh kosong",
             "category.in" => "Kategori tidak boleh kosong",
             "master_armada_id.required" => "Nopol tidak boleh kosong",
             "tgl_transaksi.required" => "Tanggal Transaksi tidak boleh kosong",

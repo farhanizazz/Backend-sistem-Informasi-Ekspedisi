@@ -8,13 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class RekeningModel extends Model
 {
     use HasFactory;
-    protected $table='master_rekening';
-    protected $fillable=[
-        'biaya_kuli',
-        'biaya_akomodasi',
-        'claim',
-        'brg_rusak',
-        'biaya_tol',
-        'total'
+    protected $table = 'master_rekening';
+    protected $fillable = [
+        'nama',
+        'nominal',
     ];
 }
