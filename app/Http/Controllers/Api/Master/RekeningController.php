@@ -22,7 +22,7 @@ class RekeningController extends Controller
     }
     public function index()
     {
-        $total = RekeningModel::selectRaw('SUM(biaya_kuli + biaya_akomodasi - claim - brg_rusak + biaya_tol) as total')->value('total');
+        $total = RekeningModel::selectRaw('SUM(nominal) as total')->value('total');
 
         return response()->json([
             'total' => $total,
@@ -68,7 +68,7 @@ class RekeningController extends Controller
      */
     public function total()
     {
-        $total = RekeningModel::selectRaw('SUM(biaya_kuli + biaya_akomodasi - claim - brg_rusak + biaya_tol) as total')->value('total');
+        $total = RekeningModel::selectRaw('SUM(nominal) as total')->value('total');
         return response()->json([
             'status' => 'success',
             'data' => $total
