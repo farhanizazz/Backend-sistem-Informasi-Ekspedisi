@@ -22,6 +22,7 @@ class MSopir extends Migration
             $table->string('nomor_hp', 13);
             $table->text('keterangan')->nullable(true);
             $table->date('tanggal_gabung')->nullable();
+            $table->enum('status', ['aktif', 'tidak_aktif']);
             $table->timestamps();
         });
     }

@@ -9,17 +9,19 @@ class SopirModel extends Model
 {
     use HasFactory;
     protected $table = "master_sopir";
-    protected $fillable =[
+    protected $fillable = [
         'nama',
         'alamat',
         'ktp',
         'sim',
         'keterangan',
         'tanggal_gabung',
-        'nomor_hp'   
+        'nomor_hp',
+        'status'
     ];
 
-    public function getKeteranganAttribute(){
+    public function getKeteranganAttribute()
+    {
         return $this->attributes['keterangan'] ?? 'Tidak ada keterangan';
     }
 }

@@ -23,12 +23,12 @@ class SopirController extends Controller
      */
     public function index()
     {
-        //
+        $data = $this->sopirModel->orderBy('status', 'asc')->get();
+
         return response()->json([
             'status' => 'success',
-            'data' => $this->sopirModel->all()
-        ]
-    );
+            'data' => $data,
+        ]);
     }
 
     /**
@@ -40,7 +40,8 @@ class SopirController extends Controller
     public function store(CreateRequest $request)
     {
         if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => $request->validator->errors()
                 ]
@@ -48,7 +49,8 @@ class SopirController extends Controller
         }
         $this->sopirModel->create($request->all());
 
-        return response()->json([
+        return response()->json(
+            [
                 'status' => 'success',
                 'message' => 'Data berhasil ditambahkan'
             ]
@@ -72,14 +74,16 @@ class SopirController extends Controller
     {
         try {
             //code...
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'success',
                     'data' => $this->sopirModel->findOrFail($id)
                 ]
             );
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => 'Data tidak ditemukan'
                 ]
@@ -107,33 +111,37 @@ class SopirController extends Controller
      */
     public function update(UpdateRequest $request, $id)
     {
-        
+
         try {
             //code...
-        if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json([
-                    'status' => 'error',
-                    'message' => $request->validator->errors()->all()
-                ]
-            );
-        }
+            if (isset($request->validator) && $request->validator->fails()) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => $request->validator->errors()->all()
+                    ]
+                );
+            }
 
-        $response = $this->sopirModel->findOrFail($id)->update($request->all());
-        if (!$response) {
-            return response()->json([
-                    'status' => 'error',
-                    'message' => 'Data gagal diubah'
+            $response = $this->sopirModel->findOrFail($id)->update($request->all());
+            if (!$response) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Data gagal diubah'
+                    ]
+                );
+            }
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Data berhasil diubah'
                 ]
             );
-        }
-        return response()->json([
-                'status' => 'success',
-                'message' => 'Data berhasil diubah'
-            ]
-        );
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => 'Data tidak ditemukan'
                 ]
@@ -151,13 +159,15 @@ class SopirController extends Controller
     {
         try {
             $this->sopirModel->findOrfail($id)->delete();
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'success',
                     'message' => 'Data berhasil dihapus'
                 ]
             );
         } catch (\Throwable $th) {
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => 'Data tidak ditemukan'
                 ]
