@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Master\SopirController;
 use App\Http\Controllers\Api\Master\UserController;
 use App\Http\Controllers\Api\Master\SubkonController;
 use App\Http\Controllers\Api\Transaksi\HutangSopirController;
+use App\Http\Controllers\Api\Transaksi\OrderController;
 use App\Http\Controllers\Api\Transaksi\PengeluaranContoller;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotifikasiController;
@@ -35,7 +36,7 @@ Route::post("/register", [UserController::class, "store"]);
 
 Route::middleware('jwt.verify')->group(function () {
     Route::get("/getProfile", [AuthController::class, "userProfile"]);
-    
+
     // Route Master
     Route::group(['prefix' => 'master'], function () {
         Route::group(['prefix' => "penyewa"], function () {
@@ -136,7 +137,15 @@ Route::group(['prefix' => 'transaksi'], function () {
         Route::put("/{id}", [HutangSopirController::class, "update"]);
         Route::delete("/{id}", [HutangSopirController::class, "destroy"]);
     });
+
+    Route::group(['prefix' => 'order'], function () {
+        Route::get("/", [OrderController::class, "index"]);
+        Route::post("/", [OrderController::class, "store"]);
+        Route::put("/{id}", [OrderController::class, "update"]);
+        Route::delete("/{id}", [OrderController::class, "destroy"]);
+    });
 });
+
 
 Route::group(['prefix' => 'notifikasi'], function () {
     Route::get("/getReminderPajak", [NotifikasiController::class, "getReminderPajak"]);
