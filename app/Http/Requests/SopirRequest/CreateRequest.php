@@ -32,14 +32,17 @@ class CreateRequest extends FormRequest
             'sim' => 'required',
             'nomor_hp' => 'required',
             'tanggal_gabung' => 'required',
+            'status' => 'required',
 
         ];
     }
 
-    public function failedValidation(Validator $validator){
+    public function failedValidation(Validator $validator)
+    {
         $this->validator = $validator;
     }
-    public function messages(){
+    public function messages()
+    {
         return [
             'nama.required' => 'Nama harus diisi',
             'alamat.required' => 'Alamat harus diisi',
@@ -47,6 +50,7 @@ class CreateRequest extends FormRequest
             'sim.required' => 'SIM harus diisi',
             'nomor_hp.required' => 'Nomer HP harus diisi',
             'tanggal_gabung.required' => 'Tanggal Gabung harus diisi',
+            'status.required' => 'Status harus diisi',
         ];
-    }   
+    }
 }
