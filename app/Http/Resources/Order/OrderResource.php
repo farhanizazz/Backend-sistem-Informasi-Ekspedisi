@@ -46,7 +46,6 @@ class OrderResource extends JsonResource
             'armada' => $this->armada,
             'sopir' => $this->sopir,
             'subkon' => $this->subkon,
-            'rekening' => $this->rekening,
             'sisa_tagihan' => $this->sisa_tagihan,
             'sisa_hutang_ke_subkon' => $this->sisa_hutang_ke_subkon,
             'total_pajak' => $this->total_pajak,
