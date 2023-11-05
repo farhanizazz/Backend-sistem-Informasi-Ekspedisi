@@ -25,11 +25,22 @@ class CreateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $request = $this->request->all();
+        switch ($request['status_kendaraan']) {
+            case 'Sendiri':
+                $rule = [
+                     'status_kendaraan_sendiri' => 'required_if:status_kendaraaan,Sendiri|in:Berangkat,Pulang,Kontrak,Kota-Kota',
+                ];
+                break;
+            default:
+                $rule = [];
+                break;
+        }
+        return array_merge([
             'tanggal_awal' => 'required|date',
-            'tanggal_akhir' => 'required_if:status_kendaraan_sendiri,Kota-Kota|date',
+            // 'tanggal_akhir' => 'required_if:status_kendaraan_sendiri,Kota-Kota',
+            'tanggal_akhir' => 'required',
             'status_kendaraan' => 'required|in:Sendiri,Subkon',
-            'status_kendaraan_sendiri' => 'required_if:status_kendaraaan,Sendiri|in:Berangkat,Pulang,Kontrak,Kota-Kota',
             'status_surat_jalan' => 'required|in:Sopir,Kantor,Selesai',
             'm_penyewa_id' => 'required|exists:master_penyewa,id',
             'muatan' => 'required',
@@ -49,7 +60,7 @@ class CreateRequest extends FormRequest
             'harga_jual' => 'required_if:status_kendaraan,Subkon|numeric',
             'status_harga_jual' => 'required_if:status_kendaraan,Subkon|in:Pelunasan,Dp',
             'biaya_lain_harga_jual' => 'array'
-        ];
+        ], $rule);
     }
 
     public function messages()
