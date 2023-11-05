@@ -28,7 +28,7 @@ class OrderHelper
           $dataSave = $payload->only([
             "tanggal_awal",
             "tanggal_akhir",
-            "status_kendaraaan",
+            "status_kendaraan",
             "status_kendaraan_sendiri",
             "no_transaksi",
             "status_surat_jalan",
@@ -66,7 +66,7 @@ class OrderHelper
           $dataSave = $payload->only([
             "tanggal_awal",
             "tanggal_akhir",
-            "status_kendaraaan",
+            "status_kendaraan",
             "status_kendaraan_sendiri",
             "no_transaksi",
             "status_surat_jalan",
@@ -92,6 +92,7 @@ class OrderHelper
             "biaya_lain_harga_jual",
             "keterangan"
           ]);
+      
           $result = $this->createOrderSubkon($dataSave);
           if (!$result['status']) {
             return $result;

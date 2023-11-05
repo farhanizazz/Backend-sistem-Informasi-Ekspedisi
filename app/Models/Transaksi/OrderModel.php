@@ -14,7 +14,7 @@ class OrderModel extends Model
     protected $fillable = [
         'tanggal_awal',
         'tanggal_akhir',
-        'status_kendaraaan',
+        'status_kendaraan',
         'status_kendaraan_sendiri',
         'no_transaksi',
         'status_surat_jalan',
