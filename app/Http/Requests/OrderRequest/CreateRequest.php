@@ -54,11 +54,11 @@ class CreateRequest extends FormRequest
             'status_harga_order' => 'required|in:Pelunasan,Dp',
             'biaya_lain_harga_order' => 'array',
             'status_pajak' => 'required|in:ya,tidak',
-            'setor' => 'required_if:status_kendaraan,Sendiri|numeric',
-            'uang_jalan' => 'required|numeric',
-            'potongan_wajib' => 'required|numeric|min:0',
+            'setor' => 'required_if:status_kendaraan,Sendiri',
+            'uang_jalan' => 'required',
+            'potongan_wajib' => 'required|min:0',
             'biaya_lain_uang_jalan' => 'array',
-            'harga_jual' => 'required_if:status_kendaraan,Subkon|numeric',
+            'harga_jual' => 'required_if:status_kendaraan,Subkon',
             'status_harga_jual' => 'required_if:status_kendaraan,Subkon|in:Pelunasan,Dp',
             'biaya_lain_harga_jual' => 'array'
         ], $rule);
