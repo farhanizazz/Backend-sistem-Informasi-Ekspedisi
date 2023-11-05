@@ -33,7 +33,9 @@ class CreateRequest extends FormRequest
                 ];
                 break;
             default:
-                $rule = [];
+                $rule = [
+                    'm_subkon_id' => 'required_if:status_kendaraan,Subkon|exists:master_subkon,id',
+                ];
                 break;
         }
         return array_merge([
@@ -56,7 +58,6 @@ class CreateRequest extends FormRequest
             'uang_jalan' => 'required|numeric',
             'potongan_wajib' => 'required|numeric|min:0',
             'biaya_lain_uang_jalan' => 'array',
-            'm_subkon_id' => 'required_if:status_kendaraan,Subkon|exists:master_subkon,id',
             'harga_jual' => 'required_if:status_kendaraan,Subkon|numeric',
             'status_harga_jual' => 'required_if:status_kendaraan,Subkon|in:Pelunasan,Dp',
             'biaya_lain_harga_jual' => 'array'
