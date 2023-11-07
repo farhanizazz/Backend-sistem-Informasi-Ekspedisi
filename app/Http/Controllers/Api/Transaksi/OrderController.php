@@ -6,6 +6,7 @@ use App\Helpers\Transaksi\OrderHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest\CreateRequest;
 use App\Http\Resources\Order\OrderCollection;
+use App\Http\Resources\Order\OrderResource;
 use App\Models\Transaksi\OrderModel;
 use Illuminate\Http\Request;
 
@@ -83,6 +84,24 @@ class OrderController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil dihapus'
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
+    }
+
+    public function show($id)
+    {
+        try {
+            //code...
+            $result =  $this->orderModel->with(['penyewa', 'armada', 'sopir', 'subkon'])->findOrFail($id);
+            return response()->json([
+                'status' => 'success',
+                'data' => new OrderResource($result)
             ]);
         } catch (\Throwable $th) {
             //throw $th;
