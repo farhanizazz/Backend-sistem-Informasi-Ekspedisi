@@ -29,6 +29,7 @@ class UpdateRequest extends FormRequest
             //
             'nama' => ['required'],
             'nominal' => ['required'],
+            'sifat' => 'required|in:Menambahkan,Mengurangi',
         ];
     }
     public function failedValidation(Validator $validator)
@@ -40,6 +41,7 @@ class UpdateRequest extends FormRequest
         return [
             'nama.required' => 'Nama Rekening tidak boleh kosong',
             'nominal.required' => 'Nominal tidak boleh kosong',
+            'sifat.required' => 'Sifat tidak boleh kosong',
         ];
     }
 }
