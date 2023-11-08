@@ -64,4 +64,13 @@ trait GlobalTrait
           }
       }
     }
+
+    public function getSifatRekening($sifat){
+      if($sifat == config('global.sifat_rekening.plus')){
+        return 1;
+      }else if($sifat == config('global.sifat_rekening.minus')){
+        return -1;
+      }
+      return 1;
+    }
 }

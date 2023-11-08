@@ -9,6 +9,7 @@ use App\Models\Master\RoleModel;
 use App\Models\Master\SopirModel;
 use App\Models\Master\SubkonModel;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,6 +23,17 @@ class DatabaseSeeder extends Seeder
     {
         RoleModel::factory(10)->create();
         User::factory(10)->create();
+
+        User::create([
+            'name' => "admin",
+            'username' => "admin",
+            'email' => "admin@gmail.com",
+            'm_role_id' => RoleModel::all()->random()->id,
+            'email_verified_at' => now(),
+            'password' =>'password', // password
+            'remember_token' => Str::random(10),
+        ]);
+        
         PenyewaModel::create([
             'nama_perusahaan' =>  'PT. Sinar Jaya',
             'alamat' => 'Jl. Raya Cikarang',
@@ -50,11 +62,11 @@ class DatabaseSeeder extends Seeder
         ]);
         RekeningModel::create([
             'nama' => 'Ganti rugi',
-            'nominal' => -10000
+            'sifat' => 'Mengurangi',
         ]);
         RekeningModel::create([
             'nama' => 'Ban Bocor',
-            'nominal' => -50000
+            'sifat' => 'Mengurangi',
         ]);
         SubkonModel::create([
             'nama_perusahaan' => 'PT. Subkon',

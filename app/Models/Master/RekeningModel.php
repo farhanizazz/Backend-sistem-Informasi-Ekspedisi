@@ -11,7 +11,6 @@ class RekeningModel extends Model
     protected $table = 'master_rekening';
     protected $fillable = [
         'nama',
-        // 'nominal',
         'sifat',
     ];
 }
