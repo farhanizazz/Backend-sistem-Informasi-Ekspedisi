@@ -17,6 +17,7 @@ class OrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'no_transaksi' => $this->no_transaksi,
             'tanggal_awal' => $this->tanggal_awal,
             'tanggal_akhir' => $this->tanggal_akhir,
             'status_kendaraan' => $this->status_kendaraan,
