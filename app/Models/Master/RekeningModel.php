@@ -12,5 +12,6 @@ class RekeningModel extends Model
     protected $fillable = [
         'nama',
         'nominal',
+        'sifat',
     ];
 }
