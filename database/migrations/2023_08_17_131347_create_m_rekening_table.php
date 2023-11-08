@@ -16,7 +16,7 @@ class CreateMRekeningTable extends Migration
         Schema::create('master_rekening', function (Blueprint $table) {
             $table->id();
             $table->string("nama");
-            $table->integer("nominal");
+            // $table->integer("nominal");
             $table->enum('sifat', ['Menambahkan', 'Mengurangi'])->default('Menambahkan');
             $table->timestamps();
         });
