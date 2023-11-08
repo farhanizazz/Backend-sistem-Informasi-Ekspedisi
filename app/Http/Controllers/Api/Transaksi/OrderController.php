@@ -20,11 +20,16 @@ class OrderController extends Controller
         $this->orderModel = new OrderModel();
     }
 
-    public function index()
+    public function index(Request $request)
     {
+        $filter = [
+            "status_kendaraan" => $request->status_kendaraan ?? null 
+        ];
         return response()->json([
             'status' => 'success',
-            'data' => new OrderCollection($this->orderModel->with(['penyewa', 'armada', 'sopir', 'subkon'])->get())
+            'data' => new OrderCollection($this->orderModel->when($filter['status_kendaraan'],function($query) use($filter){
+                                                $query->where("status_kendaraan", $filter['status_kendaraan']);
+                                            })->with(['penyewa', 'armada', 'sopir', 'subkon'])->get())
         ]);
     }
 

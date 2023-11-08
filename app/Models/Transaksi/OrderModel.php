@@ -84,7 +84,11 @@ class OrderModel extends Model
         if ($this->biaya_lain_harga_order == null) {
             return [];
         }
-        return RekeningModel::whereIn('id', $this->biaya_lain_harga_order)->get();
+        return array_map(function($data){
+                    $rekeningData = RekeningModel::where('id',$data['m_rekening_id'])->first();
+                    $sifat = $rekeningData->sifat ?? '';
+                    return array_merge($data,['sifat' => $sifat]);
+                },$this->biaya_lain_harga_order);
     }
 
     public function getBiayaLainUangJalanArrAttribute()
@@ -92,7 +96,11 @@ class OrderModel extends Model
         if ($this->biaya_lain_uang_jalan == null) {
             return [];
         }
-        return RekeningModel::whereIn('id', $this->biaya_lain_uang_jalan)->get();
+        return array_map(function($data){
+            $rekeningData = RekeningModel::where('id',$data['m_rekening_id'])->first();
+            $sifat = $rekeningData->sifat ?? '';
+            return array_merge($data,['sifat' => $sifat]);
+        },$this->biaya_lain_uang_jalan);
     }
 
     public function getBiayaLainHargaJualArrAttribute()
@@ -100,7 +108,11 @@ class OrderModel extends Model
         if ($this->biaya_lain_harga_jual == null) {
             return [];
         }
-        return RekeningModel::whereIn('id', $this->biaya_lain_harga_jual)->get();
+        return array_map(function($data){
+            $rekeningData = RekeningModel::where('id',$data['m_rekening_id'])->first();
+            $sifat = $rekeningData->sifat ?? '';
+            return array_merge($data,['sifat' => $sifat]);
+        },$this->biaya_lain_harga_jual);
     }
 
     public function getSisaTagihanAttribute()

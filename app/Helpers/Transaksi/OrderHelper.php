@@ -2,6 +2,7 @@
 
 namespace App\Helpers\Transaksi;
 
+use App\Http\Traits\GlobalTrait;
 use App\Models\Master\ArmadaModel;
 use App\Models\Master\RekeningModel;
 use App\Models\Transaksi\OrderModel;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 
 class OrderHelper
 {
+  use GlobalTrait;
 
   private $armadaModel, $orderModel, $pph, $rekeningModel;
   public function __construct()
@@ -253,12 +255,22 @@ class OrderHelper
     }
   }
 
-  public function hitungTotalBiayaLain($listId)
+  public function hitungTotalBiayaLain($listBiayaLain)
   {
-    $listBiayaLain = $this->rekeningModel->whereIn('id', $listId)->get();
+    $listId = array_column($listBiayaLain, 'm_rekening_id');
+    $listRekening = $this->rekeningModel->whereIn('id', $listId)->get();
+    
+    foreach ($listBiayaLain as $key => $value) {
+      foreach ($listRekening as $key2 => $value2) {
+        if ($value['m_rekening_id'] == $value2->id) {
+          $listBiayaLain[$key]["nominal"] *= $this->getSifatRekening($value2->sifat);
+        }
+      }
+    }
+
     $total = 0;
     foreach ($listBiayaLain as $key => $value) {
-      $total += $value->nominal;
+      $total += $value['nominal'];
     }
     return $total;
   }

@@ -40,8 +40,7 @@ class CreateRequest extends FormRequest
         }
         return array_merge([
             'tanggal_awal' => 'required|date',
-            // 'tanggal_akhir' => 'required_if:status_kendaraan_sendiri,Kota-Kota',
-            'tanggal_akhir' => 'required',
+            'tanggal_akhir' => 'required_if:status_kendaraan_sendiri,Kontrak',
             'status_kendaraan' => 'required|in:Sendiri,Subkon',
             'status_surat_jalan' => 'required|in:Sopir,Kantor,Selesai',
             'm_penyewa_id' => 'required|exists:master_penyewa,id',
