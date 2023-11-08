@@ -22,10 +22,10 @@ class RekeningController extends Controller
     }
     public function index()
     {
-        $total = RekeningModel::selectRaw('SUM(nominal) as total')->value('total');
+        // $total = RekeningModel::selectRaw('SUM(nominal) as total')->value('total');
 
         return response()->json([
-            'total' => $total,
+            // 'total' => $total,
             'status' => 'success',
             'data' => $this->rekeningModel->all()
         ]);
@@ -54,7 +54,7 @@ class RekeningController extends Controller
 
 
         return response()->json([
-            'total' => $total,
+            // 'total' => $total,
             'status' => 'success',
             'message' => 'Data berhasil ditambahkan'
         ]);
@@ -68,12 +68,12 @@ class RekeningController extends Controller
      */
     public function total()
     {
-        $total = RekeningModel::selectRaw('SUM(nominal) as total')->value('total');
+        // $total = RekeningModel::selectRaw('SUM(nominal) as total')->value('total');
         return response()->json([
             'status' => 'success',
-            'data' => $total
+            // 'data' => $total
         ]);
-        return $total;
+        // return $total;
     }
     public function show($id)
     {
