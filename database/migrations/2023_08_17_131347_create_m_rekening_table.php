@@ -17,6 +17,7 @@ class CreateMRekeningTable extends Migration
             $table->id();
             $table->string("nama");
             $table->integer("nominal");
+            $table->enum('sifat', ['Menambahkan', 'Mengurangi'])->default('Menambahkan');
             $table->timestamps();
         });
     }
