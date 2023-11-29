@@ -28,8 +28,8 @@ class OrderController extends Controller
         return response()->json([
             'status' => 'success',
             'data' => new OrderCollection($this->orderModel->when($filter['status_kendaraan'],function($query) use($filter){
-                                                $query->where("status_kendaraan", $filter['status_kendaraan']);
-                                            })->with(['penyewa', 'armada', 'sopir', 'subkon'])->get())
+                $query->where("status_kendaraan", $filter['status_kendaraan']);
+            })->with(['penyewa', 'armada', 'sopir', 'subkon'])->get())
         ]);
     }
 

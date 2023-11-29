@@ -26,6 +26,32 @@ class CreateRequest extends FormRequest
     public function rules()
     {
         $request = $this->request->all();
+        if (!isset($request['status_kendaraan'])) {
+            return [
+                'status_kendaraan' => 'required|in:Sendiri,Subkon',
+                'tanggal_awal' => 'required|date',
+                'tanggal_akhir' => 'required_if:status_kendaraan_sendiri,Kontrak',
+                'status_kendaraan' => 'required|in:Sendiri,Subkon',
+                'status_surat_jalan' => 'required|in:Sopir,Kantor,Selesai',
+                'm_penyewa_id' => 'required|exists:master_penyewa,id',
+                'muatan' => 'required',
+                'm_armada_id' => 'required|exists:master_armada,id',
+                'm_sopir_id' => 'required|exists:master_sopir,id',
+                'asal' => 'required',
+                'tujuan' => 'required',
+                'harga_order' => 'required|numeric',
+                'status_harga_order' => 'required|in:Pelunasan,Dp',
+                'biaya_lain_harga_order' => 'array',
+                'status_pajak' => 'required|in:ya,tidak',
+                'setor' => 'required_if:status_kendaraan,Sendiri',
+                'uang_jalan' => 'required_if:status_kendaraan,Sendiri',
+                'potongan_wajib' => 'required_if:status_kendaraaan,Sendiri',
+                'biaya_lain_uang_jalan' => 'array',
+                'harga_jual' => 'required_if:status_kendaraan,Subkon',
+                'status_harga_jual' => 'required_if:status_kendaraan,Subkon|in:Pelunasan,Dp',
+                'biaya_lain_harga_jual' => 'array'
+            ];
+        }
         switch ($request['status_kendaraan']) {
             case 'Sendiri':
                 $rule = [
