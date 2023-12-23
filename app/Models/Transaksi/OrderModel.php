@@ -87,7 +87,8 @@ class OrderModel extends Model
         return array_map(function($data){
                     $rekeningData = RekeningModel::where('id',$data['m_rekening_id'])->first();
                     $sifat = $rekeningData->sifat ?? '';
-                    return array_merge($data,['sifat' => $sifat]);
+                    $nama = $rekeningData->nama ?? '';
+                    return array_merge($data,['sifat' => $sifat, 'nama' => $nama]);
                 },$this->biaya_lain_harga_order);
     }
 
@@ -99,7 +100,8 @@ class OrderModel extends Model
         return array_map(function($data){
             $rekeningData = RekeningModel::where('id',$data['m_rekening_id'])->first();
             $sifat = $rekeningData->sifat ?? '';
-            return array_merge($data,['sifat' => $sifat]);
+            $nama = $rekeningData->nama ?? '';
+            return array_merge($data,['sifat' => $sifat, 'nama' => $nama]);
         },$this->biaya_lain_uang_jalan);
     }
 
@@ -111,7 +113,8 @@ class OrderModel extends Model
         return array_map(function($data){
             $rekeningData = RekeningModel::where('id',$data['m_rekening_id'])->first();
             $sifat = $rekeningData->sifat ?? '';
-            return array_merge($data,['sifat' => $sifat]);
+            $nama = $rekeningData->nama ?? '';
+            return array_merge($data,['sifat' => $sifat, 'nama' => $nama]);
         },$this->biaya_lain_harga_jual);
     }
 
