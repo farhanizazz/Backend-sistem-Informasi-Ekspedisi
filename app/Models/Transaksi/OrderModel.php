@@ -17,6 +17,7 @@ class OrderModel extends Model
         'status_kendaraan',
         'status_kendaraan_sendiri',
         'no_transaksi',
+        'nomor_sj_po_do',
         'status_surat_jalan',
         'm_penyewa_id',
         'muatan',
@@ -42,7 +43,10 @@ class OrderModel extends Model
         'harga_jual_bersih',
         'status_harga_jual',
         'biaya_lain_harga_jual',
-        'keterangan'
+        'keterangan',
+        'catatan_surat_jalan',
+        'nopol_subkon',
+        'sopir_subkon',
     ];
 
     protected $casts = [
