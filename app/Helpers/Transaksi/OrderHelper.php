@@ -33,6 +33,7 @@ class OrderHelper
             "status_kendaraan",
             "status_kendaraan_sendiri",
             "no_transaksi",
+            "nomor_sj_po_do",
             "status_surat_jalan",
             "m_penyewa_id",
             "muatan",
@@ -51,7 +52,8 @@ class OrderHelper
             "uang_jalan",
             "potongan_wajib",
             "biaya_lain_uang_jalan",
-            "keterangan"
+            "keterangan",
+            "catatan_surat_jalan"
           ]);
           $result = $this->createOrderSendiri($dataSave);
           if (!$result['status']) {
@@ -71,6 +73,7 @@ class OrderHelper
             "status_kendaraan",
             "status_kendaraan_sendiri",
             "no_transaksi",
+            "nomor_sj_po_do",
             "status_surat_jalan",
             "m_penyewa_id",
             "muatan",
@@ -92,7 +95,10 @@ class OrderHelper
             "harga_jual_bersih",
             "status_harga_jual",
             "biaya_lain_harga_jual",
-            "keterangan"
+            "keterangan",
+            "catatan_surat_jalan",
+            "nopol_subkon",
+            "sopir_subkon"
           ]);
       
           $result = $this->createOrderSubkon($dataSave);
@@ -126,7 +132,7 @@ class OrderHelper
 
   public function createOrderSendiri($payload)
   {
-    $noTransaksi = $this->generateNoTransaksi($payload['m_armada_id']);
+    $noTransaksi = $this->generateNoTransaksi($payload['m_armada_id'],"sendiri");
     if (!$noTransaksi['status']) {
       return $noTransaksi;
     }
@@ -143,7 +149,7 @@ class OrderHelper
 
   public function createOrderSubkon($payload)
   {
-    $noTransaksi = $this->generateNoTransaksi($payload['m_armada_id']);
+    $noTransaksi = $this->generateNoTransaksi($payload['nopol_subkon'], "subkon");
     if (!$noTransaksi['status']) {
       return $noTransaksi;
     }
@@ -158,9 +164,17 @@ class OrderHelper
     ];
   }
 
-  public function generateNoTransaksi($m_armada_id)
+  public function generateNoTransaksi($m_armada_id, $status_kendaraan)
   {
-    $armada = $this->armadaModel->where('id', $m_armada_id)->first();
+    switch ($status_kendaraan) {
+      case 'sendiri':
+        $armada = $this->armadaModel->where('id', $m_armada_id)->first();
+        break;
+      default:
+        $armada = (object) ["nopol"=> $m_armada_id];
+        break;
+    }
+
     $order = $this->orderModel->whereDate('created_at', date("Y-m-d"))->orderBy('id', 'desc')->select('no_transaksi')->first();
     if ($armada == null) {
       return [
@@ -284,6 +298,7 @@ class OrderHelper
           # code...
           $dataSave = $payload->only([
             "no_transaksi",
+            "nomor_sj_po_do", 
             "tanggal_awal",
             "tanggal_akhir",
             "status_kendaraaan",
@@ -307,7 +322,8 @@ class OrderHelper
             "uang_jalan",
             "potongan_wajib",
             "biaya_lain_uang_jalan",
-            "keterangan"
+            "keterangan",
+            "catatan_surat_jalan"
           ]);
           $result = $this->passedDataKendSendiri($dataSave);
           $isSuccess = $this->orderModel->where('id', $id)->update($result);
@@ -327,6 +343,7 @@ class OrderHelper
           # code...
           $dataSave = $payload->only([
             "no_transaksi",
+            "nomor_sj_po_do",
             "tanggal_awal",
             "tanggal_akhir",
             "status_kendaraaan",
@@ -353,7 +370,10 @@ class OrderHelper
             "harga_jual_bersih",
             "status_harga_jual",
             "biaya_lain_harga_jual",
-            "keterangan"
+            "keterangan",
+            "catatan_surat_jalan",
+            "nopol_subkon",
+            "sopir_subkon"
           ]);
           $result = $this->passedDataKendSubkon($dataSave);
           $isSuccess = $this->orderModel->where('id', $id)->update($result);

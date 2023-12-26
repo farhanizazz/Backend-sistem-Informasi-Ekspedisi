@@ -35,8 +35,6 @@ class CreateRequest extends FormRequest
                 'status_surat_jalan' => 'required|in:Sopir,Kantor,Selesai',
                 'm_penyewa_id' => 'required|exists:master_penyewa,id',
                 'muatan' => 'required',
-                'm_armada_id' => 'required|exists:master_armada,id',
-                'm_sopir_id' => 'required|exists:master_sopir,id',
                 'asal' => 'required',
                 'tujuan' => 'required',
                 'harga_order' => 'required|numeric',
@@ -55,12 +53,15 @@ class CreateRequest extends FormRequest
         switch ($request['status_kendaraan']) {
             case 'Sendiri':
                 $rule = [
-                     'status_kendaraan_sendiri' => 'required_if:status_kendaraaan,Sendiri|in:Berangkat,Pulang,Kontrak,Kota-Kota',
+                     'status_kendaraan_sendiri' => 'required_if:status_kendaraan,Sendiri|in:Berangkat,Pulang,Kontrak,Kota-Kota',
+                     'm_armada_id' => 'required|exists:master_armada,id',
+                     'm_sopir_id' => 'required|exists:master_sopir,id',
                 ];
                 break;
             default:
                 $rule = [
                     'm_subkon_id' => 'required_if:status_kendaraan,Subkon|exists:master_subkon,id',
+                    'nopol_subkon' => 'required',
                 ];
                 break;
         }
@@ -130,7 +131,8 @@ class CreateRequest extends FormRequest
             'harga_jual.numeric' => 'Harga jual harus berupa angka',
             'status_harga_jual.required_if' => 'Status harga jual harus diisi',
             'status_harga_jual.in' => 'Status harga jual harus diisi dengan Pelunasan atau Dp',
-            'biaya_lain_harga_jual.array' => 'Biaya lain harga jual harus berupa array'
+            'biaya_lain_harga_jual.array' => 'Biaya lain harga jual harus berupa array',
+            'nopol_subkon'              => 'Nopol subkon harus diisi'
         ];
     }
 
