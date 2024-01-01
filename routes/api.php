@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Master\SubkonController;
 use App\Http\Controllers\Api\Transaksi\HutangSopirController;
 use App\Http\Controllers\Api\Transaksi\OrderController;
 use App\Http\Controllers\Api\Transaksi\PengeluaranContoller;
+use App\Http\Controllers\Api\Master\MutasiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\RegisterController;
@@ -74,6 +75,13 @@ Route::middleware('jwt.verify')->group(function () {
             Route::post("/", [RekeningController::class, "store"]);
             Route::put("/{id}", [RekeningController::class, "update"]);
             Route::delete("/{id}", [RekeningController::class, "destroy"]);
+                Route::group(['prefix' => "mutasi"], function () {
+                    Route::get("/", [MutasiController::class, "index"]);
+                    Route::post("/", [MutasiController::class, "store"]);
+                    Route::get("/{id}", [MutasiController::class, "show"]);
+                    Route::put("/{id}", [MutasiController::class, "update"]);
+                    Route::delete("/{id}", [MutasiController::class, "destroy"]);
+                });
         });
         Route::group(['prefix' => "subkon"], function () {
             Route::get("/", [SubkonController::class, "index"]);

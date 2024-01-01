@@ -15,9 +15,10 @@ class CreateRekeningTable extends Migration
     {
         Schema::create('master_rekening', function (Blueprint $table) {
             $table->id();
+            
             $table->string('nama_bank');
             $table->string("atas_nama");
-            $table->bigInteger('saldo');
+            // $table->bigInteger('saldo');
             $table->bigInteger('nomor_rekening');
             $table->timestamps();
         });

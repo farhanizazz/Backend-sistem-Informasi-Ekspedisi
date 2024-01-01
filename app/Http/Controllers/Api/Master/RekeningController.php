@@ -73,7 +73,7 @@ class RekeningController extends Controller
             'status' => 'success',
             // 'data' => $total
         ]);
-        // return $total;
+        
     }
     public function show($id)
     {

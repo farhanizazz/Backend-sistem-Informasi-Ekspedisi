@@ -24,4 +24,5 @@ class SopirModel extends Model
     {
         return $this->attributes['keterangan'] ?? 'Tidak ada keterangan';
     }
+    
 }

@@ -10,8 +10,13 @@ class RekeningModel extends Model
     use HasFactory;
     protected $table = 'master_rekening';
     protected $fillable = [
-        'nama',
-        // 'nominal',
-        'sifat',
+
+        'nomor_rekening',
+        'atas_nama',
+        'nama_bank',
+
     ];
+
+    
+
 }

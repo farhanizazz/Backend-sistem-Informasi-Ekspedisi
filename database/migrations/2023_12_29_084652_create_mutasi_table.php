@@ -16,6 +16,7 @@ class CreateMutasiTable extends Migration
         Schema::create('master_mutasi', function (Blueprint $table) {
             $table->id();
             $table->foreign('transaksi_order_id')->references('id')->on('transaksi_order');
+            $table->foreign('rekening_id')->references('id')->on('rekening');
             $table->date('tanggal_pembayaran')->nullable();
             $table->integer('nominal');
             $table->text('keterangan')->nullable();
