@@ -3,6 +3,7 @@
 namespace App\Models\Transaksi;
 
 use App\Models\Master\RekeningModel;
+use App\Models\Master\TambahanModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -89,7 +90,7 @@ class OrderModel extends Model
             return [];
         }
         return array_map(function($data){
-                    $rekeningData = RekeningModel::where('id',$data['m_rekening_id'])->first();
+                    $rekeningData = TambahanModel::where('id',$data['m_tambahan_id'])->first();
                     $sifat = $rekeningData->sifat ?? '';
                     $nama = $rekeningData->nama ?? '';
                     return array_merge($data,['sifat' => $sifat, 'nama' => $nama]);
@@ -102,7 +103,7 @@ class OrderModel extends Model
             return [];
         }
         return array_map(function($data){
-            $rekeningData = RekeningModel::where('id',$data['m_rekening_id'])->first();
+            $rekeningData = TambahanModel::where('id',$data['m_tambahan_id'])->first();
             $sifat = $rekeningData->sifat ?? '';
             $nama = $rekeningData->nama ?? '';
             return array_merge($data,['sifat' => $sifat, 'nama' => $nama]);
@@ -115,7 +116,7 @@ class OrderModel extends Model
             return [];
         }
         return array_map(function($data){
-            $rekeningData = RekeningModel::where('id',$data['m_rekening_id'])->first();
+            $rekeningData = TambahanModel::where('id',$data['m_tambahan_id'])->first();
             $sifat = $rekeningData->sifat ?? '';
             $nama = $rekeningData->nama ?? '';
             return array_merge($data,['sifat' => $sifat, 'nama' => $nama]);
@@ -132,5 +133,10 @@ class OrderModel extends Model
     {
         $sisa_hutang_ke_subkon = $this->harga_jual_bersih - $this->bayar_harga_jual;
         return $sisa_hutang_ke_subkon;
+    }
+
+    public function mutasi_sum()
+    {
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->selectRaw('sum(nominal) as total, transaksi_order_id')->groupBy('transaksi_order_id');
     }
 }
