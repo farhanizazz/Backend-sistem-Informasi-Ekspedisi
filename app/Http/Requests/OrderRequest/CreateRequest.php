@@ -76,7 +76,6 @@ class CreateRequest extends FormRequest
             'asal' => 'required',
             'tujuan' => 'required', 
             'harga_order' => 'required|numeric',
-            'status_harga_order' => 'required|in:Pelunasan,Dp',
             'biaya_lain_harga_order' => 'array',
             'status_pajak' => 'required|in:ya,tidak',
             'setor' => 'required_if:status_kendaraan,Sendiri',
