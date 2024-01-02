@@ -74,7 +74,7 @@ class CreateRequest extends FormRequest
             'm_armada_id' => 'required|exists:master_armada,id',
             'm_sopir_id' => 'required|exists:master_sopir,id',
             'asal' => 'required',
-            'tujuan' => 'required',
+            'tujuan' => 'required', 
             'harga_order' => 'required|numeric',
             'status_harga_order' => 'required|in:Pelunasan,Dp',
             'biaya_lain_harga_order' => 'array',
