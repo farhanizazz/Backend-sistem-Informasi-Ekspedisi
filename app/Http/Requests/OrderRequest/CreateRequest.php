@@ -38,7 +38,6 @@ class CreateRequest extends FormRequest
                 'asal' => 'required',
                 'tujuan' => 'required',
                 'harga_order' => 'required|numeric',
-                'status_harga_order' => 'required|in:Pelunasan,Dp',
                 'biaya_lain_harga_order' => 'array',
                 'status_pajak' => 'required|in:ya,tidak',
                 'setor' => 'required_if:status_kendaraan,Sendiri',
@@ -46,7 +45,6 @@ class CreateRequest extends FormRequest
                 'potongan_wajib' => 'required_if:status_kendaraaan,Sendiri',
                 'biaya_lain_uang_jalan' => 'array',
                 'harga_jual' => 'required_if:status_kendaraan,Subkon',
-                'status_harga_jual' => 'required_if:status_kendaraan,Subkon|in:Pelunasan,Dp',
                 'biaya_lain_harga_jual' => 'array'
             ];
         }
@@ -62,6 +60,7 @@ class CreateRequest extends FormRequest
                 $rule = [
                     'm_subkon_id' => 'required_if:status_kendaraan,Subkon|exists:master_subkon,id',
                     'nopol_subkon' => 'required',
+                    'status_harga_order' => 'required|in:Pelunasan,Dp',
                 ];
                 break;
         }
