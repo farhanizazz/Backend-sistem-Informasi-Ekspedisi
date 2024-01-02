@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\Transaksi\HutangSopirController;
 use App\Http\Controllers\Api\Transaksi\OrderController;
 use App\Http\Controllers\Api\Transaksi\PengeluaranContoller;
 use App\Http\Controllers\Api\Master\MutasiController;
+use App\Http\Controllers\Api\Master\TambahanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\RegisterController;
@@ -28,9 +29,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 Route::post("/login",   [AuthController::class, "login"]);
 Route::post("/register", [UserController::class, "store"]);
@@ -60,6 +61,13 @@ Route::middleware('jwt.verify')->group(function () {
             Route::get("/{id}", [SopirController::class, "show"]);
             Route::put("/{id}", [SopirController::class, "update"]);
             Route::delete("/{id}", [SopirController::class, "destroy"]);
+        });
+        Route::group(['prefix' => "tambahan"], function () {
+            Route::get("/", [TambahanController::class, "index"]);
+            Route::post("/", [TambahanController::class, "store"]);
+            Route::get("/{id}", [TambahanController::class, "show"]);
+            Route::put("/{id}", [TambahanController::class, "update"]);
+            Route::delete("/{id}", [TambahanController::class, "destroy"]);
         });
         Route::group(['prefix' => "armada"], function () {
             Route::get("/", [ArmadaController::class, "index"]);
