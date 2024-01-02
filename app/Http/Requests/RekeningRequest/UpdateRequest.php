@@ -27,9 +27,9 @@ class UpdateRequest extends FormRequest
     {
         return [
             //
-            'nama' => ['required'],
-            // 'nominal' => ['required'],
-            'sifat' => 'required|in:Menambahkan,Mengurangi',
+            'nomor_rekening' => 'required',
+            'atas_nama' => 'required',
+            'nama_bank' => 'required',
         ];
     }
     public function failedValidation(Validator $validator)
@@ -39,9 +39,10 @@ class UpdateRequest extends FormRequest
     public function message()
     {
         return [
-            'nama.required' => 'Nama Rekening tidak boleh kosong',
-            // 'nominal.required' => 'Nominal tidak boleh kosong',
-            'sifat.required' => 'Sifat tidak boleh kosong',
+
+            'nomor_rekening.required' => 'Nomor Rekening tidak boleh kosong',
+            'atas_nama.required' => 'Atas Nama tidak boleh kosong',
+            'nama_bank.required' => 'Nama Bank tidak boleh kosong',
         ];
     }
 }
