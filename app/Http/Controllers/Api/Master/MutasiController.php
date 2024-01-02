@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Master;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MutasiRequest\CreateRequest;
+use App\Http\Requests\MutasiRequest\UpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Master\MutasiModel;
 
@@ -18,11 +20,13 @@ class MutasiController extends Controller
     {
         $this->mutasiModel = new MutasiModel();
     }
-    public function index()
+    public function index(Request $request)
     {
+        $result = $this->mutasiModel->getAll($request->all());
+
         return response()->json([
             'status' => 'success',
-            'data' => $this->mutasiModel->all()
+            'data' => $result
         ]);
     }
 

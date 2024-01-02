@@ -18,7 +18,7 @@ class CreateRekeningTable extends Migration
             
             $table->string('nama_bank');
             $table->string("atas_nama");
-            // $table->bigInteger('saldo');
+            $table->bigInteger('saldo');
             $table->bigInteger('nomor_rekening');
             $table->timestamps();
         });

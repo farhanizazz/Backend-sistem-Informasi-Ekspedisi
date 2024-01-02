@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Route;
 Route::post("/login",   [AuthController::class, "login"]);
 Route::post("/register", [UserController::class, "store"]);
 
-Route::middleware('jwt.verify')->group(function () {
+// Route::middleware('jwt.verify')->group(function () {
     Route::get("/getProfile", [AuthController::class, "userProfile"]);
 
     // Route Master
@@ -77,19 +77,19 @@ Route::middleware('jwt.verify')->group(function () {
             Route::delete("/{id}", [ArmadaController::class, "destroy"]);
         });
         Route::group(['prefix' => "rekening"], function () {
+            Route::group(['prefix' => "mutasi"], function () {
+                Route::get("/", [MutasiController::class, "index"]);
+                Route::post("/", [MutasiController::class, "store"]);
+                Route::get("/{id}", [MutasiController::class, "show"]);
+                Route::put("/{id}", [MutasiController::class, "update"]);
+                Route::delete("/{id}", [MutasiController::class, "destroy"]);
+            });
             Route::get("/", [RekeningController::class, "index"]);
             Route::get("/total", [RekeningController::class, "total"]);
             Route::get("/{id}", [RekeningController::class, "show"]);
             Route::post("/", [RekeningController::class, "store"]);
             Route::put("/{id}", [RekeningController::class, "update"]);
             Route::delete("/{id}", [RekeningController::class, "destroy"]);
-                Route::group(['prefix' => "mutasi"], function () {
-                    Route::get("/", [MutasiController::class, "index"]);
-                    Route::post("/", [MutasiController::class, "store"]);
-                    Route::get("/{id}", [MutasiController::class, "show"]);
-                    Route::put("/{id}", [MutasiController::class, "update"]);
-                    Route::delete("/{id}", [MutasiController::class, "destroy"]);
-                });
         });
         Route::group(['prefix' => "subkon"], function () {
             Route::get("/", [SubkonController::class, "index"]);
@@ -108,7 +108,7 @@ Route::middleware('jwt.verify')->group(function () {
             Route::delete("/{id}", [RoleController::class, "destroy"]);
         });
     });
-});
+// });
 Route::group(['prefix' => "sopir"], function () {
     Route::get("/", [SopirController::class, "index"]);
     Route::post("/", [SopirController::class, "store"]);

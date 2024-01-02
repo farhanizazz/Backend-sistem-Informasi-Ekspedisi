@@ -8,6 +8,7 @@ use App\Models\Master\RekeningModel;
 use App\Models\Master\RoleModel;
 use App\Models\Master\SopirModel;
 use App\Models\Master\SubkonModel;
+use App\Models\Master\TambahanModel;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
@@ -60,11 +61,11 @@ class DatabaseSeeder extends Seeder
             'keterangan' => 'Sopir yang berpengalaman',
             'tanggal_gabung' => '2021-10-05'
         ]);
-        RekeningModel::create([
+        TambahanModel::create([
             'nama' => 'Ganti rugi',
             'sifat' => 'Mengurangi',
         ]);
-        RekeningModel::create([
+        TambahanModel::create([
             'nama' => 'Ban Bocor',
             'sifat' => 'Mengurangi',
         ]);
