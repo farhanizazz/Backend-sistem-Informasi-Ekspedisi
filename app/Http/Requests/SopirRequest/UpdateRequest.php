@@ -29,8 +29,8 @@ class UpdateRequest extends FormRequest
             //
             "nama" => "required",
             "alamat" => "required",
-            "ktp" => "required",
-            "sim" => "required",
+            'ktp' => 'required|min:16|max:16',
+            "sim" => 'required|min:14|max:14',
             "nomor_hp" => "required",
             "tanggal_gabung" => "required",
 
@@ -43,8 +43,8 @@ class UpdateRequest extends FormRequest
         return [
             "nama.required" => "Nama harus diisi",
             "alamat.required" => "Alamat harus diisi",
-            "ktp.required" => "ktp harus diisi",
-            "sim.required" => "SIM harus diisi",
+            "ktp.required" => "ktp harus diisi dan pastikan mengandung 16 digit",
+            "sim.required" => "SIM harus diisi dan pastikan mengandung 14 digit",
             "nomor_hp.required" => "Nomer HP harus diisi",
             "tanggal_gabung.required" => "Tanggal Gabung harus diisi",
         ];
