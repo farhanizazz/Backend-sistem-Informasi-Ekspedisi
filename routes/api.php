@@ -81,6 +81,7 @@ Route::post("/register", [UserController::class, "store"]);
                 Route::get("/", [MutasiController::class, "index"]);
                 Route::post("/", [MutasiController::class, "store"]);
                 Route::get("/{id}", [MutasiController::class, "show"]);
+                Route::get("/{nama_bank}", [MutasiController::class, "filterByNamaBank"]);
                 Route::put("/{id}", [MutasiController::class, "update"]);
                 Route::delete("/{id}", [MutasiController::class, "destroy"]);
             });

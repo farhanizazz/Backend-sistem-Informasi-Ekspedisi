@@ -54,6 +54,27 @@ class MutasiController extends Controller
             'message' => 'Data berhasil ditambahkan'
         ]);
     }
+    public function filterByNamaBank($nama_bank)
+{
+    $transactions = MutasiModel::with(['transaksiOrder', 'rekening'])
+        ->whereHas('rekening', function ($query) use ($nama_bank) {
+            $query->where('nama_bank', $nama_bank);
+        })
+        ->get();
+
+    if ($transactions->isEmpty()) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'No transactions found'
+        ]);
+    }
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Data retrieved successfully',
+        'data' => $transactions
+    ]);
+}
 
     /**
      * Display the specified resource.
