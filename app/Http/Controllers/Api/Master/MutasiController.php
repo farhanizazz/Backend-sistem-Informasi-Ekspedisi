@@ -56,7 +56,7 @@ class MutasiController extends Controller
     }
     public function filterByNamaBank($nama_bank)
 {
-    $transactions = MutasiModel::with(['transaksiOrder', 'rekening'])
+    $transactions = MutasiModel::with(['transaksi_order', 'rekening'])
         ->whereHas('rekening', function ($query) use ($nama_bank) {
             $query->where('nama_bank', $nama_bank);
         })
