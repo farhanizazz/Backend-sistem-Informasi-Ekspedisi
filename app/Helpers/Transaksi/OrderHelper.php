@@ -53,7 +53,11 @@ class OrderHelper
             "potongan_wajib",
             "biaya_lain_uang_jalan",
             "keterangan",
-            "catatan_surat_jalan"
+            "catatan_surat_jalan",
+            "nomor_sj",
+            "nomor_po",
+            "nomor_do",
+            "ppn"
           ]);
           $result = $this->createOrderSendiri($dataSave);
           if (!$result['status']) {
@@ -98,7 +102,11 @@ class OrderHelper
             "keterangan",
             "catatan_surat_jalan",
             "nopol_subkon",
-            "sopir_subkon"
+            "sopir_subkon",
+            "nomor_sj",
+            "nomor_po",
+            "nomor_do",
+            "ppn"
           ]);
       
           $result = $this->createOrderSubkon($dataSave);
@@ -198,7 +206,7 @@ class OrderHelper
   {
     // set pajak
     if ($payload['status_pajak'] == 'ya') {
-      $payload['total_pajak'] = $this->hitungPajak($payload['harga_order'], 'pph');
+      $payload['total_pajak'] = $this->hitungPajak($payload['harga_order'], $payload['ppn']);
     } else {
       $payload['total_pajak'] = 0;
     }
@@ -228,7 +236,7 @@ class OrderHelper
   {
     // set pajak
     if ($payload['status_pajak'] == 'ya') {
-      $payload['total_pajak'] = $this->hitungPajak($payload['harga_order'], 'pph');
+      $payload['total_pajak'] = $this->hitungPajak($payload['harga_order'], $payload['ppn']);
     } else {
       $payload['total_pajak'] = 0;
     }
@@ -254,19 +262,9 @@ class OrderHelper
     return $payload;
   }
 
-  public function hitungPajak($total, $jenis)
+  public function hitungPajak($total, $persen_pajak)
   {
-    switch ($jenis) {
-      case 'pph':
-        # code...
-        return $total * $this->pph / 100;
-        break;
-
-      default:
-        # code...
-        return 0;
-        break;
-    }
+    return $total * $persen_pajak / 100;
   }
 
   public function hitungTotalBiayaLain($listBiayaLain)
