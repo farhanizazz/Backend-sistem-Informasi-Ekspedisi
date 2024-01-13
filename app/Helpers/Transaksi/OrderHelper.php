@@ -33,7 +33,6 @@ class OrderHelper
             "status_kendaraan",
             "status_kendaraan_sendiri",
             "no_transaksi",
-            "nomor_sj_po_do",
             "status_surat_jalan",
             "m_penyewa_id",
             "muatan",
@@ -77,7 +76,6 @@ class OrderHelper
             "status_kendaraan",
             "status_kendaraan_sendiri",
             "no_transaksi",
-            "nomor_sj_po_do",
             "status_surat_jalan",
             "m_penyewa_id",
             "muatan",
@@ -296,7 +294,6 @@ class OrderHelper
           # code...
           $dataSave = $payload->only([
             "no_transaksi",
-            "nomor_sj_po_do", 
             "tanggal_awal",
             "tanggal_akhir",
             "status_kendaraaan",
@@ -321,7 +318,11 @@ class OrderHelper
             "potongan_wajib",
             "biaya_lain_uang_jalan",
             "keterangan",
-            "catatan_surat_jalan"
+            "catatan_surat_jalan",
+            "nomor_sj",
+            "nomor_po",
+            "nomor_do",
+            "ppn"
           ]);
           $result = $this->passedDataKendSendiri($dataSave);
           $isSuccess = $this->orderModel->where('id', $id)->update($result);
@@ -341,7 +342,6 @@ class OrderHelper
           # code...
           $dataSave = $payload->only([
             "no_transaksi",
-            "nomor_sj_po_do",
             "tanggal_awal",
             "tanggal_akhir",
             "status_kendaraaan",
@@ -371,7 +371,11 @@ class OrderHelper
             "keterangan",
             "catatan_surat_jalan",
             "nopol_subkon",
-            "sopir_subkon"
+            "sopir_subkon",
+            "nomor_sj",
+            "nomor_po",
+            "nomor_do",
+            "ppn"
           ]);
           $result = $this->passedDataKendSubkon($dataSave);
           $isSuccess = $this->orderModel->where('id', $id)->update($result);
