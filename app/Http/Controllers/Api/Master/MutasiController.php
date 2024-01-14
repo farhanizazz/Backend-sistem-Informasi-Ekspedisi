@@ -54,27 +54,28 @@ class MutasiController extends Controller
             'message' => 'Data berhasil ditambahkan'
         ]);
     }
-    public function filterByRekeningId($rekening_id)
-    {
-        $transactions = MutasiModel::with(['transaksi_order', 'rekening'])
-            ->whereHas('rekening', function ($query) use ($rekening_id) {
-                $query->where('id', $rekening_id);
-            })
-            ->get();
+    // public function filterByRekeningId($rekening_id)
+    // {
+        
+    //     $transactions = MutasiModel::with(['transaksi_order', 'rekening'])
+    //         ->whereHas('rekening', function ($query) use ($rekening_id) {
+    //             $query->where('id', $rekening_id);
+    //         })
+    //         ->get();
     
-        if ($transactions->isEmpty()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'No transactions found'
-            ]);
-        }
+    //     if ($transactions->isEmpty()) {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'No transactions found'
+    //         ]);
+    //     }
     
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data retrieved successfully',
-            'data' => $transactions
-        ]);
-    }
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'Data retrieved successfully',
+    //         'data' => $transactions
+    //     ]);
+    // }
 
     /**
      * Display the specified resource.

@@ -30,8 +30,8 @@ class MutasiModel extends Model
     public function getAll($payload){
         $data = $this->when(isset($payload['transaksi_order_id']) && $payload['transaksi_order_id'], function($query) use($payload){
             $query->where('transaksi_order_id', $payload['transaksi_order_id']);
-        })->when(isset($payload['rekening_id']) && $payload['rekening_id'], function($query) use($payload){
-            $query->where('rekening_id', $payload['rekening_id']);
+        })->when(isset($payload['master_rekening_id']) && $payload['master_rekening_id'], function($query) use($payload){
+            $query->where('master_rekening_id', $payload['master_rekening_id']);
         })->when(isset($payload['tanggal_pembayaran']) && $payload['tanggal_pembayaran'], function($query) use($payload){
             $query->where('tanggal_pembayaran', $payload['tanggal_pembayaran']);
         })->when(isset($payload['keterangan']) && $payload['keterangan'], function($query) use($payload){
