@@ -81,7 +81,7 @@ class CreateRequest extends FormRequest
             'potongan_wajib' => 'required_if:status_kendaraaan,Sendiri',
             'biaya_lain_uang_jalan' => 'array',
             'harga_jual' => 'required_if:status_kendaraan,Subkon',
-            'status_harga_jual' => 'required_if:status_kendaraan,Subkon|in:Pelunasan,Dp',
+            'status_harga_jual' => 'required_if:status_kendaraan,Subkon',
             'biaya_lain_harga_jual' => 'array'
         ], $rule);
     }
