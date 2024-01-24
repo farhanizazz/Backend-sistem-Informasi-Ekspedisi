@@ -71,8 +71,6 @@ class CreateRequest extends FormRequest
             'status_surat_jalan' => 'required|in:Sopir,Kantor,Selesai',
             'm_penyewa_id' => 'required|exists:master_penyewa,id',
             'muatan' => 'required',
-            'm_armada_id' => 'required|exists:master_armada,id',
-            'm_sopir_id' => 'required|exists:master_sopir,id',
             'asal' => 'required',
             'tujuan' => 'required', 
             'harga_order' => 'required|numeric',
