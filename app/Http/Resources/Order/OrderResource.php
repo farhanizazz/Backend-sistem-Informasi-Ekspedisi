@@ -31,6 +31,7 @@ class OrderResource extends JsonResource
             'm_sopir_id' => $this->m_sopir_id,
             'asal' => $this->asal,
             'tujuan' => $this->tujuan,
+            'ppn'   => $this->ppn,
             'harga_order' => $this->harga_order,
             'status_harga_order' => $this->status_harga_order,
             'biaya_lain_harga_order' => $this->biaya_lain_harga_order,
