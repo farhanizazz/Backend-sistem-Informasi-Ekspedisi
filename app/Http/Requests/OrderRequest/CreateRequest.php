@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\OrderRequest;
 
+use App\Rules\CekBiayaLainRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -38,14 +39,14 @@ class CreateRequest extends FormRequest
                 'asal' => 'required',
                 'tujuan' => 'required',
                 'harga_order' => 'required|numeric',
-                'biaya_lain_harga_order' => 'array',
+                'biaya_lain_harga_order' => ['array',new CekBiayaLainRule()],
                 'status_pajak' => 'required|in:ya,tidak',
                 'setor' => 'required_if:status_kendaraan,Sendiri',
                 'uang_jalan' => 'required_if:status_kendaraan,Sendiri',
                 'potongan_wajib' => 'required_if:status_kendaraaan,Sendiri',
-                'biaya_lain_uang_jalan' => 'array',
+                'biaya_lain_uang_jalan' => ['array', new CekBiayaLainRule()],
                 'harga_jual' => 'required_if:status_kendaraan,Subkon',
-                'biaya_lain_harga_jual' => 'array'
+                'biaya_lain_harga_jual' => ['array', new CekBiayaLainRule()]
             ];
         }
         switch ($request['status_kendaraan']) {
@@ -74,15 +75,15 @@ class CreateRequest extends FormRequest
             'asal' => 'required',
             'tujuan' => 'required', 
             'harga_order' => 'required|numeric',
-            'biaya_lain_harga_order' => 'array',
+            'biaya_lain_harga_order' => ['array',new CekBiayaLainRule()],
             'status_pajak' => 'required|in:ya,tidak',
             'setor' => 'required_if:status_kendaraan,Sendiri',
             'uang_jalan' => 'required_if:status_kendaraan,Sendiri',
             'potongan_wajib' => 'required_if:status_kendaraaan,Sendiri',
-            'biaya_lain_uang_jalan' => 'array',
+            'biaya_lain_uang_jalan' => ['array', new CekBiayaLainRule()],
             'harga_jual' => 'required_if:status_kendaraan,Subkon',
             'status_harga_jual' => 'required_if:status_kendaraan,Subkon',
-            'biaya_lain_harga_jual' => 'array'
+            'biaya_lain_harga_jual' => ['array', new CekBiayaLainRule()]
         ], $rule);
     }
 
