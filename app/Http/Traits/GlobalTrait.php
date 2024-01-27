@@ -73,4 +73,34 @@ trait GlobalTrait
       }
       return 1;
     }
+
+    public function checkArrayIssetOnRequest($request, array $requestRequired,string $request_name)
+    {
+      $is_error = false;
+      $errArr = [];
+        foreach ($requestRequired as $key => $value) {
+          foreach ($request as $requestKey => $requestValue) {
+            # code...
+            if (!isset($requestValue[$value])) {
+                $message = "";
+                foreach ($requestRequired as $requiredKey => $requiredValue) {
+                    $message .= $requiredValue . ", "; 
+                }
+                $is_error = true;
+                $errArr = [
+                  'status' => false,
+                  'message' => "Field " . $message . " tidak ada pada request " . $request_name
+              ];
+              break;  
+            }
+          }
+        }
+        if($is_error){
+          return $errArr;
+        }
+        return [
+            'status' => true,
+            'message' => "Field " . implode(", ", $requestRequired) . " ada pada request " . $request_name
+        ];
+    }
 }
