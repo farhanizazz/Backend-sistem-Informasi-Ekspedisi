@@ -29,6 +29,7 @@ class UpdateRequest extends FormRequest
             'transaksi_order_id' => 'required',
             'master_rekening_id' => 'required',
             'tanggal_pembayaran' => 'required|date',
+            'jenis_transaksi' => 'required|in:order,jual', // 'order' or 'jual
             'nominal' => 'required|numeric',
         ];
     }
@@ -41,6 +42,8 @@ class UpdateRequest extends FormRequest
             'nominal.required' => 'Nominal harus diisi',
             'tanggal_pembayaran.date' => 'Tanggal Pembayaran harus berupa tanggal',
             'nominal.numeric' => 'Nominal harus berupa angka',
+            'jenis_transaksi.required' => 'Jenis Transaksi harus diisi',
+            'jenis_transaksi.in' => 'Jenis Transaksi harus berupa order atau jual'
         ];
     }
     
