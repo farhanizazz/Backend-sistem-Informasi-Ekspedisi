@@ -140,6 +140,16 @@ class OrderModel extends Model
 
     public function mutasi_sum()
     {
-        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->selectRaw('sum(nominal) as total, transaksi_order_id')->groupBy('transaksi_order_id');
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->selectRaw('COALESCE(sum(nominal)) as total, transaksi_order_id')->groupBy('transaksi_order_id');
+    }
+
+    public function mutasi_order_sum()
+    {
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'order')->selectRaw('COALESCE(sum(nominal)) as total, transaksi_order_id')->groupBy('transaksi_order_id');
+    }
+
+    public function mutasi_jual_sum()
+    {
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'jual')->selectRaw('COALESCE(sum(nominal)) as total, transaksi_order_id')->groupBy('transaksi_order_id');
     }
 }

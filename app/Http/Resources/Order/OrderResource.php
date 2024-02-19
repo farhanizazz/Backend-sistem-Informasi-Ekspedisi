@@ -62,6 +62,8 @@ class OrderResource extends JsonResource
             'biaya_lain_uang_jalan_arr' => $this->biaya_lain_uang_jalan_arr,
             'biaya_lain_harga_jual_arr' => $this->biaya_lain_harga_jual_arr,
             'total_mutasi' => $this->mutasi_sum,
+            'total_mutasi_order' => $this->mutasi_order_sum,
+            'total_mutasi_jual' => $this->mutasi_jual_sum,
         ];
     }
 }
