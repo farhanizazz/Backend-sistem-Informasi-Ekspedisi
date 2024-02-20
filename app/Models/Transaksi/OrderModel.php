@@ -138,18 +138,18 @@ class OrderModel extends Model
         return $sisa_hutang_ke_subkon;
     }
 
-    public function mutasi_sum()
+    public function mutasi()
     {
-        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->selectRaw('COALESCE(sum(nominal)) as total, transaksi_order_id')->groupBy('transaksi_order_id');
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id');
     }
 
-    public function mutasi_order_sum()
+    public function mutasi_order()
     {
-        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'order')->selectRaw('COALESCE(sum(nominal)) as total, transaksi_order_id')->groupBy('transaksi_order_id');
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'order');
     }
 
-    public function mutasi_jual_sum()
+    public function mutasi_jual()
     {
-        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'jual')->selectRaw('COALESCE(sum(nominal)) as total, transaksi_order_id')->groupBy('transaksi_order_id');
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'jual');
     }
 }
