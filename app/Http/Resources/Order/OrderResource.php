@@ -14,11 +14,14 @@ class OrderResource extends JsonResource
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
-    {
+    {   
         return [
             'id' => $this->id,
             'no_transaksi' => $this->no_transaksi,
             'nomor_sj_po_do' => $this->nomor_sj_po_do,
+            "nomor_sj"  => $this->nomor_sj,
+            "nomor_po"  => $this->nomor_po,
+            "nomor_do"  => $this->nomor_do,
             'tanggal_awal' => $this->tanggal_awal,
             'tanggal_akhir' => $this->tanggal_akhir,
             'status_kendaraan' => $this->status_kendaraan,
@@ -58,7 +61,9 @@ class OrderResource extends JsonResource
             'biaya_lain_harga_order_arr' => $this->biaya_lain_harga_order_arr,
             'biaya_lain_uang_jalan_arr' => $this->biaya_lain_uang_jalan_arr,
             'biaya_lain_harga_jual_arr' => $this->biaya_lain_harga_jual_arr,
-            'total_mutasi' => $this->mutasi_sum,
+            'total_mutasi' => $this->mutasi->sum('nominal'),
+            'total_mutasi_order' => $this->mutasi_order->sum('nominal'),
+            'total_mutasi_jual' => $this->mutasi_jual->sum('nominal'),
         ];
     }
 }

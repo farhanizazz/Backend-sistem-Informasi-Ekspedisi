@@ -13,6 +13,7 @@ class MutasiModel extends Model
     protected $table = 'master_mutasi';
     protected $fillable = [
         'transaksi_order_id',
+        'jenis_transaksi', // 'order' or 'jual
         'master_rekening_id',
         'nominal',
         'tanggal_pembayaran',
@@ -36,7 +37,10 @@ class MutasiModel extends Model
             $query->where('tanggal_pembayaran', $payload['tanggal_pembayaran']);
         })->when(isset($payload['keterangan']) && $payload['keterangan'], function($query) use($payload){
             $query->where('keterangan', $payload['keterangan']);
-        })->get();
+        })->when(isset($payload['jenis_transaksi']) && $payload['jenis_transaksi'], function($query) use($payload){
+            $query->where('jenis_transaksi', $payload['jenis_transaksi']);
+        })
+        ->get();
         return $data;
     }
 
