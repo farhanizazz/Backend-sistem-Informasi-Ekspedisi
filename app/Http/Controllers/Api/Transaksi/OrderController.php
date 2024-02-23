@@ -85,7 +85,14 @@ class OrderController extends Controller
     {
         try {
             //code...
-            $result =  $this->orderModel->findOrFail($id)->delete();
+            $order = OrderModel::find($id);
+
+            if ($order) {
+                // Delete the associated MutasiModel
+                $order->mutasi()->delete();
+        
+                // Then delete the OrderModel
+                $order->delete();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil dihapus'
