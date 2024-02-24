@@ -86,17 +86,16 @@ class OrderController extends Controller
         try {
             //code...
             $order = OrderModel::find($id);
-
             if ($order) {
-                // Delete the associated MutasiModel
-                $order->mutasi()->delete();
-        
-                // Then delete the OrderModel
+                $order -> mutasi()->delete();
+
                 $order->delete();
+            
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil dihapus'
             ]);
+        }
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
