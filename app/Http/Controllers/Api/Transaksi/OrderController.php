@@ -7,8 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest\CreateRequest;
 use App\Http\Resources\Order\OrderCollection;
 use App\Http\Resources\Order\OrderResource;
+use App\Models\Master\MutasiModel;
 use App\Models\Transaksi\OrderModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -85,13 +87,17 @@ class OrderController extends Controller
     {
         try {
             //code...
+            DB::beginTransaction();
+            MutasiModel::where('transaksi_order_id', $id)->delete();
             $result =  $this->orderModel->findOrFail($id)->delete();
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil dihapus'
             ]);
         } catch (\Throwable $th) {
             //throw $th;
+            DB::rollBack();
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data tidak ditemukan'
