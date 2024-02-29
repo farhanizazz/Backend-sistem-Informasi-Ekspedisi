@@ -60,7 +60,7 @@ class CreateRequest extends FormRequest
                 $rule = [
                     'm_subkon_id' => 'required_if:status_kendaraan,Subkon|exists:master_subkon,id',
                     'nopol_subkon' => 'required',
-                    'status_harga_order' => 'required|in:Pelunasan,Dp',
+                    
                 ];
                 break;
         }
@@ -83,7 +83,6 @@ class CreateRequest extends FormRequest
             'potongan_wajib' => 'required_if:status_kendaraaan,Sendiri',
             'biaya_lain_uang_jalan' => 'array',
             'harga_jual' => 'required_if:status_kendaraan,Subkon',
-            'status_harga_jual' => 'required_if:status_kendaraan,Subkon|in:Pelunasan,Dp',
             'biaya_lain_harga_jual' => 'array'
         ], $rule);
     }
@@ -112,8 +111,6 @@ class CreateRequest extends FormRequest
             'tujuan.required' => 'Tujuan harus diisi',
             'harga_order.required' => 'Harga order harus diisi',
             'harga_order.numeric' => 'Harga order harus berupa angka',
-            'status_harga_order.required' => 'Status harga order harus diisi',
-            'status_harga_order.in' => 'Status harga order harus diisi dengan Pelunasan atau Dp',
             'biaya_lain_harga_order.array' => 'Biaya lain harga order harus berupa array',
             'status_pajak.required' => 'Status pajak harus diisi',
             'status_pajak.in'   => 'Status pajak harus diisi dengan ya atau tidak',
@@ -127,8 +124,6 @@ class CreateRequest extends FormRequest
             'biaya_lain_uang_jalan.array' => 'Biaya lain uang jalan harus berupa array',
             'harga_jual.required_if' => 'Harga jual harus diisi',
             'harga_jual.numeric' => 'Harga jual harus berupa angka',
-            'status_harga_jual.required_if' => 'Status harga jual harus diisi',
-            'status_harga_jual.in' => 'Status harga jual harus diisi dengan Pelunasan atau Dp',
             'biaya_lain_harga_jual.array' => 'Biaya lain harga jual harus berupa array',
             'nopol_subkon'              => 'Nopol subkon harus diisi'
         ];
