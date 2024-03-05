@@ -8,6 +8,8 @@ use App\Http\Resources\Servis\ServisCollection;
 use App\Http\Resources\Servis\ServisResource;
 use App\Models\Transaksi\ServisModel;
 use App\Helpers\Transaksi\ServisHelper;
+use App\Http\Requests\ServisRequest\CreateRequest;
+use App\Http\Requests\ServisRequest\UpdateRequest;
 
 class ServisController extends Controller
 {
@@ -99,7 +101,7 @@ class ServisController extends Controller
     public function show($id)
     {
         try {
-            $result =  $this->serviceModel->findOrFail($id);
+            $result =  $this->serviceModel->with('notabeli')-> findOrFail($id);
             return response()->json([
                 'status' => 'success',
                 'data' => new ServisResource($result)
