@@ -109,7 +109,7 @@ Route::post("/register", [UserController::class, "store"]);
             Route::put("/{id}", [RoleController::class, "update"]);
             Route::delete("/{id}", [RoleController::class, "destroy"]);
         });
-        Route ::group(["prefix" => "servis"], function () {
+        Route ::group(["prefix" => "laporan/servis"], function () {
             Route::get("/", [ServisController::class, "index"]);
             Route::post("/", [ServisController::class, "store"]);
             Route::get("/{id}", [ServisController::class, "show"]);
@@ -118,6 +118,13 @@ Route::post("/register", [UserController::class, "store"]);
         });
     });
 // });
+Route ::group(["prefix" => "laporan/servis"], function () {
+    Route::get("/", [ServisController::class, "index"]);
+    Route::post("/", [ServisController::class, "store"]);
+    Route::get("/{id}", [ServisController::class, "show"]);
+    Route::put("/{id}", [ServisController::class, "update"]);
+    Route::delete("/{id}", [ServisController::class, "destroy"]);
+});
 Route::group(['prefix' => "sopir"], function () {
     Route::get("/", [SopirController::class, "index"]);
     Route::post("/", [SopirController::class, "store"]);

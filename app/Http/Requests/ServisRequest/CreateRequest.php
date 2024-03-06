@@ -21,17 +21,15 @@ class CreateRequest extends FormRequest
     }
 
     public function rules()
-    {
-        // Replace with your own rules
-        return [
-            // 'field' => 'rule'
-            'nama_toko' => 'required|string',
-            'nota_beli_id' => 'nullable|exists:nota_beli,id',
-            'nopol' => 'required|exists:master_armada,nopol',
-            
-
-        ];
-    }
+{
+    return [
+        'master_armada_id' => 'required|exists:master_armada,id',
+        'nama_barang' => 'required|string',
+        'harga' => 'required|numeric',
+        'jumlah' => 'required|integer',
+        'nama_toko' => 'required|string',
+    ];
+}
 
     public function messages()
     {
@@ -39,9 +37,8 @@ class CreateRequest extends FormRequest
         return [
             // 'field.rule' => 'message'
             'nama_toko.required' => 'Nama toko wajib diisi',
-            'nama_toko.string' => 'Nama toko harus berupa string',
             'nota_beli_id.exists' => 'Nota beli tidak ditemukan',
-            'nopol.required' => 'Nopol wajib diisi',
+            'master_armada_id.required' => 'Armada wajib diisi',
 
         ];
     }
@@ -52,14 +49,5 @@ class CreateRequest extends FormRequest
         $this->validator = $validator;
     }
 
-    public function validated()
-    {
-        $validated = parent::validated();
-
-        // Assuming you have a NotaBeliModel and you want to get its data
-        $notaBeliModel = NotaBeliModel::find($validated['notaBeli_id']);
-        $notaBeli = $notaBeliModel->toArray();
-
-        return array_merge($validated, ['notaBeli' => $notaBeli]);
-    }
+   
 }

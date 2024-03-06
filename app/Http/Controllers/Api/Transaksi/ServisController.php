@@ -29,7 +29,7 @@ class ServisController extends Controller
     {
         return response()->json([
             'status' => 'success',
-            'data' => new ServisCollection($this->serviceModel->with('notabeli')->get())
+            'data' => new ServisCollection($this->serviceModel->with(['notabeli','armada'])->get())
         ]);
 
     }
