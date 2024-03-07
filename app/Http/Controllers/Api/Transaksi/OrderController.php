@@ -25,13 +25,12 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $filter = [
-            "status_kendaraan" => $request->status_kendaraan ?? null 
+            "status_kendaraan" => $request->status_kendaraan ?? null,
+            "cari"              => $request->cari ?? null
         ];
         return response()->json([
             'status' => 'success',
-            'data' => new OrderCollection($this->orderModel->when($filter['status_kendaraan'],function($query) use($filter){
-                $query->where("status_kendaraan", $filter['status_kendaraan']);
-            })->with(['penyewa', 'armada', 'sopir', 'subkon'])->get())
+            'data' => new OrderCollection($this->orderModel->index($filter))
         ]);
     }
 
@@ -87,19 +86,12 @@ class OrderController extends Controller
     {
         try {
             //code...
-<<<<<<< HEAD
-            DB::beginTransaction();
-            MutasiModel::where('transaksi_order_id', $id)->delete();
-            $result =  $this->orderModel->findOrFail($id)->delete();
-            DB::commit();
-=======
             $order = OrderModel::find($id);
             if ($order) {
                 $order -> mutasi()->delete();
 
                 $order->delete();
             
->>>>>>> c1fe6016cdbfa197a86e1614f5ab2bbe7b5c1985
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil dihapus'
