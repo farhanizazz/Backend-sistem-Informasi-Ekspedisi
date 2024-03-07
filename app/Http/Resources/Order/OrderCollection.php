@@ -14,12 +14,6 @@ class OrderCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return [
-            'list' => $this->collection,
-            'meta' => [
-                'links' => $this->getUrlRange(1, $this->lastPage()),
-                'total' => $this->total()
-            ]
-        ];
+        return parent::toArray($request);
     }
 }

@@ -7,10 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest\CreateRequest;
 use App\Http\Resources\Order\OrderCollection;
 use App\Http\Resources\Order\OrderResource;
-use App\Models\Master\MutasiModel;
 use App\Models\Transaksi\OrderModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -25,12 +23,13 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $filter = [
-            "status_kendaraan" => $request->status_kendaraan ?? null,
-            "cari"              => $request->cari ?? null
+            "status_kendaraan" => $request->status_kendaraan ?? null 
         ];
         return response()->json([
             'status' => 'success',
-            'data' => new OrderCollection($this->orderModel->index($filter))
+            'data' => new OrderCollection($this->orderModel->when($filter['status_kendaraan'],function($query) use($filter){
+                $query->where("status_kendaraan", $filter['status_kendaraan']);
+            })->with(['penyewa', 'armada', 'sopir', 'subkon'])->get())
         ]);
     }
 
@@ -99,7 +98,6 @@ class OrderController extends Controller
         }
         } catch (\Throwable $th) {
             //throw $th;
-            DB::rollBack();
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data tidak ditemukan'
