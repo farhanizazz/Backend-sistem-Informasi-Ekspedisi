@@ -150,4 +150,31 @@ class OrderModel extends Model
     {
         return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'jual');
     }
+
+    public function index($filter = [], $itemPerPage = 20)
+    {
+        $data = $this->when($filter['status_kendaraan'],function($query) use($filter){
+            $query->where("status_kendaraan", $filter['status_kendaraan']);
+        })->with(['penyewa', 'armada', 'sopir', 'subkon'])
+        ->when($filter['cari'],function($query) use($filter){
+            $query->where(function($query2) use($filter){
+                $query2->where('no_transaksi','like','%'.$filter['cari'].'%')
+                ->orWhereHas('penyewa',function($query3) use($filter){
+                    $query3->where('nama_perusahaan','like','%'.$filter['cari'].'%');
+                })
+                ->orWhere('muatan','like','%'.$filter['cari'].'%')
+                ->orWhereHas('armada',function($query3) use($filter){
+                    $query3->where('nopol','like','%'.$filter['cari'].'%');
+                })
+                ->orWhereHas('sopir',function($query3) use($filter){
+                    $query3->where('nama','like','%'.$filter['cari'].'%');
+                })
+                ->orWhere("asal","like","%".$filter['cari']."%")
+                ->orWhere("tujuan","like","%".$filter['cari']."%")
+                ->orWhere("harga_order","like","%".$filter['cari']."%");
+            });
+        });
+        $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
+        return $data->paginate($itemPerPage);
+    }
 }
