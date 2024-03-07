@@ -17,7 +17,7 @@ class CreateServisTable extends Migration
             $table->id();
             $table->string('nama_toko');
             $table->foreignId('nota_beli_id')->nullable()->constrained('nota_beli');
-            $table->foreign('nopol')->references('nopol')->on('master_armada');
+            $table->foreignId('m_armada_id')->nullable()->constrained('master_armada');
             $table->timestamps();
 
 
