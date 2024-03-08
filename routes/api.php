@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Transaksi\OrderController;
 use App\Http\Controllers\Api\Transaksi\PengeluaranContoller;
 use App\Http\Controllers\Api\Master\MutasiController;
 use App\Http\Controllers\Api\Master\TambahanController;
+use App\Http\Controllers\Api\Transaksi\ServisController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\RegisterController;
@@ -108,8 +109,22 @@ Route::post("/register", [UserController::class, "store"]);
             Route::put("/{id}", [RoleController::class, "update"]);
             Route::delete("/{id}", [RoleController::class, "destroy"]);
         });
+        Route ::group(["prefix" => "laporan/servis"], function () {
+            Route::get("/", [ServisController::class, "index"]);
+            Route::post("/", [ServisController::class, "store"]);
+            Route::get("/{id}", [ServisController::class, "show"]);
+            Route::put("/{id}", [ServisController::class, "update"]);
+            Route::delete("/{id}", [ServisController::class, "destroy"]);
+        });
     });
 // });
+Route ::group(["prefix" => "laporan/servis"], function () {
+    Route::get("/", [ServisController::class, "index"]);
+    Route::post("/", [ServisController::class, "store"]);
+    Route::get("/{id}", [ServisController::class, "show"]);
+    Route::put("/{id}", [ServisController::class, "update"]);
+    Route::delete("/{id}", [ServisController::class, "destroy"]);
+});
 Route::group(['prefix' => "sopir"], function () {
     Route::get("/", [SopirController::class, "index"]);
     Route::post("/", [SopirController::class, "store"]);
