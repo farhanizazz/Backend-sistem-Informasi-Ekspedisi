@@ -84,25 +84,14 @@ class OrderController extends Controller
     public function destroy($id)
     {
         try {
-            //code...
-<<<<<<< HEAD
             DB::beginTransaction();
             MutasiModel::where('transaksi_order_id', $id)->delete();
             $result =  $this->orderModel->findOrFail($id)->delete();
             DB::commit();
-=======
-            $order = OrderModel::find($id);
-            if ($order) {
-                $order -> mutasi()->delete();
-
-                $order->delete();
-            
->>>>>>> c1fe6016cdbfa197a86e1614f5ab2bbe7b5c1985
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil dihapus'
             ]);
-        }
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
