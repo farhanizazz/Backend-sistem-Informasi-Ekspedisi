@@ -174,7 +174,7 @@ class OrderModel extends Model
                 ->orWhere('tanggal_awal','like','%'.$filter['cari'].'%')
                 ->orWhere('tanggal_akhir','like','%'.$filter['cari'].'%')
                 ->orWhere("harga_order","like","%".$filter['cari']."%");
-            });
+            })->orderBy('tanggal_awal','desc');
         });
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
         return $data->paginate($itemPerPage);
