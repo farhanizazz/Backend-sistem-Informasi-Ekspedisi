@@ -178,7 +178,7 @@ class OrderHelper
         break;
     }
 
-    $order = $this->orderModel->whereDate('created_at', date("Y-m-d"))->orderBy('id', 'desc')->select('no_transaksi')->first();
+    $order = $this->orderModel->whereDate('created_at', date("Y-m"))->orderBy('id', 'desc')->select('no_transaksi')->first();
     if ($armada == null) {
       return [
         "status" => false,
