@@ -177,7 +177,7 @@ class OrderModel extends Model
             });
         });
         $sort = "created_at DESC";
-        $data = $data->orderByRaw("tanggal_awal ASC");
+        $data = $data->orderByRaw("tanggal_awal DESC");
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
         return $data->paginate($itemPerPage)->appends("sort", $sort);
     }
