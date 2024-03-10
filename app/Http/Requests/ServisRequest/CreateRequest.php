@@ -36,9 +36,13 @@ class CreateRequest extends FormRequest
         // Replace with your own messages
         return [
             // 'field.rule' => 'message'
-            'nama_toko.required' => 'Nama toko wajib diisi',
-            'nota_beli_id.exists' => 'Nota beli tidak ditemukan',
-            'master_armada_id.required' => 'Armada wajib diisi',
+            'master_armada_id.required' => 'Master armada is required',
+            'nama_barang.required' => 'Nama barang is required',
+            'nama_barang.string' => 'Nama barang must be a string',
+            'harga.required' => 'Harga is required',
+            'jumlah.required' => 'Jumlah is required',
+            'jumlah.integer' => 'Jumlah must be an integer',
+            'nama_toko.required' => 'Nama toko is required',
 
         ];
     }

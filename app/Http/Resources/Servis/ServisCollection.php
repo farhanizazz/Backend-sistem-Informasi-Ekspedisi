@@ -14,13 +14,6 @@ class ServisCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return [
-            'id' => $this->id,
-            'nama_toko' => $this->nama_toko,
-            'nota_beli_id' => $this->nota_beli_id,
-            'nopol' => $this->armada->nopol, // Accessing nopol from the armada relationship
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-        ];
+        return parent::toArray($request);
     }
 }
