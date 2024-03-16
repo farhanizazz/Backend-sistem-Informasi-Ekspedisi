@@ -12,6 +12,13 @@ class MutasiObserver
     {
         $this->rekeningModel = new RekeningModel();
     }
+
+
+    public function saving(MutasiModel $mutasiModel)
+    {
+        $mutasiModel->created_by = auth()->user()->id;
+    }
+
     /**
      * Handle the MutasiModel "created" event.
      *

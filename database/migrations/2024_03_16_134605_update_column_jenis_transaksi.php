@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class UpdateColumnJenisTransaksi extends Migration
@@ -13,9 +14,7 @@ class UpdateColumnJenisTransaksi extends Migration
      */
     public function up()
     {
-        Schema::table('master_mutasi', function(Blueprint $table){
-            $table->enum("jenis_transaksi",["order", "jual", "uang_jalan"])->default("order")->after("nominal");
-        });
+        DB::statement("ALTER TABLE master_mutasi MODIFY COLUMN jenis_transaksi ENUM('order', 'jual', 'uang_jalan')");
     }
 
     /**
@@ -25,6 +24,6 @@ class UpdateColumnJenisTransaksi extends Migration
      */
     public function down()
     {
-        //
+
     }
 }
