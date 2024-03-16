@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Master\RekeningModel;
 use App\Models\Transaksi\OrderModel;
+use App\Models\User;
 
 class MutasiModel extends Model
 {
@@ -29,7 +30,9 @@ class MutasiModel extends Model
     }
 
     public function getAll($payload){
-        $data = $this->when(isset($payload['transaksi_order_id']) && $payload['transaksi_order_id'], function($query) use($payload){
+        $data = $this->
+        with(['pembuat'])
+        ->when(isset($payload['transaksi_order_id']) && $payload['transaksi_order_id'], function($query) use($payload){
             $query->where('transaksi_order_id', $payload['transaksi_order_id']);
         })->when(isset($payload['master_rekening_id']) && $payload['master_rekening_id'], function($query) use($payload){
             $query->where('master_rekening_id', $payload['master_rekening_id']);
@@ -44,6 +47,8 @@ class MutasiModel extends Model
         return $data;
     }
 
-
+    public function pembuat(){
+        return $this->belongsTo(User::class, 'created_by');
+    }
 
 }
