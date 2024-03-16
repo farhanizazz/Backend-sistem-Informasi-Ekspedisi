@@ -20,9 +20,16 @@ class MutasiObserver
      */
     public function created(MutasiModel $mutasiModel)
     {
-        $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
-            'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal
-        ]);
+        if ($mutasiModel->jenis_transaksi == "order") {
+            # code...
+            $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
+                'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal
+            ]);
+        }else{
+            $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
+                'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo - $mutasiModel->nominal
+            ]);
+        }
     }
 
     /**
