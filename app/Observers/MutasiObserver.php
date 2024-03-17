@@ -16,7 +16,7 @@ class MutasiObserver
 
     public function saving(MutasiModel $mutasiModel)
     {
-        $mutasiModel->created_by = auth()->user()->id;
+        $mutasiModel->created_by = auth()->user()->id ?? null;
     }
 
     /**
