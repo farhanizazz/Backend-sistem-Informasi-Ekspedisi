@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Transaksi\OrderController;
 use App\Http\Controllers\Api\Transaksi\PengeluaranContoller;
 use App\Http\Controllers\Api\Master\MutasiController;
 use App\Http\Controllers\Api\Master\TambahanController;
+use App\Http\Controllers\Api\Transaksi\NotaBeliController;
 use App\Http\Controllers\Api\Transaksi\ServisController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotifikasiController;
@@ -37,7 +38,7 @@ use Illuminate\Support\Facades\Route;
 Route::post("/login",   [AuthController::class, "login"]);
 Route::post("/register", [UserController::class, "store"]);
 
-// Route::middleware('jwt.verify')->group(function () {
+Route::middleware('jwt.verify')->group(function () {
     Route::get("/getProfile", [AuthController::class, "userProfile"]);
 
     // Route Master
@@ -109,15 +110,9 @@ Route::post("/register", [UserController::class, "store"]);
             Route::put("/{id}", [RoleController::class, "update"]);
             Route::delete("/{id}", [RoleController::class, "destroy"]);
         });
-        Route ::group(["prefix" => "laporan/servis"], function () {
-            Route::get("/", [ServisController::class, "index"]);
-            Route::post("/", [ServisController::class, "store"]);
-            Route::get("/{id}", [ServisController::class, "show"]);
-            Route::put("/{id}", [ServisController::class, "update"]);
-            Route::delete("/{id}", [ServisController::class, "destroy"]);
-        });
+        
     });
-// });
+});
 Route ::group(["prefix" => "laporan/servis"], function () {
     Route::get("/", [ServisController::class, "index"]);
     Route::post("/", [ServisController::class, "store"]);
@@ -170,6 +165,20 @@ Route::group(['prefix' => 'transaksi'], function () {
         Route::get("/{id}", [OrderController::class, "show"]);
         Route::put("/{id}", [OrderController::class, "update"]);
         Route::delete("/{id}", [OrderController::class, "destroy"]);
+    });
+    Route ::group(["prefix" => "laporan/servis"], function () {
+        Route::get("/", [ServisController::class, "index"]);
+        Route::post("/", [ServisController::class, "store"]);
+        Route::get("/{id}", [ServisController::class, "show"]);
+        Route::put("/{id}", [ServisController::class, "update"]);
+        Route::delete("/{id}", [ServisController::class, "destroy"]);
+    });
+    Route ::group(["prefix" => "laporan/nota-beli"], function () {
+        Route::get("/", [NotaBeliController::class, "index"]);
+        Route::post("/", [NotaBeliController::class, "store"]);
+        Route::get("/{id}", [NotaBeliController::class, "show"]);
+        Route::put("/{id}", [NotaBeliController::class, "update"]);
+        Route::delete("/{id}", [NotaBeliController::class, "destroy"]);
     });
 });
 
