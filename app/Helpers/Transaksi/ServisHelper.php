@@ -75,7 +75,7 @@ class ServisHelper
         } catch (\Exception $e) {
             return [
                 'status' => false,
-                'message' => 'Failed to create Servis',
+                'message' => 'Gagal membuat Servis',
                 'dev' => $e->getMessage(),
             ];
         }
@@ -151,7 +151,7 @@ class ServisHelper
     } catch (\Exception $e) {
         return [
             'status' => false,
-            'message' => 'Failed to update Servis',
+            'message' => 'Gagal mengupdate Servis',
             'dev' => $e->getMessage(),
         ];
     }
