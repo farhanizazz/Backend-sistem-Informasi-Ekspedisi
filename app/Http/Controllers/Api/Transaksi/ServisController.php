@@ -16,22 +16,23 @@ class ServisController extends Controller
     //
     // private $servisHelper, $serviceModel;
 
-    private $serviceModel, $servisHelper;
+    private $servisModel, $servisHelper;
     public function __construct()
     {
         // $this->servisHelper = new ServisHelper();
         $this->servisHelper = new ServisHelper();
-        $this->serviceModel = new ServisModel();
+        $this->servisModel = new ServisModel();
 
     }
 
     public function index(Request $request)
     {
+        $result = $this->servisModel->getAll($request->all());
+
         return response()->json([
             'status' => 'success',
-            'data' => new ServisCollection($this->serviceModel->with(['notabeli','armada'])->get())
+            'data' => $result
         ]);
-
     }
     public function store(CreateRequest $request)
     {
@@ -101,7 +102,7 @@ class ServisController extends Controller
     public function show($id)
     {
         try {
-            $result =  $this->serviceModel->with('notabeli')-> findOrFail($id);
+            $result =  $this->servisModel->with('nota_beli','master_armada')-> findOrFail($id);
             return response()->json([
                 'status' => 'success',
                 'data' => new ServisResource($result)

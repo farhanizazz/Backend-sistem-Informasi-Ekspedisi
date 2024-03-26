@@ -15,9 +15,10 @@ class CreateServisTable extends Migration
     {
         Schema::create('servis', function (Blueprint $table) {
             $table->id();
+            $table->date('tanggal_servis');
             $table->string('nama_toko');
             $table->foreignId('nota_beli_id')->nullable()->constrained('nota_beli');
-            $table->foreignId('m_armada_id')->nullable()->constrained('master_armada');
+            $table->foreignId('master_armada_id')->nullable()->constrained('master_armada');
             $table->timestamps();
 
 

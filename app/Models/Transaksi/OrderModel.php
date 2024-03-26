@@ -151,6 +151,11 @@ class OrderModel extends Model
         return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'jual');
     }
 
+    public function mutasi_jalan()
+    {
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'uang_jalan');
+    }
+
     public function index($filter = [], $itemPerPage = 20)
     {
         $data = $this->when($filter['status_kendaraan'],function($query) use($filter){
