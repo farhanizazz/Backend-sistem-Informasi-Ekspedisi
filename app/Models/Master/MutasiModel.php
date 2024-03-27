@@ -19,6 +19,7 @@ class MutasiModel extends Model
         'nominal',
         'tanggal_pembayaran',
         'keterangan',
+        'created_by'
     ];
     public function master_rekening()
     {
