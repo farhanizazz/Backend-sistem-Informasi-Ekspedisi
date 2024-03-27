@@ -181,8 +181,8 @@ class OrderModel extends Model
                 ->orWhere("harga_order","like","%".$filter['cari']."%");
             });
         });
-        $sort = "created_at DESC";
-        $data = $data->orderByRaw("tanggal_awal DESC");
+        $data = $data->orderByRaw("tanggal_awal DESC, no_transaksi DESC");
+        $sort = "no_transaksi DESC";
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
         return $data->paginate($itemPerPage)->appends("sort", $sort);
     }

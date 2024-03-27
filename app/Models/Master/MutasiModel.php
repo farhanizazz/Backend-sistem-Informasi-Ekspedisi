@@ -19,6 +19,7 @@ class MutasiModel extends Model
         'nominal',
         'tanggal_pembayaran',
         'keterangan',
+        'created_by'
     ];
     public function master_rekening()
     {
@@ -43,7 +44,7 @@ class MutasiModel extends Model
         })->when(isset($payload['jenis_transaksi']) && $payload['jenis_transaksi'], function($query) use($payload){
             $query->where('jenis_transaksi', $payload['jenis_transaksi']);
         })
-        ->get();
+        ->orderBy('tanggal_pembayaran', 'desc')->get();
         return $data;
     }
 

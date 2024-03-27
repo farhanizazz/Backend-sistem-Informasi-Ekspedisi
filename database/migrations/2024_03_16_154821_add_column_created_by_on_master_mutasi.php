@@ -14,7 +14,7 @@ class AddColumnCreatedByOnMasterMutasi extends Migration
     public function up()
     {
         Schema::table('master_mutasi', function(Blueprint $table){
-            $table->foreignId('created_by')->nullable()->after('jenis_transaksi')->constrained('users');
+            $table->bigInteger('created_by')->nullable()->after('keterangan');
         });
     }
 
@@ -25,6 +25,8 @@ class AddColumnCreatedByOnMasterMutasi extends Migration
      */
     public function down()
     {
-        //
+        Schema::table("master_mutasi", function(Blueprint $table){
+            $table->dropColumn("created_by");
+        });
     }
 }
