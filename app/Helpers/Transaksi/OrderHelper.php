@@ -7,6 +7,7 @@ use App\Models\Master\ArmadaModel;
 use App\Models\Master\TambahanModel;
 use App\Models\Transaksi\OrderModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class OrderHelper
 {
@@ -135,7 +136,7 @@ class OrderHelper
 
   public function createOrderSendiri($payload)
   {
-    $noTransaksi = $this->generateNoTransaksi($payload['m_armada_id'],"sendiri");
+    $noTransaksi = $this->generateNoTransaksi($payload['m_armada_id'],"sendiri", $payload['tanggal_awal']);
     if (!$noTransaksi['status']) {
       return $noTransaksi;
     }
@@ -152,7 +153,7 @@ class OrderHelper
 
   public function createOrderSubkon($payload)
   {
-    $noTransaksi = $this->generateNoTransaksi($payload['nopol_subkon'], "subkon");
+    $noTransaksi = $this->generateNoTransaksi($payload['nopol_subkon'], "subkon", $payload['tanggal_awal']);
     if (!$noTransaksi['status']) {
       return $noTransaksi;
     }
@@ -167,7 +168,7 @@ class OrderHelper
     ];
   }
 
-  public function generateNoTransaksi($m_armada_id, $status_kendaraan)
+  public function generateNoTransaksi($m_armada_id, $status_kendaraan, $tanggal_awal)
   {
     switch ($status_kendaraan) {
       case 'sendiri':
@@ -177,18 +178,18 @@ class OrderHelper
         $armada = (object) ["nopol"=> $m_armada_id];
         break;
     }
-
-    $order = $this->orderModel->whereYear('created_at', date("Y"))->orderBy('id', 'desc')->select('no_transaksi')->first();
+    $order = $this->orderModel->whereYear('created_at', date("Y"))->orderByRaw(DB::raw("SUBSTRING_INDEX(no_transaksi, '.', -2) DESC"))->orderByRaw(DB::raw("CAST(SUBSTRING_INDEX(no_transaksi, '.', -1) AS UNSIGNED) DESC"))->select('no_transaksi')->first();
     if ($armada == null) {
       return [
         "status" => false,
         "message" => "Armada tidak ditemukan"
       ];
     }
+    $tanggal = date("Ymd", strtotime($tanggal_awal));
     if ($order == null) {
-      $no_transaksi = str_replace(" ", "", $armada->nopol) . '.' . date("Ymd") . "." . str_pad(1, 3, "0", STR_PAD_LEFT);
+      $no_transaksi = str_replace(" ", "", $armada->nopol) . '.' . $tanggal . "." . str_pad(1, 3, "0", STR_PAD_LEFT);
     } else {
-      $no_transaksi = str_replace(" ", "", $armada->nopol) . '.' . date("Ymd") . "." . str_pad((explode('.', $order->no_transaksi)[2] + 1), 3, "0", STR_PAD_LEFT);
+      $no_transaksi = str_replace(" ", "", $armada->nopol) . '.' . $tanggal . "." . str_pad((explode('.', $order->no_transaksi)[2] + 1), 3, "0", STR_PAD_LEFT);
     }
     return [
       "status" => true,
