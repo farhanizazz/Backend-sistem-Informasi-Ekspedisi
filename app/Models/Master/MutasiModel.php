@@ -61,7 +61,7 @@ class MutasiModel extends Model
      */
     public function detailOrder($id){
         $dataOrder = OrderModel::find($id);
-        $biaya_lain_uang_jalan = empty($dataOrder->biaya_lain_uang_jalan) ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_uang_jalan);
+        $biaya_lain_uang_jalan = empty($dataOrder->biaya_lain_uang_jalan) || $dataOrder->biaya_lain_uang_jalan ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_uang_jalan);
         $item['detail'] = [
             'no_transaksi' => $dataOrder->no_transaksi,
             'harga_order' => $dataOrder->harga_order,
@@ -86,7 +86,7 @@ class MutasiModel extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function hitungTotalBiayaLain($listBiayaLain)
+    public function hitungTotalBiayaLain($listBiayaLain = [])
     {
       $listId = array_column($listBiayaLain, 'm_tambahan_id');
       $listRekening = $this->tambahanModel->whereIn('id', $listId)->get();
