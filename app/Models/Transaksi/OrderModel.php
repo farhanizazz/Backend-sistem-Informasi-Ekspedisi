@@ -62,7 +62,7 @@ class OrderModel extends Model
         'sisa_tagihan',
         'sisa_hutang_ke_subkon',
         'biaya_lain_harga_order_arr',
-        'biasa_lain_harga_jual_arr',
+        'biaya_lain_harga_jual_arr',
         'biaya_lain_uang_jalan_arr'
     ];
 
@@ -189,17 +189,17 @@ class OrderModel extends Model
     }
 
     /**
-     * Get last order by tanggal
+     * Get last order by tahun
      * @param $tanggal string
      * @return object
      */
-    public function getLastOrderByTanggal($tanggal)
+    public function getLastOrderByTahun($tahun)
     {
-        return $this->query()
+        $data = $this->query()
         ->whereYear('created_at', date("Y"))
-        ->where(DB::raw("SUBSTRING(SUBSTRING_INDEX(no_transaksi, '.', -2), 1, 8)"), "=", $tanggal)
-        ->orderByRaw(DB::raw("SUBSTRING_INDEX(no_transaksi, '.', -2) DESC"))
+        ->where(DB::raw("SUBSTRING(SUBSTRING_INDEX(no_transaksi, '.', -2), 1, 4)"), "=", $tahun)
         ->orderByRaw(DB::raw("CAST(SUBSTRING_INDEX(no_transaksi, '.', -1) AS UNSIGNED) DESC"))
         ->select(['no_transaksi', DB::raw("SUBSTRING(SUBSTRING_INDEX(no_transaksi, '.', -2), 1, 8) as tanggal")])->first();
+        return $data;
     }
 }

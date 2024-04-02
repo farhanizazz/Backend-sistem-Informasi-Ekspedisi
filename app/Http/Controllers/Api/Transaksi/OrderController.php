@@ -54,7 +54,8 @@ class OrderController extends Controller
         }
         return response()->json([
             'status' => 'success',
-            'message' => $result['message']
+            'message' => $result['message'],
+            'data' => $result['data']
         ]);
     }
 

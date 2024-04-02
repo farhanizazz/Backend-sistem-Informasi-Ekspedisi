@@ -178,14 +178,15 @@ class OrderHelper
         $armada = (object) ["nopol"=> $m_armada_id];
         break;
       }
-    $tanggal = date("Ymd", strtotime($tanggal_awal));
-    $order = $this->orderModel->getLastOrderByTanggal($tanggal);
+    $tahun = date("Y", strtotime($tanggal_awal));
+    $order = $this->orderModel->getLastOrderByTahun($tahun);
     if ($armada == null) {
       return [
         "status" => false,
         "message" => "Armada tidak ditemukan"
       ];
     }
+    $tanggal = date("Ymd", strtotime($tanggal_awal));
     if ($order == null) {
       $no_transaksi = str_replace(" ", "", $armada->nopol) . '.' . $tanggal . "." . str_pad(1, 3, "0", STR_PAD_LEFT);
     } else {
