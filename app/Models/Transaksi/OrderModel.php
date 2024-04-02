@@ -6,6 +6,7 @@ use App\Models\Master\RekeningModel;
 use App\Models\Master\TambahanModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class OrderModel extends Model
 {
@@ -181,9 +182,24 @@ class OrderModel extends Model
                 ->orWhere("harga_order","like","%".$filter['cari']."%");
             });
         });
-        $data = $data->orderByRaw("tanggal_awal DESC, no_transaksi DESC");
+        $data = $data->orderByRaw("tanggal_awal DESC," .(DB::raw("CAST(SUBSTRING_INDEX(no_transaksi, '.', -1) AS UNSIGNED) DESC")));
         $sort = "no_transaksi DESC";
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
         return $data->paginate($itemPerPage)->appends("sort", $sort);
+    }
+
+    /**
+     * Get last order by tanggal
+     * @param $tanggal string
+     * @return object
+     */
+    public function getLastOrderByTanggal($tanggal)
+    {
+        return $this->query()
+        ->whereYear('created_at', date("Y"))
+        ->where(DB::raw("SUBSTRING(SUBSTRING_INDEX(no_transaksi, '.', -2), 1, 8)"), "=", $tanggal)
+        ->orderByRaw(DB::raw("SUBSTRING_INDEX(no_transaksi, '.', -2) DESC"))
+        ->orderByRaw(DB::raw("CAST(SUBSTRING_INDEX(no_transaksi, '.', -1) AS UNSIGNED) DESC"))
+        ->select(['no_transaksi', DB::raw("SUBSTRING(SUBSTRING_INDEX(no_transaksi, '.', -2), 1, 8) as tanggal")])->first();
     }
 }

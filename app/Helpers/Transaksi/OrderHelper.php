@@ -177,15 +177,15 @@ class OrderHelper
       default:
         $armada = (object) ["nopol"=> $m_armada_id];
         break;
-    }
-    $order = $this->orderModel->whereYear('created_at', date("Y"))->orderByRaw(DB::raw("SUBSTRING_INDEX(no_transaksi, '.', -2) DESC"))->orderByRaw(DB::raw("CAST(SUBSTRING_INDEX(no_transaksi, '.', -1) AS UNSIGNED) DESC"))->select('no_transaksi')->first();
+      }
+    $tanggal = date("Ymd", strtotime($tanggal_awal));
+    $order = $this->orderModel->getLastOrderByTanggal($tanggal);
     if ($armada == null) {
       return [
         "status" => false,
         "message" => "Armada tidak ditemukan"
       ];
     }
-    $tanggal = date("Ymd", strtotime($tanggal_awal));
     if ($order == null) {
       $no_transaksi = str_replace(" ", "", $armada->nopol) . '.' . $tanggal . "." . str_pad(1, 3, "0", STR_PAD_LEFT);
     } else {
