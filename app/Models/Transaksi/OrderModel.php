@@ -196,7 +196,6 @@ class OrderModel extends Model
     public function getLastOrderByTahun($tahun)
     {
         $data = $this->query()
-        ->whereYear('created_at', date("Y"))
         ->where(DB::raw("SUBSTRING(SUBSTRING_INDEX(no_transaksi, '.', -2), 1, 4)"), "=", $tahun)
         ->orderByRaw(DB::raw("CAST(SUBSTRING_INDEX(no_transaksi, '.', -1) AS UNSIGNED) DESC"))
         ->select(['no_transaksi', DB::raw("SUBSTRING(SUBSTRING_INDEX(no_transaksi, '.', -2), 1, 8) as tanggal")])->first();

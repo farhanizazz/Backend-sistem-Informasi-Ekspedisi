@@ -79,19 +79,22 @@ trait GlobalTrait
       $is_error = false;
       $errArr = [];
         foreach ($requestRequired as $key => $value) {
-          foreach ($request as $requestKey => $requestValue) {
+          if (!empty($request) && !is_array($request)){
             # code...
-            if (!isset($requestValue[$value])) {
-                $message = "";
-                foreach ($requestRequired as $requiredKey => $requiredValue) {
-                    $message .= $requiredValue . ", "; 
-                }
-                $is_error = true;
-                $errArr = [
-                  'status' => false,
-                  'message' => "Field " . $message . " tidak ada pada request " . $request_name
-              ];
-              break;  
+            foreach ($request as $requestKey => $requestValue) {
+              # code...
+              if (!isset($requestValue[$value])) {
+                  $message = "";
+                  foreach ($requestRequired as $requiredKey => $requiredValue) {
+                      $message .= $requiredValue . ", "; 
+                  }
+                  $is_error = true;
+                  $errArr = [
+                    'status' => false,
+                    'message' => "Field " . $message . " tidak ada pada request " . $request_name
+                ];
+                break;  
+              }
             }
           }
         }
