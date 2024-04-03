@@ -65,7 +65,7 @@ class MutasiModel extends Model
         $item['detail'] = [
             'no_transaksi' => $dataOrder->no_transaksi,
             'harga_order' => $dataOrder->harga_order,
-            'biasa_lain_harga_order_arr' => $dataOrder->biaya_lain_harga_order_arr,
+            'biaya_lain_harga_order_arr' => $dataOrder->biaya_lain_harga_order_arr,
             'sisa_tagihan' => $dataOrder->sisa_tagihan,
             'muatan' => $dataOrder->muatan,
             'asal'  => $dataOrder->asal,
