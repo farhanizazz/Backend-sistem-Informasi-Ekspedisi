@@ -47,10 +47,12 @@ class MutasiModel extends Model
         ->orderBy('tanggal_pembayaran', 'desc')->get();
 
         // get detail order
-        $data = array_map(function($item){
-            $item['detail'] = $this->detailOrder($item['transaksi_order_id']);
-            return $item;
-        }, $data->toArray());
+        if (isset($payload['transaksi_order_id']) && $payload['transaksi_order_id'] && $data->count() > 0) {
+            $data = $data->map(function($item){
+                $item['detail'] = $this->detailOrder($item->transaksi_order_id);
+                return $item;
+            });
+        }
         return $data;
     }
 
@@ -62,6 +64,8 @@ class MutasiModel extends Model
     public function detailOrder($id){
         $dataOrder = OrderModel::find($id);
         $biaya_lain_uang_jalan = empty($dataOrder->biaya_lain_uang_jalan) || $dataOrder->biaya_lain_uang_jalan ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_uang_jalan);
+        $biaya_lain_harga_order = empty($dataOrder->biaya_lain_harga_order) || $dataOrder->biaya_lain_harga_order ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_harga_order);
+        $biaya_lain_harga_jual = empty($dataOrder->biaya_lain_harga_jual) || $dataOrder->biaya_lain_harga_jual ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_harga_jual);
         $item = [
             'no_transaksi' => $dataOrder->no_transaksi,
             'harga_order' => $dataOrder->harga_order,
@@ -76,7 +80,11 @@ class MutasiModel extends Model
             'sisa_uang_jalan' => (
                 $dataOrder->uang_jalan - $dataOrder->potongan_wajib - $dataOrder->mutasi_jalan->sum('nominal') + $biaya_lain_uang_jalan
             ),
-            'mutasi' => $dataOrder->mutasi_jalan->sum('nominal'),
+            'sisa_harga_order' => $dataOrder->harga_order - $dataOrder->mutasi_order->sum('nominal') + $biaya_lain_harga_order,
+            'sisa_harga_jual' => $dataOrder->harga_jual - $dataOrder->mutasi_jual->sum('nominal') + $biaya_lain_harga_jual,
+            'mutasi_jalan' => $dataOrder->mutasi_jalan->sum('nominal'),
+            'mutasi_order' => $dataOrder->mutasi_order->sum('nominal'),
+            'mutasi_jual' => $dataOrder->mutasi_jual->sum('nominal'),
         ];
      
         return $item;
