@@ -81,7 +81,7 @@ class MutasiModel extends Model
             'sisa_uang_jalan' => (
                 $dataOrder->uang_jalan - $dataOrder->potongan_wajib - $dataOrder->mutasi_jalan->sum('nominal') + $biaya_lain_uang_jalan
             ),
-            'sisa_harga_order' => $dataOrder->harga_order - $dataOrder->mutasi_order->sum('nominal') + $biaya_lain_harga_order,
+            'sisa_harga_order' => $dataOrder->harga_order - $dataOrder->mutasi_order->sum('nominal') + $biaya_lain_harga_order - $dataOrder->total_pajak,
             'sisa_harga_jual' => $dataOrder->harga_jual - $dataOrder->mutasi_jual->sum('nominal') + $biaya_lain_harga_jual,
             'mutasi_jalan' => $dataOrder->mutasi_jalan->sum('nominal'),
             'mutasi_order' => $dataOrder->mutasi_order->sum('nominal'),
