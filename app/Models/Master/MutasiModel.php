@@ -2,6 +2,7 @@
 
 namespace App\Models\Master;
 
+use App\Http\Traits\GlobalTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Master\RekeningModel;
@@ -10,7 +11,7 @@ use App\Models\User;
 
 class MutasiModel extends Model
 {
-    use HasFactory;
+    use HasFactory, GlobalTrait;
     protected $table = 'master_mutasi';
     protected $fillable = [
         'transaksi_order_id',
@@ -63,9 +64,9 @@ class MutasiModel extends Model
      */
     public function detailOrder($id){
         $dataOrder = OrderModel::find($id);
-        $biaya_lain_uang_jalan = empty($dataOrder->biaya_lain_uang_jalan) || $dataOrder->biaya_lain_uang_jalan ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_uang_jalan);
-        $biaya_lain_harga_order = empty($dataOrder->biaya_lain_harga_order) || $dataOrder->biaya_lain_harga_order ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_harga_order);
-        $biaya_lain_harga_jual = empty($dataOrder->biaya_lain_harga_jual) || $dataOrder->biaya_lain_harga_jual ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_harga_jual);
+        $biaya_lain_uang_jalan = empty($dataOrder->biaya_lain_uang_jalan) || !$dataOrder->biaya_lain_uang_jalan ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_uang_jalan);
+        $biaya_lain_harga_order = empty($dataOrder->biaya_lain_harga_order) || !$dataOrder->biaya_lain_harga_order ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_harga_order);
+        $biaya_lain_harga_jual = empty($dataOrder->biaya_lain_harga_jual) || !$dataOrder->biaya_lain_harga_jual ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_harga_jual);
         $item = [
             'no_transaksi' => $dataOrder->no_transaksi,
             'harga_order' => $dataOrder->harga_order,
@@ -96,8 +97,9 @@ class MutasiModel extends Model
 
     public function hitungTotalBiayaLain($listBiayaLain = [])
     {
+      $tambahanModel = new RekeningModel();
       $listId = array_column($listBiayaLain, 'm_tambahan_id');
-      $listRekening = $this->tambahanModel->whereIn('id', $listId)->get();
+      $listRekening = $tambahanModel->whereIn('id', $listId)->get();
       
       foreach ($listBiayaLain as $key => $value) {
         foreach ($listRekening as $key2 => $value2) {
