@@ -86,6 +86,7 @@ class MutasiModel extends Model
             'mutasi_jalan' => $dataOrder->mutasi_jalan->sum('nominal'),
             'mutasi_order' => $dataOrder->mutasi_order->sum('nominal'),
             'mutasi_jual' => $dataOrder->mutasi_jual->sum('nominal'),
+            'total_pajak' => $dataOrder->total_pajak,
         ];
      
         return $item;
