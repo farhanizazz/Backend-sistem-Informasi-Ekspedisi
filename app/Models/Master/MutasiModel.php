@@ -65,7 +65,7 @@ class MutasiModel extends Model
      * @return array
      */
     public function detailOrder($id){
-        $dataOrder = OrderModel::find($id);
+        $dataOrder = OrderModel::with(['penyewa'])->find($id);
         $biaya_lain_uang_jalan = empty($dataOrder->biaya_lain_uang_jalan) || !$dataOrder->biaya_lain_uang_jalan ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_uang_jalan);
         $biaya_lain_harga_order = empty($dataOrder->biaya_lain_harga_order) || !$dataOrder->biaya_lain_harga_order ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_harga_order);
         $biaya_lain_harga_jual = empty($dataOrder->biaya_lain_harga_jual) || !$dataOrder->biaya_lain_harga_jual ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_harga_jual);
