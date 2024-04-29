@@ -80,6 +80,7 @@ class MutasiModel extends Model
             'uang_jalan' => $dataOrder->uang_jalan,
             'biaya_lain_uang_jalan_arr' => $dataOrder->biaya_lain_uang_jalan_arr,
             'thr' => $dataOrder->potongan_wajib,
+            'nama_perusahaan' => $dataOrder->penyewa->nama_perusahaan ?? '',
             'sisa_uang_jalan' => (
                 $dataOrder->uang_jalan - $dataOrder->potongan_wajib - $dataOrder->mutasi_jalan->sum('nominal') + $biaya_lain_uang_jalan
             ),

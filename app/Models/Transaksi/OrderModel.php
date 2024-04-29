@@ -179,6 +179,10 @@ class OrderModel extends Model
                 ->orWhere("tujuan","like","%".$filter['cari']."%")
                 ->orWhere('tanggal_awal','like','%'.$filter['cari'].'%')
                 ->orWhere('tanggal_akhir','like','%'.$filter['cari'].'%')
+                ->orWhere('nomor_sj','like','%'.$filter['cari'].'%')
+                ->orWhere('nomor_po','like','%'.$filter['cari'].'%')
+                ->orWhere('nomor_do','like','%'.$filter['cari'].'%')
+                ->orWhere('catatan_surat_jalan','like','%'.$filter['cari'].'%')
                 ->orWhere("harga_order","like","%".$filter['cari']."%");
             });
         });
