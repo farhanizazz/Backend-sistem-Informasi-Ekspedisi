@@ -12,6 +12,13 @@ class MutasiObserver
     {
         $this->rekeningModel = new RekeningModel();
     }
+
+
+    public function creating(MutasiModel $mutasiModel)
+    {
+        $mutasiModel->created_by = auth()->user()->id ?? null;
+    }
+
     /**
      * Handle the MutasiModel "created" event.
      *
@@ -20,9 +27,16 @@ class MutasiObserver
      */
     public function created(MutasiModel $mutasiModel)
     {
-        $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
-            'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal
-        ]);
+        if ($mutasiModel->jenis_transaksi == "order") {
+            # code...
+            $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
+                'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal
+            ]);
+        }else{
+            $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
+                'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo - $mutasiModel->nominal
+            ]);
+        }
     }
 
     /**
@@ -44,9 +58,15 @@ class MutasiObserver
      */
     public function deleted(MutasiModel $mutasiModel)
     {
-        $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
-            'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo - $mutasiModel->nominal
-        ]);
+        if($mutasiModel->jenis_transaksi == "uang_jalan") {
+            $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
+                'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal
+            ]);
+        } else {
+            $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
+                'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo - $mutasiModel->nominal
+            ]);
+        }
     }
 
     /**

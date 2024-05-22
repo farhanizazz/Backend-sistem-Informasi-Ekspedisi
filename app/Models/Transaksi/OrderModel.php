@@ -6,6 +6,7 @@ use App\Models\Master\RekeningModel;
 use App\Models\Master\TambahanModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class OrderModel extends Model
 {
@@ -61,7 +62,7 @@ class OrderModel extends Model
         'sisa_tagihan',
         'sisa_hutang_ke_subkon',
         'biaya_lain_harga_order_arr',
-        'biasa_lain_harga_jual_arr',
+        'biaya_lain_harga_jual_arr',
         'biaya_lain_uang_jalan_arr'
     ];
 
@@ -136,8 +137,72 @@ class OrderModel extends Model
         return $sisa_hutang_ke_subkon;
     }
 
-    public function mutasi_sum()
+    public function mutasi()
     {
-        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->selectRaw('sum(nominal) as total, transaksi_order_id')->groupBy('transaksi_order_id');
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id');
+    }
+
+    public function mutasi_order()
+    {
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'order');
+    }
+
+    public function mutasi_jual()
+    {
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'jual');
+    }
+
+    public function mutasi_jalan()
+    {
+        return $this->hasMany('App\Models\Master\MutasiModel', 'transaksi_order_id')->where('jenis_transaksi', 'uang_jalan');
+    }
+
+    public function index($filter = [], $itemPerPage = 20)
+    {
+        $data = $this->when($filter['status_kendaraan'],function($query) use($filter){
+            $query->where("status_kendaraan", $filter['status_kendaraan']);
+        })->with(['penyewa', 'armada', 'sopir', 'subkon'])
+        ->when($filter['cari'],function($query) use($filter){
+            $query->where(function($query2) use($filter){
+                $query2->where('no_transaksi','like','%'.$filter['cari'].'%')
+                ->orWhereHas('penyewa',function($query3) use($filter){
+                    $query3->where('nama_perusahaan','like','%'.$filter['cari'].'%');
+                })
+                ->orWhere('muatan','like','%'.$filter['cari'].'%')
+                ->orWhereHas('armada',function($query3) use($filter){
+                    $query3->where('nopol','like','%'.$filter['cari'].'%');
+                })
+                ->orWhereHas('sopir',function($query3) use($filter){
+                    $query3->where('nama','like','%'.$filter['cari'].'%');
+                })
+                ->orWhere("asal","like","%".$filter['cari']."%")
+                ->orWhere("tujuan","like","%".$filter['cari']."%")
+                ->orWhere('tanggal_awal','like','%'.$filter['cari'].'%')
+                ->orWhere('tanggal_akhir','like','%'.$filter['cari'].'%')
+                ->orWhere('nomor_sj','like','%'.$filter['cari'].'%')
+                ->orWhere('nomor_po','like','%'.$filter['cari'].'%')
+                ->orWhere('nomor_do','like','%'.$filter['cari'].'%')
+                ->orWhere('catatan_surat_jalan','like','%'.$filter['cari'].'%')
+                ->orWhere("harga_order","like","%".$filter['cari']."%");
+            });
+        });
+        $data = $data->orderByRaw("tanggal_awal DESC," .(DB::raw("CAST(SUBSTRING_INDEX(no_transaksi, '.', -1) AS UNSIGNED) DESC")));
+        $sort = "no_transaksi DESC";
+        $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
+        return $data->paginate($itemPerPage)->appends("sort", $sort);
+    }
+
+    /**
+     * Get last order by tahun
+     * @param $tanggal string
+     * @return object
+     */
+    public function getLastOrderByTahun($tahun)
+    {
+        $data = $this->query()
+        ->where(DB::raw("SUBSTRING(SUBSTRING_INDEX(no_transaksi, '.', -2), 1, 4)"), "=", $tahun)
+        ->orderByRaw(DB::raw("CAST(SUBSTRING_INDEX(no_transaksi, '.', -1) AS UNSIGNED) DESC"))
+        ->select(['no_transaksi', DB::raw("SUBSTRING(SUBSTRING_INDEX(no_transaksi, '.', -2), 1, 8) as tanggal")])->first();
+        return $data;
     }
 }

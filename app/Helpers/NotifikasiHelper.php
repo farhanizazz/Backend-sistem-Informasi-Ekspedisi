@@ -46,7 +46,7 @@ use App\Models\Notifikasi;
           'nopol' => $value->nopol,
           'tgl' => $value->tgl_uji_kir,
           'selisih' => $this->tanggalKeLisan($value->tgl_uji_kir),
-          'message' => 'Armada dengan nopol '.$value->nopol." $status jatuh tempo pajak KIR pada tanggal ".date('d-m-Y',strtotime($value->tgl_uji_kir)).'. Segera lakukan pembayaran pajak KIR.',
+          'message' => 'Armada dengan nopol '.$value->nopol." $status jatuh tempo uji KIR pada tanggal ".date('d-m-Y',strtotime($value->tgl_uji_kir)).'. Segera lakukan pembayaran uji KIR.',
         ];
       }
 
