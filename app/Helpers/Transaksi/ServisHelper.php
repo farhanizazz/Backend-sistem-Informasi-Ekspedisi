@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Transaksi\ServisModel;
 use App\Models\Transaksi\NotaBeliModel;
 use App\Models\Master\ArmadaModel;
-
+use Illuminate\Support\Facades\DB;
 
 class ServisHelper
 {
@@ -21,11 +21,13 @@ class ServisHelper
     public function create(Request $payload)
     {
         try {
+            DB::beginTransaction(); 
             $dataSave= $payload->only([
                 "master_armada_id",
                 "nama_toko",
                 "nota_beli_items", // This should be an array of objects
                 "tanggal_servis",
+                "kategori_servis"
             ]);
             
             // Fetch the MasterArmada model
@@ -41,10 +43,22 @@ class ServisHelper
             
             $notaBeliItems = $dataSave['nota_beli_items'];
             $notaBeliIds = [];
+
+                
+            $servisData = [
+                "master_armada_id" => $dataSave['master_armada_id'],
+                "nama_toko" => $dataSave['nama_toko'],
+                "tanggal_servis" => $dataSave['tanggal_servis'],
+                "nopol" => $nopol, // get nopol,
+                "kategori_servis" => $dataSave['kategori_servis']
+            ];
+            
+            $result = $this->servisModel->create($servisData);
             
             foreach ($notaBeliItems as $item) {
                 $notaBeliData = [
-                    "master_armada_id" => $dataSave['master_armada_id'],
+                    // "master_armada_id" => $dataSave['master_armada_id'],
+                    'servis_id' => $result->id,
                     "nama_barang" => $item['nama_barang'],
                     "harga" => $item['harga'],
                     "jumlah" => $item['jumlah'],
@@ -53,16 +67,7 @@ class ServisHelper
                 $notaBeli = $this->notaBeliModel->create($notaBeliData);
                 $notaBeliIds[] = $notaBeli->id;
             }
-    
-            $servisData = [
-                "master_armada_id" => $dataSave['master_armada_id'],
-                "nama_toko" => $dataSave['nama_toko'],
-                "tanggal_servis" => $dataSave['tanggal_servis'],
-                "nopol" => $nopol, // get nopol
-            ];
-            
-            $result = $this->servisModel->create($servisData);
-            
+            DB::commit();
             return [
                 'status' => true,
                 'message' => 'Servis created successfully',
@@ -73,6 +78,7 @@ class ServisHelper
                  // Return the IDs of the created notaBeli records
             ];
         } catch (\Exception $e) {
+            DB::rollBack();
             return [
                 'status' => false,
                 'message' => 'Failed to create Servis',
@@ -86,7 +92,7 @@ class ServisHelper
 
     }
 
-    public function update($id, Request $payload)
+    public function update(Request $payload,$id)
 {
     try {
         $dataSave = $payload->only([
@@ -94,6 +100,7 @@ class ServisHelper
             "nama_toko",
             "nota_beli_items",
             "tanggal_servis",
+            'kategori_servis'
         ]);
 
         // Fetch the Servis model
@@ -124,22 +131,53 @@ class ServisHelper
                 "nama_barang" => $item['nama_barang'],
                 "harga" => $item['harga'],
                 "jumlah" => $item['jumlah'],
+                'servis_id' => $servis->id,
             ];
 
             // Update the existing NotaBeli record if it exists, otherwise create a new one
-            $notaBeli = $this->notaBeliModel->updateOrCreate(['id' => $item['id']], $notaBeliData);
+            $notaBeli = $this->notaBeliModel->updateOrCreate(['id' => ($item['id'] ?? -1)], $notaBeliData);
             $notaBeliIds[] = $notaBeli->id;
         }
 
-        $servisData = [
-            "master_armada_id" => $dataSave['master_armada_id'],
-            "nama_toko" => $dataSave['nama_toko'],
-            "tanggal_servis" => $dataSave['tanggal_servis'],
-            "nopol" => $nopol,
-        ];
+        // delete data nota beli yang tidak ada di request
+        $nota_beli_ids = array_column($notaBeliItems, 'id');
+        $this->notaBeliModel->where('servis_id', $servis->id)->whereNotIn('id', $nota_beli_ids)->delete();
 
-        // Update the Servis record
-        $servis->update($servisData);
+        switch ($dataSave['kategori_servis']) {
+            case 'servis':
+                $servisData = [ 
+                    "master_armada_id" => $dataSave['master_armada_id'],
+                    "nama_toko" => $dataSave['nama_toko'],
+                    "tanggal_servis" => $dataSave['tanggal_servis'],
+                    'kategori_servis' => $dataSave['kategori_servis'], // Add the 'kategori_servis' key to the 'servisData' array
+                    "nopol" => $nopol,
+                ];
+                // Update the Servis record
+                $servis->update($servisData);
+                break;
+            case 'lain':
+                $servisData = [ 
+                    "master_armada_id" => $dataSave['master_armada_id'],
+                    "nama_toko" => $dataSave['nama_toko'],
+                    "tanggal_servis" => $dataSave['tanggal_servis'],
+                    'kategori_servis' => $dataSave['kategori_servis'], // Add the 'kategori_servis' key to the 'servisData' array
+                    "nopol" => $nopol,
+                    "nama_tujuan_lain" => $dataSave['nama_tujuan_lain'],
+                    "keterangan_lain" => $dataSave['keterangan_lain'],
+                    "nominal_lain" => $dataSave['nominal_lain'],
+                    "jumlah_lain" => $dataSave['jumlah_lain'],
+                    "total_lain" => $dataSave['total_lain'],
+                ];
+                
+                // Update the Servis record
+                $servis->update($servisData);
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
 
         return [
             'status' => true,

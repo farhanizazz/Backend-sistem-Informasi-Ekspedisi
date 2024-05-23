@@ -180,6 +180,8 @@ Route::group(['prefix' => 'transaksi'], function () {
         Route::put("/{id}", [NotaBeliController::class, "update"]);
         Route::delete("/{id}", [NotaBeliController::class, "destroy"]);
     });
+
+    
 });
 
 
