@@ -25,7 +25,10 @@ class ServisResource extends JsonResource
             'jumlah' => $this->jumlah,
             'nopol' => $this->nopol,
             'kategori_servis' => $this->kategori_servis,
-            'nota_beli_items' => $this->nota_beli_items,
+            'nota_beli_items' => $this->nota_beli_items->map(function($q){
+                $q->master_rekening_id = $q->mutasi->master_rekening_id;
+                return $q;
+            }),
             'master_armada' => $this->master_armada,
         ];
     }

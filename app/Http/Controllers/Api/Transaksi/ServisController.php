@@ -101,7 +101,6 @@ class ServisController extends Controller
                 ]);
             }
         } catch (\Throwable $th) {
-            dd($th->getMessage() . ' ');
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data tidak ditemukan'
@@ -111,7 +110,7 @@ class ServisController extends Controller
     public function show($id)
     {
         try {
-            $result =  $this->servisModel->with('nota_beli_items','master_armada')-> findOrFail($id);
+            $result =  $this->servisModel->with('nota_beli_items.mutasi','master_armada')-> findOrFail($id);
             return response()->json([
                 'status' => 'success',
                 'data' => new ServisResource($result)
