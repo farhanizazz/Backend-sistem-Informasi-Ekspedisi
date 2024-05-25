@@ -47,7 +47,22 @@ class MutasiObserver
      */
     public function updated(MutasiModel $mutasiModel)
     {
-        //
+        // Update saldo rekening, dengan mengambil nominal mutasi sebelumnya dan menguranginya dengan nominal mutasi yang baru
+        $mutasiModel->getOriginal('nominal');
+        $mutasiModel->getOriginal('master_rekening_id');
+        $mutasiModel->getOriginal('jenis_transaksi');
+        if ($mutasiModel->jenis_transaksi == "order") {
+            # code...
+            $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
+                'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal - $mutasiModel->getOriginal('nominal')
+            ]);
+        }else{
+            $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
+                'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo - $mutasiModel->nominal + $mutasiModel->getOriginal('nominal')
+            ]);
+        }
+        
+
     }
 
     /**

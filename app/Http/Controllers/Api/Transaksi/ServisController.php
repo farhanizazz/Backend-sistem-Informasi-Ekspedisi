@@ -84,11 +84,14 @@ class ServisController extends Controller
         try {
             $service = ServisModel::find($id);
             if ($service) {
+                $service->nota_beli_items->map(function($q){
+                    $q->mutasi()->delete();
+                });
                 $service->nota_beli_items()->delete();
                 $service->delete();
 
                 return response()->json([
-                    'status' => 'error',
+                    'status' => 'success',
                     'message' => 'Data berhasil dihapus'
                 ]);
             }else{
@@ -98,6 +101,7 @@ class ServisController extends Controller
                 ]);
             }
         } catch (\Throwable $th) {
+            dd($th->getMessage() . ' ');
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data tidak ditemukan'

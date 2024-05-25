@@ -6,16 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\Transaksi\ServisModel;
 use App\Models\Transaksi\NotaBeliModel;
 use App\Models\Master\ArmadaModel;
+use App\Models\Master\MutasiModel;
 use Illuminate\Support\Facades\DB;
 
 class ServisHelper
 {
-    private $servisModel,$notaBeliModel,$masterArmadaModel;
+    private $servisModel,$notaBeliModel,$masterArmadaModel, $masterMutasiModel;
     public function __construct()
     {
         $this->servisModel= new ServisModel();
         $this->notaBeliModel = new NotaBeliModel();
         $this->masterArmadaModel = new ArmadaModel();
+        $this->masterMutasiModel = new MutasiModel();
     }
  
     public function create(Request $payload)
@@ -65,6 +67,17 @@ class ServisHelper
                 ];
             
                 $notaBeli = $this->notaBeliModel->create($notaBeliData);
+
+                $saveMutasi = $this->masterMutasiModel->create([
+                    'asal_transaksi' => 'nota_beli',
+                    'model_type' => 'App\\\Models\\\Transaksi\\\NotaBeliModel',
+                    'model_id' => $notaBeli->id,
+                    'tanggal_pembayaran' => date('Y-m-d'),
+                    'nominal' => $item['harga'] * $item['jumlah'],
+                    'master_rekening_id' => $item['master_rekening_id'],
+                    'jenis_transaksi' => 'jual'
+                ]);
+                
                 $notaBeliIds[] = $notaBeli->id;
             }
             DB::commit();
@@ -125,6 +138,13 @@ class ServisHelper
         $notaBeliItems = $dataSave['nota_beli_items'];
         $notaBeliIds = [];
 
+        // delete data nota beli yang tidak ada di request
+        $nota_beli_ids = array_column($notaBeliItems, 'id');
+        $nota_beli_delete = $this->notaBeliModel->where('servis_id', $servis->id)->whereNotIn('id', $nota_beli_ids)->get();
+        $nota_beli_delete_ids = $nota_beli_delete->pluck('id')->toArray();
+        $this->masterMutasiModel->whereIn('model_id', $nota_beli_delete_ids)->where('asal_transaksi','nota_beli')->delete();
+        $this->notaBeliModel->where('servis_id', $servis->id)->whereNotIn('id', $nota_beli_ids)->delete();
+
         foreach ($notaBeliItems as $item) {
             $notaBeliData = [
                 "master_armada_id" => $dataSave['master_armada_id'],
@@ -136,12 +156,37 @@ class ServisHelper
 
             // Update the existing NotaBeli record if it exists, otherwise create a new one
             $notaBeli = $this->notaBeliModel->updateOrCreate(['id' => ($item['id'] ?? -1)], $notaBeliData);
+            
+            $checkedNotaBeliIsAvail = false;
+            if (isset($item['id']) && $item['id']) {
+                # code...
+                $checkedNotaBeliIsAvail = $this->notaBeliModel->where('id', $item['id'])->first();
+            }
+
+            if (!$checkedNotaBeliIsAvail) {
+                $saveMutasi = $this->masterMutasiModel->create([
+                    'asal_transaksi' => 'nota_beli',
+                    'model_type' => 'App\\\Models\\\Transaksi\\\NotaBeliModel',
+                    'model_id' => $notaBeli->id,
+                    'tanggal_pembayaran' => date('Y-m-d'),
+                    'nominal' => $item['harga'] * $item['jumlah'],
+                    'master_rekening_id' => $item['master_rekening_id'],
+                    'jenis_transaksi' => 'jual'
+                ]);
+            }else{
+                $saveMutasi = $this->masterMutasiModel->where('model_id', $item['id'])->where('asal_transaksi', 'nota_beli')->update([
+                    'asal_transaksi' => 'nota_beli',
+                    'model_type' => 'App\\\Models\\\Transaksi\\\NotaBeliModel',
+                    'model_id' => $item['id'],
+                    'tanggal_pembayaran' => date('Y-m-d'),
+                    'nominal' => $item['harga'] * $item['jumlah'],
+                    'master_rekening_id' => $item['master_rekening_id'],
+                    'jenis_transaksi' => 'jual'
+                ]);
+            }
+
             $notaBeliIds[] = $notaBeli->id;
         }
-
-        // delete data nota beli yang tidak ada di request
-        $nota_beli_ids = array_column($notaBeliItems, 'id');
-        $this->notaBeliModel->where('servis_id', $servis->id)->whereNotIn('id', $nota_beli_ids)->delete();
 
         switch ($dataSave['kategori_servis']) {
             case 'servis':
@@ -190,7 +235,7 @@ class ServisHelper
         return [
             'status' => false,
             'message' => 'Failed to update Servis',
-            'dev' => $e->getMessage(),
+            'dev' => $e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getFile(),
         ];
     }
 }

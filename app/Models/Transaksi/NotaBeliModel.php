@@ -2,6 +2,7 @@
 
 namespace App\Models\Transaksi;
 
+use App\Models\Master\MutasiModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,7 +14,10 @@ class NotaBeliModel extends Model
         'nama_barang',
         'harga',
         'jumlah',
-        'servis_id'
+        'servis_id',
     ];
     
+    public function mutasi(){
+        return $this->hasOne(MutasiModel::class, 'model_id', 'id');
+    }
 }

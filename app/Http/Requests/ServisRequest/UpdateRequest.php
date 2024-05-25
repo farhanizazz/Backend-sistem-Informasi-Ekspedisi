@@ -35,6 +35,7 @@ class UpdateRequest extends FormRequest
             'nota_beli_items.*.nama_barang' => 'required|string',
             'nota_beli_items.*.harga' => 'required|numeric',
             'nota_beli_items.*.jumlah' => 'required|integer',
+            'nota_beli_items.*.master_rekening_id' => 'required',
             "kategori_servis" => "required|string",
             "nama_tujuan_lain" => "required_if:kategori_servis,lain|string",
             "keterangan_lain" => "required_if:kategori_servis,lain|string",
