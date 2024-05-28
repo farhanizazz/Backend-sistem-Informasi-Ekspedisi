@@ -14,6 +14,17 @@ class ServisResource extends JsonResource
      */
     public function toArray($request)
     {
+
+        // hitung total
+        $total = 0;
+        $this->nota_beli_items->map(function($item) use(&$total){
+            $total_sub = $item->harga * $item->jumlah;
+            $total += $total_sub;
+            return $item;
+        });
+        $total = $total;
+
+                
         return [
             'id' => $this->id,
             'nama_toko' => $this->nama_toko,
@@ -25,10 +36,9 @@ class ServisResource extends JsonResource
             'jumlah' => $this->jumlah,
             'nopol' => $this->nopol,
             'kategori_servis' => $this->kategori_servis,
-            'nota_beli_items' => $this->nota_beli_items->map(function($q){
-                $q->master_rekening_id = $q->mutasi->master_rekening_id;
-                return $q;
-            }),
+            'total' => $total,
+            'nota_beli_items' => $this->nota_beli_items,
+            'servis_mutasi' => $this->servis_mutasi,
             'master_armada' => $this->master_armada,
         ];
     }

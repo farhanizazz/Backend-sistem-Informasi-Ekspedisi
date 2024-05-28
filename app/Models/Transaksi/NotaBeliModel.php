@@ -16,8 +16,4 @@ class NotaBeliModel extends Model
         'jumlah',
         'servis_id',
     ];
-    
-    public function mutasi(){
-        return $this->hasOne(MutasiModel::class, 'model_id', 'id');
-    }
 }

@@ -28,16 +28,32 @@ class ServisModel extends Model
         return $this->hasMany(NotaBeliModel::class, 'servis_id');
     }
 
+    public function servis_mutasi()
+    {
+        return $this->hasMany(ServisMutasiModel::class, 'servis_id');
+    }
+
     public function getAll($payload){
         $data =$this->with(['master_armada' => function ($query) {
             $query->select('id', 'nopol');
-        }, 'nota_beli_items', 'nota_beli_items.mutasi'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function($query) use($payload){
+        }, 'nota_beli_items', 'nota_beli_items', 'servis_mutasi.master_mutasi'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function($query) use($payload){
             $query->where('nota_beli_id', $payload['nota_beli_id']);
         })->when(isset($payload['nama_toko'])&& $payload['nama_toko'],function($query) use($payload){
             $query->where('nama_toko',$payload['nama_toko']);
         })->when(isset($payload['tanggal_servis'])&& $payload['tanggal_servis'],function($query) use($payload){
             $query->where('tanggal_servis',$payload['tanggal_servis']);
         })->get();
+
+        // hitung total
+        $data->map(function($item){
+            $total = 0;
+            $item->nota_beli_items->map(function($item) use(&$total){
+                $total_sub = $item->harga * $item->jumlah;
+                $total += $total_sub;
+                return $item;
+            });
+            $item->total = $total;
+        });
 
         return $data;
     }

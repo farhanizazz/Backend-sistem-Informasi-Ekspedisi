@@ -119,6 +119,11 @@ Route ::group(["prefix" => "laporan/servis"], function () {
     Route::get("/{id}", [ServisController::class, "show"]);
     Route::put("/{id}", [ServisController::class, "update"]);
     Route::delete("/{id}", [ServisController::class, "destroy"]);
+
+    Route::group(["prefix" => "mutasi"], function(){
+        Route::post("/", [ServisController::class, "createServisMutasi"]);
+        Route::delete("/{id}", [ServisController::class, "deleteServisMutasi"]);
+    });
 });
 Route::group(['prefix' => "sopir"], function () {
     Route::get("/", [SopirController::class, "index"]);
@@ -166,7 +171,7 @@ Route::group(['prefix' => 'transaksi'], function () {
         Route::put("/{id}", [OrderController::class, "update"]);
         Route::delete("/{id}", [OrderController::class, "destroy"]);
     });
-    Route ::group(["prefix" => "laporan/servis"], function () {
+    Route::group(["prefix" => "laporan/servis"], function () {
         Route::get("/", [ServisController::class, "index"]);
         Route::post("/", [ServisController::class, "store"]);
         Route::get("/{id}", [ServisController::class, "show"]);

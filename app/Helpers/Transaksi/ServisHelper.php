@@ -7,19 +7,23 @@ use App\Models\Transaksi\ServisModel;
 use App\Models\Transaksi\NotaBeliModel;
 use App\Models\Master\ArmadaModel;
 use App\Models\Master\MutasiModel;
+use App\Models\Transaksi\ServisMutasiModel;
 use Illuminate\Support\Facades\DB;
 
 class ServisHelper
 {
-    private $servisModel,$notaBeliModel,$masterArmadaModel, $masterMutasiModel;
+    private $servisModel,$notaBeliModel, $masterMutasiModel, $servisMutasiModel;
     public function __construct()
     {
         $this->servisModel= new ServisModel();
         $this->notaBeliModel = new NotaBeliModel();
-        $this->masterArmadaModel = new ArmadaModel();
         $this->masterMutasiModel = new MutasiModel();
+        $this->servisMutasiModel = new ServisMutasiModel();
     }
  
+    /**
+     * Create a new Servis record
+     */
     public function create(Request $payload)
     {
         try {
@@ -29,66 +33,24 @@ class ServisHelper
                 "nama_toko",
                 "nota_beli_items", // This should be an array of objects
                 "tanggal_servis",
-                "kategori_servis"
+                'kategori_servis',
+                'nama_tujuan_lain',
+                'keterangan_lain',
+                'nominal_lain',
+                'jumlah_lain',
+                'total_lain',
             ]);
             
-            // Fetch the MasterArmada model
-            $masterArmada = $this->masterArmadaModel->find($dataSave['master_armada_id']);
+            $result = $this->servisModel->create($dataSave);
             
-            // Check if the MasterArmada model was found
-            if (!$masterArmada) {
-                throw new \Exception('MasterArmada not found');
-            }
-            
-            // Get the nopol from the MasterArmada model
-            $nopol = $masterArmada->nopol;
-            
-            $notaBeliItems = $dataSave['nota_beli_items'];
-            $notaBeliIds = [];
-
-                
-            $servisData = [
-                "master_armada_id" => $dataSave['master_armada_id'],
-                "nama_toko" => $dataSave['nama_toko'],
-                "tanggal_servis" => $dataSave['tanggal_servis'],
-                "nopol" => $nopol, // get nopol,
-                "kategori_servis" => $dataSave['kategori_servis']
-            ];
-            
-            $result = $this->servisModel->create($servisData);
-            
-            foreach ($notaBeliItems as $item) {
-                $notaBeliData = [
-                    // "master_armada_id" => $dataSave['master_armada_id'],
-                    'servis_id' => $result->id,
-                    "nama_barang" => $item['nama_barang'],
-                    "harga" => $item['harga'],
-                    "jumlah" => $item['jumlah'],
-                ];
-            
-                $notaBeli = $this->notaBeliModel->create($notaBeliData);
-
-                $saveMutasi = $this->masterMutasiModel->create([
-                    'asal_transaksi' => 'nota_beli',
-                    'model_type' => 'App\\\Models\\\Transaksi\\\NotaBeliModel',
-                    'model_id' => $notaBeli->id,
-                    'tanggal_pembayaran' => date('Y-m-d'),
-                    'nominal' => $item['harga'] * $item['jumlah'],
-                    'master_rekening_id' => $item['master_rekening_id'],
-                    'jenis_transaksi' => 'jual'
-                ]);
-                
-                $notaBeliIds[] = $notaBeli->id;
+            foreach (($dataSave['nota_beli_items'] ?? []) as $item) {
+                $result = $this->createNotaBeliItem($item, $result);
             }
             DB::commit();
             return [
                 'status' => true,
                 'message' => 'Servis created successfully',
                 "data" => $result,
-                "servis_id" => $result->id,
-                "nopol" => $nopol, // Return the nopol of the MasterArmada model // Return the ID of the created servis record
-                "nota_beli_ids" => $notaBeliIds
-                 // Return the IDs of the created notaBeli records
             ];
         } catch (\Exception $e) {
             DB::rollBack();
@@ -100,20 +62,50 @@ class ServisHelper
         }
     }
     
-    public function createServis($payload)
+    /**
+     * Create a new NotaBeli record
+     */
+    public function createNotaBeliItem(array $nota_beli, $servis)
     {
+        $notaBeliData = [
+            'servis_id' => $servis->id,
+            "nama_barang" => $nota_beli['nama_barang'],
+            "harga" => $nota_beli['harga'],
+            "jumlah" => $nota_beli['jumlah'],
+        ];
+        
+        $this->notaBeliModel->create($notaBeliData);
+    }
 
+    /**
+     * Update an existing NotaBeli record
+     */
+    public function updateNotaBeliItem(array $nota_beli, $servis){
+        $notaBeliData = [
+            "nama_barang" => $nota_beli['nama_barang'],
+            "harga" => $nota_beli['harga'],
+            "jumlah" => $nota_beli['jumlah'],
+            'servis_id' => $servis->id,
+        ];
+
+        // Update the existing NotaBeli record if it exists, otherwise create a new one
+        $notaBeli = $this->notaBeliModel->updateOrCreate(['id' => ($item['id'] ?? -1)], $notaBeliData);
     }
 
     public function update(Request $payload,$id)
-{
+    {
     try {
         $dataSave = $payload->only([
             "master_armada_id",
             "nama_toko",
             "nota_beli_items",
             "tanggal_servis",
-            'kategori_servis'
+            'kategori_servis',
+            'nama_tujuan_lain',
+            'keterangan_lain',
+            'nominal_lain',
+            'jumlah_lain',
+            'total_lain',
         ]);
 
         // Fetch the Servis model
@@ -124,19 +116,7 @@ class ServisHelper
             throw new \Exception('Servis not found');
         }
 
-        // Fetch the MasterArmada model
-        $masterArmada = $this->masterArmadaModel->find($dataSave['master_armada_id']);
-
-        // Check if the MasterArmada model was found
-        if (!$masterArmada) {
-            throw new \Exception('MasterArmada not found');
-        }
-
-        // Get the nopol from the MasterArmada model
-        $nopol = $masterArmada->nopol;
-
-        $notaBeliItems = $dataSave['nota_beli_items'];
-        $notaBeliIds = [];
+        $notaBeliItems = $dataSave['nota_beli_items'] ?? [];
 
         // delete data nota beli yang tidak ada di request
         $nota_beli_ids = array_column($notaBeliItems, 'id');
@@ -146,48 +126,10 @@ class ServisHelper
         $this->notaBeliModel->where('servis_id', $servis->id)->whereNotIn('id', $nota_beli_ids)->delete();
 
         foreach ($notaBeliItems as $item) {
-            $notaBeliData = [
-                "master_armada_id" => $dataSave['master_armada_id'],
-                "nama_barang" => $item['nama_barang'],
-                "harga" => $item['harga'],
-                "jumlah" => $item['jumlah'],
-                'servis_id' => $servis->id,
-            ];
-
-            // Update the existing NotaBeli record if it exists, otherwise create a new one
-            $notaBeli = $this->notaBeliModel->updateOrCreate(['id' => ($item['id'] ?? -1)], $notaBeliData);
-            
-            $checkedNotaBeliIsAvail = false;
-            if (isset($item['id']) && $item['id']) {
-                # code...
-                $checkedNotaBeliIsAvail = $this->notaBeliModel->where('id', $item['id'])->first();
-            }
-
-            if (!$checkedNotaBeliIsAvail) {
-                $saveMutasi = $this->masterMutasiModel->create([
-                    'asal_transaksi' => 'nota_beli',
-                    'model_type' => 'App\\\Models\\\Transaksi\\\NotaBeliModel',
-                    'model_id' => $notaBeli->id,
-                    'tanggal_pembayaran' => date('Y-m-d'),
-                    'nominal' => $item['harga'] * $item['jumlah'],
-                    'master_rekening_id' => $item['master_rekening_id'],
-                    'jenis_transaksi' => 'jual'
-                ]);
-            }else{
-                $saveMutasi = $this->masterMutasiModel->where('model_id', $item['id'])->where('asal_transaksi', 'nota_beli')->update([
-                    'asal_transaksi' => 'nota_beli',
-                    'model_type' => 'App\\\Models\\\Transaksi\\\NotaBeliModel',
-                    'model_id' => $item['id'],
-                    'tanggal_pembayaran' => date('Y-m-d'),
-                    'nominal' => $item['harga'] * $item['jumlah'],
-                    'master_rekening_id' => $item['master_rekening_id'],
-                    'jenis_transaksi' => 'jual'
-                ]);
-            }
-
-            $notaBeliIds[] = $notaBeli->id;
+            $this->updateNotaBeliItem($item, $servis);
         }
 
+        // Update Servis sesuai dengan kategori_servis yang dipilih
         switch ($dataSave['kategori_servis']) {
             case 'servis':
                 $servisData = [ 
@@ -195,7 +137,6 @@ class ServisHelper
                     "nama_toko" => $dataSave['nama_toko'],
                     "tanggal_servis" => $dataSave['tanggal_servis'],
                     'kategori_servis' => $dataSave['kategori_servis'], // Add the 'kategori_servis' key to the 'servisData' array
-                    "nopol" => $nopol,
                 ];
                 // Update the Servis record
                 $servis->update($servisData);
@@ -206,7 +147,6 @@ class ServisHelper
                     "nama_toko" => $dataSave['nama_toko'],
                     "tanggal_servis" => $dataSave['tanggal_servis'],
                     'kategori_servis' => $dataSave['kategori_servis'], // Add the 'kategori_servis' key to the 'servisData' array
-                    "nopol" => $nopol,
                     "nama_tujuan_lain" => $dataSave['nama_tujuan_lain'],
                     "keterangan_lain" => $dataSave['keterangan_lain'],
                     "nominal_lain" => $dataSave['nominal_lain'],
@@ -223,13 +163,10 @@ class ServisHelper
                 break;
         }
 
-
         return [
             'status' => true,
             'message' => 'Servis updated successfully',
             "data" => $servis,
-            "nopol" => $nopol,
-            "nota_beli_ids" => $notaBeliIds
         ];
     } catch (\Exception $e) {
         return [
@@ -238,5 +175,72 @@ class ServisHelper
             'dev' => $e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getFile(),
         ];
     }
-}
+    }
+
+    public function createServisMutasi($payload){
+        try {
+            DB::beginTransaction();
+
+            $payload = $payload->only([
+                'servis_id',
+                'master_rekening_id',
+                'nominal',
+            ]);
+
+            // Buat Mutasi baru
+            $payload_mutasi = $this->masterMutasiModel->create([
+                'asal_transaksi' => 'servis',
+                'model_type' => 'App\\\Models\\\Transaksi\\\ServisModel',
+                'model_id' => $payload['servis_id'],
+                'tanggal_pembayaran' => date('Y-m-d'),
+                'nominal' => $payload['nominal'],
+                'master_rekening_id' => $payload['master_rekening_id'],
+                'jenis_transaksi' => 'jual'
+            ]);
+
+            // ambil id dari mutasi yang baru dibuat
+            $payload['master_mutasi_id'] = $payload_mutasi->id;
+
+            $result = $this->servisMutasiModel->create($payload);
+
+            DB::commit();
+            return [
+                'status' => true,
+                'message' => 'Servis mutasi created successfully',
+                'data' => $result
+            ];
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollBack();
+            return [
+                'status' => false,
+                'message' => 'Failed to create Servis mutasi',
+                'dev' => $th->getMessage() . ' ' . $th->getLine() . ' ' . $th->getFile(),
+            ];
+        }
+    }
+
+    public function hapusServisMutasi($id){
+        try {
+            $result = $this->servisMutasiModel->find($id);
+            if (!$result) {
+                return [
+                    'status' => false,
+                    'message' => 'Servis mutasi not found',
+                ];
+            }
+            $result->delete();
+            $result->master_mutasi->delete();
+            return [
+                'status' => true,
+                'message' => 'Servis mutasi deleted successfully',
+            ];
+        } catch (\Throwable $th) {
+            return [
+                'status' => false,
+                'message' => 'Failed to delete Servis mutasi',
+                'dev' => $th->getMessage() . ' ' . $th->getLine() . ' ' . $th->getFile(),
+            ];
+        }
+    }
 }
