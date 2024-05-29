@@ -55,6 +55,16 @@ class ServisModel extends Model
             $item->total = $total;
         });
 
+        // hitung total mutasi
+        $data->map(function($item){
+            $total = 0;
+            $item->servis_mutasi->map(function($item) use(&$total){
+                $total += ($item->master_mutasi->nominal ?? 0);
+                return $item;
+            });
+            $item->total_mutasi = $total;
+        });
+
         return $data;
     }
 

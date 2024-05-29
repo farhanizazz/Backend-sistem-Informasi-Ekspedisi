@@ -24,6 +24,13 @@ class ServisResource extends JsonResource
         });
         $total = $total;
 
+        // hitung total mutasi
+        $total_mutasi = 0;
+        $this->servis_mutasi->map(function($item) use(&$total_mutasi){
+            $total_mutasi += ($item->master_mutasi->nominal ?? 0);
+            return $item;
+        });
+
                 
         return [
             'id' => $this->id,
@@ -37,6 +44,7 @@ class ServisResource extends JsonResource
             'nopol' => $this->nopol,
             'kategori_servis' => $this->kategori_servis,
             'total' => $total,
+            'total_mutasi' => $total_mutasi,
             'nota_beli_items' => $this->nota_beli_items,
             'servis_mutasi' => $this->servis_mutasi,
             'master_armada' => $this->master_armada,
