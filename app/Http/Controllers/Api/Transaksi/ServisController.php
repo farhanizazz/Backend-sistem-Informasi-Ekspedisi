@@ -110,7 +110,7 @@ class ServisController extends Controller
     public function show($id)
     {
         try {
-            $result =  $this->servisModel->with('nota_beli_items', 'servis_mutasi.master_mutasi','master_armada')-> findOrFail($id);
+            $result =  $this->servisModel->with('nota_beli_items', 'servis_mutasi.master_mutasi.master_rekening','master_armada')-> findOrFail($id);
             return response()->json([
                 'status' => 'success',
                 'data' => new ServisResource($result)

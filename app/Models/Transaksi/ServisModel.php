@@ -36,7 +36,7 @@ class ServisModel extends Model
     public function getAll($payload){
         $data =$this->with(['master_armada' => function ($query) {
             $query->select('id', 'nopol');
-        }, 'nota_beli_items', 'nota_beli_items', 'servis_mutasi.master_mutasi'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function($query) use($payload){
+        }, 'nota_beli_items', 'nota_beli_items', 'servis_mutasi.master_mutasi.master_rekening'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function($query) use($payload){
             $query->where('nota_beli_id', $payload['nota_beli_id']);
         })->when(isset($payload['nama_toko'])&& $payload['nama_toko'],function($query) use($payload){
             $query->where('nama_toko',$payload['nama_toko']);
