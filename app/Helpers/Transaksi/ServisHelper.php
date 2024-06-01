@@ -44,20 +44,20 @@ class ServisHelper
             $result = $this->servisModel->create($dataSave);
             
             foreach (($dataSave['nota_beli_items'] ?? []) as $item) {
-                $result = $this->createNotaBeliItem($item, $result);
+                $return = $this->createNotaBeliItem($item, $result);
             }
             DB::commit();
             return [
                 'status' => true,
                 'message' => 'Servis created successfully',
-                "data" => $result,
+                "data" => $return,
             ];
         } catch (\Exception $e) {
             DB::rollBack();
             return [
                 'status' => false,
                 'message' => 'Failed to create Servis',
-                'dev' => $e->getMessage(),
+                'dev' => $e->getMessage() . ' ' . $e->getLine() . ' ' . $e->getFile(),
             ];
         }
     }
@@ -75,6 +75,7 @@ class ServisHelper
         ];
         
         $this->notaBeliModel->create($notaBeliData);
+
     }
 
     /**
