@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Transaksi\OrderController;
 use App\Http\Controllers\Api\Transaksi\PengeluaranContoller;
 use App\Http\Controllers\Api\Master\MutasiController;
 use App\Http\Controllers\Api\Master\TambahanController;
+use App\Http\Controllers\Api\Transaksi\IncomeController;
 use App\Http\Controllers\Api\Transaksi\NotaBeliController;
 use App\Http\Controllers\Api\Transaksi\ServisController;
 use App\Http\Controllers\AuthController;
@@ -110,9 +111,14 @@ Route::middleware('jwt.verify')->group(function () {
             Route::put("/{id}", [RoleController::class, "update"]);
             Route::delete("/{id}", [RoleController::class, "destroy"]);
         });
+
         
     });
 });
+Route::group(["prefix" => "laporan/income"], function () {
+    Route::get("/", [IncomeController::class, "index"]);
+});
+
 Route ::group(["prefix" => "laporan/servis"], function () {
     Route::get("/", [ServisController::class, "index"]);
     Route::post("/", [ServisController::class, "store"]);

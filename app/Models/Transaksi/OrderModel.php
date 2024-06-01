@@ -205,4 +205,20 @@ class OrderModel extends Model
         ->select(['no_transaksi', DB::raw("SUBSTRING(SUBSTRING_INDEX(no_transaksi, '.', -2), 1, 8) as tanggal")])->first();
         return $data;
     }
+
+    public function getIncome ($itemPerPage = 20){
+        
+        $data = $this->with(['penyewa', 'armada', 'sopir', 'subkon']);
+        $data = $data->orderByRaw("tanggal_awal DESC," .(DB::raw("CAST(SUBSTRING_INDEX(no_transaksi, '.', -1) AS UNSIGNED) DESC")));
+        $sort = "no_transaksi DESC";
+        $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
+        return $data->paginate($itemPerPage)->appends("sort", $sort);
+    }
+
+        
+    public function calculateGetIncome($order) {
+        $income = $order->harga_order_bersih - $order->setor - $order->uang_jalan_bersih;
+        return $income;
+    }
+
 }
