@@ -120,7 +120,7 @@ Route::group(["prefix" => "laporan/income"], function () {
     Route::get("/", [IncomeController::class, "index"]);
 });
 
-Route::group(["prefix" => "laporan/income-vehicle"], function () {
+Route::group(["prefix" => "laporan/pemasukan-kendaraan"], function () {
     Route::get("/", [IncomeVehicleController::class, "index"]);
 });
 
