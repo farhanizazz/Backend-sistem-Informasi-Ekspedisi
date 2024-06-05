@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Master\TambahanController;
 use App\Http\Controllers\Api\Transaksi\IncomeController;
 use App\Http\Controllers\Api\Transaksi\IncomeVehicleController;
 use App\Http\Controllers\Api\Transaksi\NotaBeliController;
+use App\Http\Controllers\Api\Transaksi\PotonganWajibController;
 use App\Http\Controllers\Api\Transaksi\ServisController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotifikasiController;
@@ -122,6 +123,9 @@ Route::group(["prefix" => "laporan/income"], function () {
 
 Route::group(["prefix" => "laporan/pemasukan-kendaraan"], function () {
     Route::get("/", [IncomeVehicleController::class, "index"]);
+});
+Route::group(["prefix" => "laporan/potongan-wajib"], function () {
+    Route::get("/", [PotonganWajibController::class, "index"]);
 });
 
 Route ::group(["prefix" => "laporan/servis"], function () {
