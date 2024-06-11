@@ -28,8 +28,9 @@ class UpdateRequest extends FormRequest
     {
         return [
             'master_armada_id' => 'required|exists:master_armada,id',
-            'nama_barang' => 'required|string',
+            // 'nama_barang' => 'required|string',
             'nama_toko' => 'required|string',
+            'nomor_nota' => 'required|string',
             'tanggal_servis' => 'required|date',
             'kategori_servis' => 'required|string',
             'nota_beli_items.*.nama_barang' => 'required|string',
@@ -47,8 +48,10 @@ class UpdateRequest extends FormRequest
     {
         return [
             'master_armada_id.required' => 'Master armada is required',
-            'nama_barang.required' => 'Nama barang is required',
-            'nama_barang.string' => 'Nama barang must be a string',
+            // 'nama_barang.required' => 'Nama barang is required',
+            // 'nama_barang.string' => 'Nama barang must be a string',
+            'nomor_nota.required' => 'Nomor Nota is required',
+            'nomor_nota.string' => 'Nomor nota must be a string',
             'harga.required' => 'Harga is required',
             'jumlah.required' => 'Jumlah is required',
             'jumlah.integer' => 'Jumlah must be an integer',

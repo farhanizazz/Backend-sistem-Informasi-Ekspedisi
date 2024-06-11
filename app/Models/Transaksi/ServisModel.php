@@ -12,6 +12,7 @@ class ServisModel extends Model
     use HasFactory;
     protected $table = 'servis';
     protected $fillable = [
+        'nomor_nota',
         'nama_toko',
         'tanggal_servis',
         'nota_beli_id',

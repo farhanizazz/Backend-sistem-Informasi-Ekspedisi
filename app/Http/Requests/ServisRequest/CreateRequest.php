@@ -25,7 +25,8 @@ class CreateRequest extends FormRequest
 {
     return [
         'master_armada_id' => 'required|exists:master_armada,id',
-        'nama_barang' => 'required|string',
+        // 'nama_barang' => 'required|string',
+        'nomor_nota' => 'required|string',
         'nama_toko' => 'required|string',
         'tanggal_servis' => 'required|date',
         'nota_beli_items.*.nama_barang' => 'required|string',
@@ -46,8 +47,10 @@ class CreateRequest extends FormRequest
         return [
             // 'field.rule' => 'message'
             'master_armada_id.required' => 'Master armada is required',
-            'nama_barang.required' => 'Nama barang is required',
-            'nama_barang.string' => 'Nama barang must be a string',
+            // 'nama_barang.required' => 'Nama barang is required',
+            // 'nama_barang.string' => 'Nama barang must be a string',
+            'nomor_nota.required' => 'Nomor nota is required',
+            'nomor_nota.string' => 'Nomor nota must be a string',
             'harga.required' => 'Harga is required',
             'jumlah.required' => 'Jumlah is required',
             'jumlah.integer' => 'Jumlah must be an integer',

@@ -35,6 +35,7 @@ class ServisResource extends JsonResource
         return [
             'id' => $this->id,
             'nama_toko' => $this->nama_toko,
+            "nomor_nota" => $this->nomor_nota,
             'tanggal_servis' => $this->tanggal_servis,
             'nota_beli_id' => $this->nota_beli_id,
             'master_armada_id' => $this->master_armada_id,

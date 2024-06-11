@@ -31,6 +31,7 @@ class ServisHelper
             $dataSave= $payload->only([
                 "master_armada_id",
                 "nama_toko",
+                "nomor_nota",
                 "nota_beli_items", // This should be an array of objects
                 "tanggal_servis",
                 'kategori_servis',
@@ -99,6 +100,7 @@ class ServisHelper
         $dataSave = $payload->only([
             "master_armada_id",
             "nama_toko",
+            "nomor_nota",
             "nota_beli_items",
             "tanggal_servis",
             'kategori_servis',
@@ -137,6 +139,7 @@ class ServisHelper
                     "master_armada_id" => $dataSave['master_armada_id'],
                     "nama_toko" => $dataSave['nama_toko'],
                     "tanggal_servis" => $dataSave['tanggal_servis'],
+                    "nomor_nota"=> $dataSave['nomor_nota'],
                     'kategori_servis' => $dataSave['kategori_servis'], // Add the 'kategori_servis' key to the 'servisData' array
                 ];
                 // Update the Servis record
@@ -146,6 +149,7 @@ class ServisHelper
                 $servisData = [ 
                     "master_armada_id" => $dataSave['master_armada_id'],
                     "nama_toko" => $dataSave['nama_toko'],
+                    "nomor_nota" => $dataSave['nomor_nota'],
                     "tanggal_servis" => $dataSave['tanggal_servis'],
                     'kategori_servis' => $dataSave['kategori_servis'], // Add the 'kategori_servis' key to the 'servisData' array
                     "nama_tujuan_lain" => $dataSave['nama_tujuan_lain'],
