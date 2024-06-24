@@ -28,7 +28,7 @@ class ServisController extends Controller
 
     public function index(Request $request)
     {
-        $result = $this->servisModel->getAll($request->all());
+        $result = $this->servisModel->getAllServis($request->all());
 
         return response()->json([
             'status' => 'success',

@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Transaksi\OrderController;
 use App\Http\Controllers\Api\Transaksi\PengeluaranContoller;
 use App\Http\Controllers\Api\Master\MutasiController;
 use App\Http\Controllers\Api\Master\TambahanController;
+use App\Http\Controllers\Api\Transaksi\LainLainController;
 use App\Http\Controllers\Api\Transaksi\NotaBeliController;
 use App\Http\Controllers\Api\Transaksi\ServisController;
 use App\Http\Controllers\AuthController;
@@ -124,6 +125,13 @@ Route ::group(["prefix" => "laporan/servis"], function () {
         Route::post("/", [ServisController::class, "createServisMutasi"]);
         Route::delete("/{id}", [ServisController::class, "deleteServisMutasi"]);
     });
+});
+Route::group(["prefix" => "laporan/lainlain"], function () {
+    Route::get("/", [LainLainController::class, "index"]);
+    Route::post("/", [LainLainController::class, "store"]);
+    Route::get("/{id}", [LainLainController::class, "show"]);
+    Route::put("/{id}", [LainLainController::class, "update"]);
+    Route::delete("/{id}", [LainLainController::class, "destroy"]);
 });
 Route::group(['prefix' => "sopir"], function () {
     Route::get("/", [SopirController::class, "index"]);
