@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Api\Transaksi;
 
 use App\Helpers\Transaksi\ServisHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ArmadaRequest\CreateRequest;
-use App\Http\Requests\ArmadaRequest\UpdateRequest;
 use App\Http\Requests\ServisMutasiRequest\CreateServisMutasiRequest;
 use App\Models\Transaksi\ServisModel;
 use Illuminate\Http\Request;
+use App\Http\Requests\ServisRequest\CreateRequest;
+use App\Http\Requests\ServisRequest\UpdateRequest;
 
 class LainLainController extends Controller
 {
