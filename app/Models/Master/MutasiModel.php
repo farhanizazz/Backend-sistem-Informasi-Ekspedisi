@@ -6,6 +6,7 @@ use App\Http\Traits\GlobalTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Master\RekeningModel;
+use App\Models\Transaksi\NotaBeliModel;
 use App\Models\Transaksi\OrderModel;
 use App\Models\User;
 
@@ -20,6 +21,9 @@ class MutasiModel extends Model
         'nominal',
         'tanggal_pembayaran',
         'keterangan',
+        'asal_transaksi',
+        'model_type',
+        'model_id',
         'created_by'
     ];
     public function master_rekening()

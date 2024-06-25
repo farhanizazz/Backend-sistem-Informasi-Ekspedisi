@@ -8,6 +8,7 @@ use App\Http\Resources\Servis\ServisCollection;
 use App\Http\Resources\Servis\ServisResource;
 use App\Models\Transaksi\ServisModel;
 use App\Helpers\Transaksi\ServisHelper;
+use App\Http\Requests\ServisMutasiRequest\CreateServisMutasiRequest;
 use App\Http\Requests\ServisRequest\CreateRequest;
 use App\Http\Requests\ServisRequest\UpdateRequest;
 
@@ -27,7 +28,7 @@ class ServisController extends Controller
 
     public function index(Request $request)
     {
-        $result = $this->servisModel->getAll($request->all());
+        $result = $this->servisModel->getAllServis($request->all());
 
         return response()->json([
             'status' => 'success',
@@ -37,8 +38,7 @@ class ServisController extends Controller
     public function store(CreateRequest $request)
     {
         if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json(
-                [
+            return response()->json([
                     'status' => 'error',
                     'message' => $request->validator->errors()
                 ]
@@ -85,11 +85,19 @@ class ServisController extends Controller
         try {
             $service = ServisModel::find($id);
             if ($service) {
-                $service->notaBeli() ->delete();
+                // $service->servis_mutasi->master_mutasi()->delete();
+                // $service->servis_mutasi()->delete();
+                $service->nota_beli_items()->delete();
+                $service->delete();
 
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Data berhasil dihapus'
+                ]);
+            }else{
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Data tidak ditemukan'
                 ]);
             }
         } catch (\Throwable $th) {
@@ -102,7 +110,7 @@ class ServisController extends Controller
     public function show($id)
     {
         try {
-            $result =  $this->servisModel->with('nota_beli','master_armada')-> findOrFail($id);
+            $result =  $this->servisModel->with('nota_beli_items', 'servis_mutasi.master_mutasi.master_rekening','master_armada')-> findOrFail($id);
             return response()->json([
                 'status' => 'success',
                 'data' => new ServisResource($result)
@@ -115,7 +123,35 @@ class ServisController extends Controller
         }
     }
 
+    public function createServisMutasi(CreateServisMutasiRequest $request){
+        $result = $this->servisHelper->createServisMutasi($request);
+        if (!$result['status']) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $result['message'],
+                'dev'   => $result['dev']
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => $result['message']
+        ]);
+    }
 
+    public function deleteServisMutasi($id){
+        $result = $this->servisHelper->hapusServisMutasi($id);
+        if (!$result['status']) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $result['message'],
+                'dev'   => $result['dev']
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => $result['message']
+        ]);
+    }
 
 
 }
