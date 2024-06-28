@@ -1,0 +1,106 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Documentation",
+        "description": "API documentation for the application",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register new user",
+                "operationId": "a97e586990d0776b795fe45dfced8147",
+                "requestBody": {
+                    "description": "Data that will be used to register new user",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "email",
+                                    "name",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "user123"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@gmail.com"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "User 123"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success register new user"
+                    }
+                }
+            }
+        },
+        "/api/transaksi/lainlain": {
+            "post": {
+                "tags": [
+                    "Lain Lain"
+                ],
+                "summary": "Tambah data servis tipe lain-lain",
+                "operationId": "2c671e9a8ba7854f6eb56a59e998d339",
+                "requestBody": {
+                    "description": "Data yang dibutuhkan untuk menambah data servis tipe lain-lain",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "master_armada_id",
+                                    "nomor_nota",
+                                    "nama_toko",
+                                    "tanggal_servis",
+                                    "nota_beli_items",
+                                    "kategori_servis",
+                                    "nama_tujuan_lain",
+                                    "keterangan_lain",
+                                    "nominal_lain",
+                                    "jumlah_lain",
+                                    "total_lain"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Data servis berhasil ditambahkan"
+                    },
+                    "400": {
+                        "description": "Data servis gagal ditambahkan"
+                    },
+                    "422": {
+                        "description": "Data yang dibutuhkan tidak lengkap"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     private $userModel;
-    
+
     /**
      * UserController constructor.
      * Initializes the $userModel field with an instance of the User model.
@@ -23,21 +23,39 @@ class UserController extends Controller
     }
 
     /**
-     * Register new user.
-     *
-     * @param CreateRequest $request The request object containing the data for register new user.
-     * @return array JSON response with either a success status, success message, and created user data, or an error status, error message, and the response from the `create` method.
+     * @OA\Post(
+     *  path="/register",
+     *  summary="Register new user",
+     *  tags={"Auth"},
+     *  @OA\RequestBody(
+     *      required=true,
+     *      description="Data that will be used to register new user",
+     *      @OA\JsonContent(
+     *          required={"username", "email", "name", "password"},
+     *          @OA\Property(property="username", type="string", format="text", example="user123"),
+     *          @OA\Property(property="email", type="string", format="email", example="user@gmail.com"),
+     *          @OA\Property(property="name", type="string", format="text", example="User 123"),
+     *          @OA\Property(property="password", type="string", format="text", example="password123")
+     *      )
+     *  ),
+     *  @OA\Response(
+     *    response=200,
+     *    description="Success register new user"
+     * )
+     * )
      */
-    public function store(CreateRequest $request){
+    public function store(CreateRequest $request)
+    {
         if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => $request->validator->errors()
                 ]
             );
         }
 
-        $payload = $request->only('username', 'email','name', 'password');
+        $payload = $request->only('username', 'email', 'name', 'password');
         $response = $this->userModel->create($payload);
         if ($response) {
             return [
@@ -51,19 +69,20 @@ class UserController extends Controller
             'message' => 'User gagal ditambahkan',
             'data' => $response
         ];
-    
     }
 
-    public function create(CreateUserFromAdminRequest $request){
+    public function create(CreateUserFromAdminRequest $request)
+    {
         if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => $request->validator->errors()
                 ]
             );
         }
 
-        $payload = $request->only('username', 'email','name','m_role_id', 'password');
+        $payload = $request->only('username', 'email', 'name', 'm_role_id', 'password');
         $response = $this->userModel->create($payload);
         if ($response) {
             return [
@@ -77,41 +96,45 @@ class UserController extends Controller
             'message' => 'User gagal ditambahkan',
             'data' => $response
         ];
-    
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         try {
             //code...
             $response = $this->userModel->findOrFail($id)->delete();
             if ($response) {
-                return response()->json([
+                return response()->json(
+                    [
                         'status' => 'success',
                         'message' => 'User berhasil dihapus'
                     ]
                 );
             }
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => 'User gagal dihapus'
                 ]
             );
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => 'Data tidak ditemukan'
                 ]
             );
         }
     }
-    
+
     /**
      * Retrieve all users.
      *
      * @return array JSON response with either a success status, success message, and the retrieved user data, or an error status, error message, and the response from the `all` method of the `User` model.
      */
-    public function index(){
+    public function index()
+    {
         $response = $this->userModel->all();
         if ($response) {
             return [
@@ -128,10 +151,12 @@ class UserController extends Controller
     }
 
 
-    public function show($id){
+    public function show($id)
+    {
         try {
             //code...
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'success',
                     'data' => $this->userModel->with(['role'])->findOrFail($id)
                 ]
@@ -139,38 +164,43 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
-                    'status' => 'error',
-                    'message' => 'Data tidak ditemukan'
-                ]);
-       }
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
     }
 
-    public function update(UpdateRequest $request, $id){
+    public function update(UpdateRequest $request, $id)
+    {
         try {
-        if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json([
-                    'status' => 'error',
-                    'message' => $request->validator->errors()
-                ]
-            );
-        }
+            if (isset($request->validator) && $request->validator->fails()) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => $request->validator->errors()
+                    ]
+                );
+            }
 
-        $response = $this->userModel->findOrFail($id)->update($request->all());
-        if (!$response) {
-            return response()->json([
-                    'status' => 'error',
-                    'message' => 'Data gagal diubah'
+            $response = $this->userModel->findOrFail($id)->update($request->all());
+            if (!$response) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Data gagal diubah'
+                    ]
+                );
+            }
+            return response()->json(
+                [
+                    'status' => 'success',
+                    'message' => 'Data berhasil diubah'
                 ]
             );
-        }
-        return response()->json([
-                'status' => 'success',
-                'message' => 'Data berhasil diubah'
-            ]
-        );
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json([
+            return response()->json(
+                [
                     'status' => 'error',
                     'message' => 'Data tidak ditemukan'
                 ]
