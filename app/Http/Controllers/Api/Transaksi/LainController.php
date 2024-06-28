@@ -32,32 +32,6 @@ class LainController extends Controller
         ]);
     }
 
-    /**
-     * @OA\Post(
-     * path="/api/transaksi/lainlain",
-     * summary="Tambah data servis tipe lain-lain",
-     * tags = {"Lain Lain"},
-     * @OA\RequestBody(
-     *   required=true,
-     *   description="Data yang dibutuhkan untuk menambah data servis tipe lain-lain",
-     *   @OA\JsonContent(
-     *     required={"master_armada_id", "nomor_nota", "nama_toko", "tanggal_servis", "nota_beli_items", "kategori_servis", "nama_tujuan_lain", "keterangan_lain", "nominal_lain", "jumlah_lain", "total_lain"},
-     *   )
-     * ),
-     * @OA\Response(
-     *   response=200,
-     *  description="Data servis berhasil ditambahkan"
-     *  ),
-     * @OA\Response(
-     *  response=400,
-     * description="Data servis gagal ditambahkan"
-     * ),
-     * @OA\Response(
-     * response=422,
-     * description="Data yang dibutuhkan tidak lengkap"
-     * ),
-     * )
-     */
     public function store(CreateRequest $request)
     {
         if (isset($request->validator) && $request->validator->fails()) {

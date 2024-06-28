@@ -59,13 +59,14 @@
                 }
             }
         },
-        "/api/transaksi/lainlain": {
+        "/api/laporan/lainlain": {
             "post": {
                 "tags": [
+                    "Laporan",
                     "Lain Lain"
                 ],
                 "summary": "Tambah data servis tipe lain-lain",
-                "operationId": "2c671e9a8ba7854f6eb56a59e998d339",
+                "operationId": "38f8d303e851d62169d2caf7fac1295b",
                 "requestBody": {
                     "description": "Data yang dibutuhkan untuk menambah data servis tipe lain-lain",
                     "required": true,
