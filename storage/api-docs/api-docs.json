@@ -60,10 +60,21 @@
             }
         },
         "/api/laporan/lainlain": {
+            "get": {
+                "tags": [
+                    "Servis Kategori Lain-lain"
+                ],
+                "summary": "Get data servis tipe lain-lain",
+                "operationId": "33f7f3383af967bf838fe41e97f330c6",
+                "responses": {
+                    "200": {
+                        "description": "Data servis tipe lain-lain berhasil ditemukan"
+                    }
+                }
+            },
             "post": {
                 "tags": [
-                    "Laporan",
-                    "Lain Lain"
+                    "Servis Kategori Lain-lain"
                 ],
                 "summary": "Tambah data servis tipe lain-lain",
                 "operationId": "38f8d303e851d62169d2caf7fac1295b",
@@ -99,6 +110,28 @@
                     },
                     "422": {
                         "description": "Data yang dibutuhkan tidak lengkap"
+                    }
+                }
+            }
+        },
+        "/api/laporan/lainlain/{id}": {
+            "get": {
+                "tags": [
+                    "Servis Kategori Lain-lain"
+                ],
+                "summary": "Get data servis tipe lain-lain by id",
+                "operationId": "2284667c4991afb85105f922eb534900",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID dari data servis tipe lain-lain",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data servis tipe lain-lain berhasil ditemukan"
                     }
                 }
             }

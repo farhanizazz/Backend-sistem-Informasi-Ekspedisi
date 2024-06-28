@@ -18,6 +18,11 @@ class ServisModel extends Model
         'nota_beli_id',
         'master_armada_id',
         'kategori_servis',
+        'nama_tujuan_lain',
+        'keterangan_lain',
+        'nominal_lain',
+        'jumlah_lain',
+        'total_lain',
     ];
     public function master_armada()
     {
