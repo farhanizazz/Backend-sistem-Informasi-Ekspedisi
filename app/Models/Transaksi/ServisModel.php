@@ -80,6 +80,11 @@ class ServisModel extends Model
             $query->where('tanggal_servis',$payload['tanggal_servis']);
         })
         ->where('kategori_servis', 'servis')
+        // search
+        ->when(isset($payload['search']) && $payload['search'],function($query) use ($payload){
+            $query->orWhere('nama_toko', 'like', '%'.$payload['search'].'%');
+            $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
+        })
         ->get();
 
         // hitung total
@@ -117,6 +122,16 @@ class ServisModel extends Model
             $query->where('tanggal_servis',$payload['tanggal_servis']);
         })
         ->where('kategori_servis', 'lain')
+        // search
+        ->when(isset($payload['search']) && $payload['search'],function($query) use ($payload){
+            $query->where('nama_tujuan_lain', 'like', '%'.$payload['search'].'%');
+            $query->orWhere('keterangan_lain', 'like', '%'.$payload['search'].'%');
+            $query->orWhere('nominal_lain', 'like', '%'.$payload['search'].'%');
+            $query->orWhere('jumlah_lain', 'like', '%'.$payload['search'].'%');
+            $query->orWhere('total_lain', 'like', '%'.$payload['search'].'%');
+            $query->orWhere('nama_toko', 'like', '%'.$payload['search'].'%');
+            $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
+        })
         ->get();
 
         // hitung total
