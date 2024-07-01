@@ -2,21 +2,17 @@
 
 namespace App\Http\Controllers\Api\Transaksi;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Http\Resources\Servis\ServisCollection;
-use App\Http\Resources\Servis\ServisResource;
-use App\Models\Transaksi\ServisModel;
 use App\Helpers\Transaksi\ServisHelper;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\ServisMutasiRequest\CreateServisMutasiRequest;
 use App\Http\Requests\ServisRequest\CreateRequest;
 use App\Http\Requests\ServisRequest\UpdateRequest;
+use App\Http\Resources\Servis\ServisResource;
+use App\Models\Transaksi\ServisModel;
+use Illuminate\Http\Request;
 
-class ServisController extends Controller
+class LainController extends Controller
 {
-    //
-    // private $servisHelper, $serviceModel;
-
     private $servisModel, $servisHelper;
     public function __construct()
     {
@@ -26,32 +22,16 @@ class ServisController extends Controller
 
     }
 
-    /**
-     * @OA\Get(
-     * path="/api/laporan/servis",
-     * summary="Get data servis tipe servis",
-     * tags={"Servis Kategori Servis"},
-     * @OA\Parameter(
-     *  name="search",
-     *  description="Kata kunci untuk mencari data servis tipe servis",
-     *  required=false,
-     *  in="query",
-     * ),
-     * @OA\Response(
-     *  response=200,
-     *  description="Data servis tipe servis berhasil ditemukan"
-     * ),
-     * )
-     */
     public function index(Request $request)
     {
-        $result = $this->servisModel->getAllServis($request->all());
+        $result = $this->servisModel->getAll($request->all());
 
         return response()->json([
             'status' => 'success',
-            'data' => new ServisCollection($result)
+            'data' => $result
         ]);
     }
+
     public function store(CreateRequest $request)
     {
         if (isset($request->validator) && $request->validator->fails()) {
@@ -169,6 +149,4 @@ class ServisController extends Controller
             'message' => $result['message']
         ]);
     }
-
-
 }

@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * @OA\Info(
+ *     title="API Documentation",
+ *     version="1.0.0",
+ *     description="API documentation for the application"
+ * )
+ */
+
 Route::get('/', function () {
     return view('welcome');
 });

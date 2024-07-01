@@ -18,6 +18,11 @@ class ServisModel extends Model
         'nota_beli_id',
         'master_armada_id',
         'kategori_servis',
+        'nama_tujuan_lain',
+        'keterangan_lain',
+        'nominal_lain',
+        'jumlah_lain',
+        'total_lain',
     ];
     public function master_armada()
     {
@@ -69,7 +74,7 @@ class ServisModel extends Model
         return $data;
     }
 
-    public function getAllServis($payload){
+    public function getAllServis($payload, $itemPerPage = 20){
         $data =$this->with(['master_armada' => function ($query) {
             $query->select('id', 'nopol');
         }, 'nota_beli_items', 'nota_beli_items', 'servis_mutasi.master_mutasi.master_rekening'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function($query) use($payload){
@@ -85,33 +90,13 @@ class ServisModel extends Model
             $query->orWhere('nama_toko', 'like', '%'.$payload['search'].'%');
             $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
         })
-        ->get();
-
-        // hitung total
-        $data->map(function($item){
-            $total = 0;
-            $item->nota_beli_items->map(function($item) use(&$total){
-                $total_sub = $item->harga * $item->jumlah;
-                $total += $total_sub;
-                return $item;
-            });
-            $item->total = $total;
-        });
-
-        // hitung total mutasi
-        $data->map(function($item){
-            $total = 0;
-            $item->servis_mutasi->map(function($item) use(&$total){
-                $total += ($item->master_mutasi->nominal ?? 0);
-                return $item;
-            });
-            $item->total_mutasi = $total;
-        });
-
-        return $data;
+        ;
+        $sort = "created_at DESC";
+        $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
+        return $data->paginate($itemPerPage)->appends("sort", $sort);
     }
 
-    public function getAllLainLain($payload){
+    public function getAllLainLain($payload, $itemPerPage = 20){
         $data =$this->with(['master_armada' => function ($query) {
             $query->select('id', 'nopol');
         }, 'nota_beli_items', 'nota_beli_items', 'servis_mutasi.master_mutasi.master_rekening'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function($query) use($payload){
@@ -132,30 +117,10 @@ class ServisModel extends Model
             $query->orWhere('nama_toko', 'like', '%'.$payload['search'].'%');
             $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
         })
-        ->get();
-
-        // hitung total
-        $data->map(function($item){
-            $total = 0;
-            $item->nota_beli_items->map(function($item) use(&$total){
-                $total_sub = $item->harga * $item->jumlah;
-                $total += $total_sub;
-                return $item;
-            });
-            $item->total = $total;
-        });
-
-        // hitung total mutasi
-        $data->map(function($item){
-            $total = 0;
-            $item->servis_mutasi->map(function($item) use(&$total){
-                $total += ($item->master_mutasi->nominal ?? 0);
-                return $item;
-            });
-            $item->total_mutasi = $total;
-        });
-
-        return $data;
+        ;
+        $sort = "created_at DESC";
+        $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
+        return $data->paginate($itemPerPage)->appends("sort", $sort);
     }
 
 
