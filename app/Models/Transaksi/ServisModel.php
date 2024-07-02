@@ -87,7 +87,7 @@ class ServisModel extends Model
         ->where('kategori_servis', 'servis')
         // search
         ->when(isset($payload['search']) && $payload['search'],function($query) use ($payload){
-            $query->orWhere('nama_toko', 'like', '%'.$payload['search'].'%');
+            $query->where('nama_toko', 'like', '%'.$payload['search'].'%');
             $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
         })
         ;

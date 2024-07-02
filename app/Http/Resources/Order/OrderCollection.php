@@ -17,21 +17,25 @@ class OrderCollection extends ResourceCollection
         // hitung total
         $this->collection->map(function($item){
             $total = 0;
-            $item->nota_beli_items->map(function($item) use(&$total){
-                $total_sub = $item->harga * $item->jumlah;
-                $total += $total_sub;
-                return $item;
-            });
+            if ($item->nota_beli_items) {
+                $item->nota_beli_items->map(function($item) use(&$total){
+                    $total_sub = $item->harga * $item->jumlah;
+                    $total += $total_sub;
+                    return $item;
+                });
+            }
             $item->total = $total;
         });
 
         // hitung total mutasi
         $this->collection->map(function($item){
             $total = 0;
-            $item->servis_mutasi->map(function($item) use(&$total){
-                $total += ($item->master_mutasi->nominal ?? 0);
-                return $item;
-            });
+            if ($item->servis_mutasi) {
+                $item->servis_mutasi->map(function($item) use(&$total){
+                    $total += ($item->master_mutasi->nominal ?? 0);
+                    return $item;
+                });
+            }
             $item->total_mutasi = $total;
         });
 
