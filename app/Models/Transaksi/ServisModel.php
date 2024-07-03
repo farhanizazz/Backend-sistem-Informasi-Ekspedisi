@@ -86,9 +86,16 @@ class ServisModel extends Model
         })
         ->where('kategori_servis', 'servis')
         // search
-        ->when(isset($payload['search']) && $payload['search'],function($query) use ($payload){
-            $query->where('nama_toko', 'like', '%'.$payload['search'].'%');
-            $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
+        ->when(isset($payload['search']) && $payload['search'],function($query) use($payload){
+            $query->where(function($query) use ($payload){
+                $query->where('nama_toko', 'like', '%'.$payload['search'].'%');
+                $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
+                $query->orWhereHas('nota_beli_items', function($query) use($payload){
+                    $query->where(function($query) use($payload){
+                        $query->where('nama_barang', 'like', '%'.$payload['search'].'%');
+                    });
+                });
+            });
         })
         ;
         $sort = "created_at DESC";
@@ -108,14 +115,21 @@ class ServisModel extends Model
         })
         ->where('kategori_servis', 'lain')
         // search
-        ->when(isset($payload['search']) && $payload['search'],function($query) use ($payload){
-            $query->where('nama_tujuan_lain', 'like', '%'.$payload['search'].'%');
-            $query->orWhere('keterangan_lain', 'like', '%'.$payload['search'].'%');
-            $query->orWhere('nominal_lain', 'like', '%'.$payload['search'].'%');
-            $query->orWhere('jumlah_lain', 'like', '%'.$payload['search'].'%');
-            $query->orWhere('total_lain', 'like', '%'.$payload['search'].'%');
-            $query->orWhere('nama_toko', 'like', '%'.$payload['search'].'%');
-            $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
+        ->when(isset($payload['search']) && $payload['search'],function($query) use($payload){
+            $query->where(function($query) use ($payload){
+                $query->where('nama_tujuan_lain', 'like', '%'.$payload['search'].'%');
+                $query->orWhere('keterangan_lain', 'like', '%'.$payload['search'].'%');
+                $query->orWhere('nominal_lain', 'like', '%'.$payload['search'].'%');
+                $query->orWhere('jumlah_lain', 'like', '%'.$payload['search'].'%');
+                $query->orWhere('total_lain', 'like', '%'.$payload['search'].'%');
+                $query->orWhere('nama_toko', 'like', '%'.$payload['search'].'%');
+                $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
+                $query->orWhereHas('nota_beli_items', function($query) use($payload){
+                    $query->where(function($query) use($payload){
+                        $query->where('nama_barang', 'like', '%'.$payload['search'].'%');
+                    });
+                });
+            });
         })
         ;
         $sort = "created_at DESC";
