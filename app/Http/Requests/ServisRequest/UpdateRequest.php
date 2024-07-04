@@ -37,11 +37,11 @@ class UpdateRequest extends FormRequest
             'nota_beli_items.*.harga' => 'required|numeric',
             'nota_beli_items.*.jumlah' => 'required|integer',
             "kategori_servis" => "required|string",
-            "nama_tujuan_lain" => "required_if:kategori_servis,lain|string",
-            "keterangan_lain" => "required_if:kategori_servis,lain|string",
-            "nominal_lain" => "required_if:kategori_servis,lain|string",
-            "jumlah_lain" => "required_if:kategori_servis,lain|integer",
-            "total_lain" => "required_if:kategori_servis,lain|integer",
+            "nama_tujuan_lain" => "required_if:kategori_servis,lain",
+            "keterangan_lain" => "required_if:kategori_servis,lain",
+            "nominal_lain" => "required_if:kategori_servis,lain",
+            "jumlah_lain" => "required_if:kategori_servis,lain",
+            "total_lain" => "required_if:kategori_servis,lain",
         ];
     }
     public function messages()
