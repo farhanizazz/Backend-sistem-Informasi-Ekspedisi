@@ -20,6 +20,19 @@ class RekeningController extends Controller
     {
         $this->rekeningModel = new RekeningModel();
     }
+
+    /**
+     * @OA\Get(
+     * path="/api/master/rekening",
+     * summary="Get data rekening",
+     * tags={"Rekening"},
+     * security={{ "apiAuth": {} }},
+     * @OA\Response(
+     *  response=200,
+     *  description="Data rekening berhasil ditemukan"
+     * ),
+     * )
+     */
     public function index()
     {
         return response()->json([
@@ -65,8 +78,26 @@ class RekeningController extends Controller
         return response()->json([
             'status' => 'success',
         ]);
-        
     }
+
+    /**
+     * @OA\Get(
+     * path="/api/master/rekening/{id}",
+     * @OA\Parameter(
+     *  name="id",
+     *  description="ID rekening",
+     *  required=true,
+     *  in="path",
+     * ),
+     * summary="Get data rekening",
+     * tags={"Rekening"},
+     * security={{ "apiAuth": {} }},
+     * @OA\Response(
+     *  response=200,
+     *  description="Data rekening berhasil ditemukan"
+     * ),
+     * )
+     */
     public function show($id)
     {
         try {

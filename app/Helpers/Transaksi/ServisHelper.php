@@ -2,6 +2,7 @@
 
 namespace App\Helpers\Transaksi;
 
+use App\Enums\JenisTransaksiMutasiEnum;
 use Illuminate\Http\Request;
 use App\Models\Transaksi\ServisModel;
 use App\Models\Transaksi\NotaBeliModel;
@@ -182,6 +183,7 @@ class ServisHelper
     }
     }
 
+    
     public function createServisMutasi($payload){
         try {
             DB::beginTransaction();
@@ -200,7 +202,7 @@ class ServisHelper
                 'tanggal_pembayaran' => date('Y-m-d'),
                 'nominal' => $payload['nominal'],
                 'master_rekening_id' => $payload['master_rekening_id'],
-                'jenis_transaksi' => 'jual'
+                'jenis_transaksi' => JenisTransaksiMutasiEnum::PENGELUARAN->value
             ]);
 
             // ambil id dari mutasi yang baru dibuat

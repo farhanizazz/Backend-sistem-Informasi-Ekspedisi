@@ -80,11 +80,11 @@ Route::middleware('jwt.verify')->group(function () {
             Route::delete("/{id}", [ArmadaController::class, "destroy"]);
         });
         Route::group(['prefix' => "rekening"], function () {
+            Route::get("/{rekening_id}/mutasi", [MutasiController::class, "getMutasiByRekening"]);
             Route::group(['prefix' => "mutasi"], function () {
                 Route::get("/", [MutasiController::class, "index"]);
                 Route::post("/", [MutasiController::class, "store"]);
                 Route::get("/{id}", [MutasiController::class, "show"]);
-                Route::get("/{rekening_id}", [MutasiController::class, "filterByRekeningId"]);
                 Route::put("/{id}", [MutasiController::class, "update"]);
                 Route::delete("/{id}", [MutasiController::class, "destroy"]);
             });

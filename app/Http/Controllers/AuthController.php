@@ -26,9 +26,40 @@ class AuthController extends Controller
     }
 
     /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Post(
+     * path="/api/login",
+     * summary="Login user",
+     * tags={"Auth"},
+     * @OA\RequestBody(
+     *  required=true,
+     *  @OA\MediaType(
+     *    mediaType="application/json",
+     *    @OA\Schema
+     *      (
+     *          type="object",
+     *          required={"username", "password"},
+     *          @OA\Property(
+     *              property="username",
+     *              type="string",
+     *              example="boss"
+     *          ),
+     *          @OA\Property(
+     *              property="password",
+     *              type="string",
+     *              example="Abc12345"
+     *          ),
+     *      )
+     *  )
+     * ),
+     * @OA\Response(
+     *  response=200,
+     *  description="User berhasil login"
+     * ),
+     * @OA\Response(
+     *  response=401,
+     *  description="Username dan Password anda salah"
+     * )
+     * )
      */
     public function login(LoginRequest $request)
     {

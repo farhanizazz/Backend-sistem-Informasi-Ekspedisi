@@ -52,6 +52,7 @@ class ServisController extends Controller
             'data' => new ServisCollection($result)
         ]);
     }
+    
     public function store(CreateRequest $request)
     {
         if (isset($request->validator) && $request->validator->fails()) {
@@ -140,6 +141,32 @@ class ServisController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     * path="/api/laporan/servis/mutasi",
+     * summary="Create Servis Mutasi",
+     * tags={"Servis Mutasi"},
+     * @OA\RequestBody(
+     *  required=true,
+     *  @OA\MediaType(
+     *    mediaType="application/json",
+     *    @OA\Schema
+     *      (
+     *          type="object",
+     *          required={"servis_id", "master_rekening_id", "nominal"},
+     *      )
+     *  )
+     * ),
+     * @OA\Response(
+     *  response=200,
+     *  description="Servis mutasi berhasil dibuat"
+     * ),
+     * @OA\Response(
+     *  response=422,
+     *  description="Data tidak valid"
+     * )
+     * )
+     */
     public function createServisMutasi(CreateServisMutasiRequest $request){
         $result = $this->servisHelper->createServisMutasi($request);
         if (!$result['status']) {
@@ -169,6 +196,5 @@ class ServisController extends Controller
             'message' => $result['message']
         ]);
     }
-
 
 }

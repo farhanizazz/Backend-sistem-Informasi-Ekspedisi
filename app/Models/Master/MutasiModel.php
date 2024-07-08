@@ -2,6 +2,7 @@
 
 namespace App\Models\Master;
 
+use App\Enums\JenisTransaksiMutasiEnum;
 use App\Http\Traits\GlobalTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,11 +10,15 @@ use App\Models\Master\RekeningModel;
 use App\Models\Transaksi\NotaBeliModel;
 use App\Models\Transaksi\OrderModel;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class MutasiModel extends Model
 {
     use HasFactory, GlobalTrait;
     protected $table = 'master_mutasi';
+    protected $casts = [
+        'jenis_transaksi' => JenisTransaksiMutasiEnum::class
+    ];
     protected $fillable = [
         'transaksi_order_id',
         'jenis_transaksi', // 'order' or 'jual
@@ -35,27 +40,27 @@ class MutasiModel extends Model
         return $this->hasOne(OrderModel::class, 'id', 'transaksi_order_id');
     }
 
-    public function getAll($payload){
-        $data = $this->
-        with(['pembuat', 'master_rekening', 'transaksi_order' => function($q){
-            $q->select('id', 'no_transaksi');
-        }])
-        ->when(isset($payload['transaksi_order_id']) && $payload['transaksi_order_id'], function($query) use($payload){
-            $query->where('transaksi_order_id', $payload['transaksi_order_id']);
-        })->when(isset($payload['master_rekening_id']) && $payload['master_rekening_id'], function($query) use($payload){
-            $query->where('master_rekening_id', $payload['master_rekening_id']);
-        })->when(isset($payload['tanggal_pembayaran']) && $payload['tanggal_pembayaran'], function($query) use($payload){
-            $query->where('tanggal_pembayaran', $payload['tanggal_pembayaran']);
-        })->when(isset($payload['keterangan']) && $payload['keterangan'], function($query) use($payload){
-            $query->where('keterangan', $payload['keterangan']);
-        })->when(isset($payload['jenis_transaksi']) && $payload['jenis_transaksi'], function($query) use($payload){
-            $query->where('jenis_transaksi', $payload['jenis_transaksi']);
-        })
-        ->orderBy('tanggal_pembayaran', 'desc')->get();
+    public function getAll($payload)
+    {
+        $data = $this->with(['pembuat', 'master_rekening', 'transaksi_order' => function ($q) {
+                $q->select('id', 'no_transaksi');
+            }])
+            ->when(isset($payload['transaksi_order_id']) && $payload['transaksi_order_id'], function ($query) use ($payload) {
+                $query->where('transaksi_order_id', $payload['transaksi_order_id']);
+            })->when(isset($payload['master_rekening_id']) && $payload['master_rekening_id'], function ($query) use ($payload) {
+                $query->where('master_rekening_id', $payload['master_rekening_id']);
+            })->when(isset($payload['tanggal_pembayaran']) && $payload['tanggal_pembayaran'], function ($query) use ($payload) {
+                $query->where('tanggal_pembayaran', $payload['tanggal_pembayaran']);
+            })->when(isset($payload['keterangan']) && $payload['keterangan'], function ($query) use ($payload) {
+                $query->where('keterangan', $payload['keterangan']);
+            })->when(isset($payload['jenis_transaksi']) && $payload['jenis_transaksi'], function ($query) use ($payload) {
+                $query->where('jenis_transaksi', $payload['jenis_transaksi']);
+            })
+            ->orderBy('tanggal_pembayaran', 'desc')->orderBy('created_at', 'DESC')->get();
 
         // get detail order
         if (isset($payload['transaksi_order_id']) && $payload['transaksi_order_id'] && $data->count() > 0) {
-            $data = $data->map(function($item){
+            $data = $data->map(function ($item) {
                 $item['detail'] = $this->detailOrder($item->transaksi_order_id);
                 return $item;
             });
@@ -68,7 +73,8 @@ class MutasiModel extends Model
      * @param $id int transaksi_order_id
      * @return array
      */
-    public function detailOrder($id){
+    public function detailOrder($id)
+    {
         $dataOrder = OrderModel::with(['penyewa'])->find($id);
         $biaya_lain_uang_jalan = empty($dataOrder->biaya_lain_uang_jalan) || !$dataOrder->biaya_lain_uang_jalan ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_uang_jalan);
         $biaya_lain_harga_order = empty($dataOrder->biaya_lain_harga_order) || !$dataOrder->biaya_lain_harga_order ? 0 : $this->hitungTotalBiayaLain($dataOrder->biaya_lain_harga_order);
@@ -99,33 +105,58 @@ class MutasiModel extends Model
             'mutasi_jual' => $dataOrder->mutasi_jual->sum('nominal'),
             'total_pajak' => $dataOrder->total_pajak,
         ];
-     
+
         return $item;
     }
 
-    public function pembuat(){
+    public function pembuat()
+    {
         return $this->belongsTo(User::class, 'created_by');
     }
 
     public function hitungTotalBiayaLain($listBiayaLain = [])
     {
-      $tambahanModel = new RekeningModel();
-      $listId = array_column($listBiayaLain, 'm_tambahan_id');
-      $listRekening = $tambahanModel->whereIn('id', $listId)->get();
-      
-      foreach ($listBiayaLain as $key => $value) {
-        foreach ($listRekening as $key2 => $value2) {
-          if ($value['m_tambahan_id'] == $value2->id) {
-            $listBiayaLain[$key]["nominal"] *= $this->getSifatRekening($value2->sifat);
-          }
+        $tambahanModel = new RekeningModel();
+        $listId = array_column($listBiayaLain, 'm_tambahan_id');
+        $listRekening = $tambahanModel->whereIn('id', $listId)->get();
+
+        foreach ($listBiayaLain as $key => $value) {
+            foreach ($listRekening as $key2 => $value2) {
+                if ($value['m_tambahan_id'] == $value2->id) {
+                    $listBiayaLain[$key]["nominal"] *= $this->getSifatRekening($value2->sifat);
+                }
+            }
         }
-      }
-  
-      $total = 0;
-      foreach ($listBiayaLain as $key => $value) {
-        $total += $value['nominal'];
-      }
-      return $total;
+
+        $total = 0;
+        foreach ($listBiayaLain as $key => $value) {
+            $total += $value['nominal'];
+        }
+        return $total;
     }
 
+    public function getMutasiRekening($rekening_id, $itemPerPage = 20)
+    {
+        try {
+            $data = $this->with(['pembuat', 'master_rekening', 'transaksi_order' => function ($q) {
+                $q->select('id', 'no_transaksi');
+            }])
+                ->where('master_rekening_id', $rekening_id)
+                ->limit(1)
+                ->orderBy('tanggal_pembayaran', 'desc');
+            $data = $data->orderByRaw("created_at DESC");
+            $sort = "no_transaksi DESC";
+            $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
+            return [
+                'status' => 'success',
+                'data' => $data->paginate($itemPerPage)->appends("sort", $sort)
+            ];
+        } catch (\Throwable $th) {
+            //throw $th;
+            return [
+                'status' => 'error',
+                'message' => $th->getMessage()
+            ];
+        }
+    }
 }

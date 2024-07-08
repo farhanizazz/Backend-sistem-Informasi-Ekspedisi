@@ -6,6 +6,98 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/master/rekening/mutasi": {
+            "get": {
+                "tags": [
+                    "Mutasi"
+                ],
+                "summary": "Get data mutasi",
+                "operationId": "2e65cba4c6347f5690914f24ff952d98",
+                "responses": {
+                    "200": {
+                        "description": "Data mutasi berhasil ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/master/rekening/{rekening_id}/mutasi": {
+            "get": {
+                "tags": [
+                    "Mutasi"
+                ],
+                "summary": "Get data mutasi rekening",
+                "operationId": "ea4e2cae70c52db374caaedcdb993ceb",
+                "parameters": [
+                    {
+                        "name": "rekening_id",
+                        "in": "path",
+                        "description": "ID rekening",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data mutasi rekening berhasil ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/master/rekening": {
+            "get": {
+                "tags": [
+                    "Rekening"
+                ],
+                "summary": "Get data rekening",
+                "operationId": "0592873c51fc82a73cb65321b6fb2958",
+                "responses": {
+                    "200": {
+                        "description": "Data rekening berhasil ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/master/rekening/{id}": {
+            "get": {
+                "tags": [
+                    "Rekening"
+                ],
+                "summary": "Get data rekening",
+                "operationId": "e9244f38c29157aee5efe2ba40d7949c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID rekening",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data rekening berhasil ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/register": {
             "post": {
                 "tags": [
@@ -164,6 +256,91 @@
                         "description": "Data servis tipe servis berhasil ditemukan"
                     }
                 }
+            }
+        },
+        "/api/laporan/servis/mutasi": {
+            "post": {
+                "tags": [
+                    "Servis Mutasi"
+                ],
+                "summary": "Create Servis Mutasi",
+                "operationId": "acc1544e453a0d6326f56cfcbb671b59",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "servis_id",
+                                    "master_rekening_id",
+                                    "nominal"
+                                ],
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Servis mutasi berhasil dibuat"
+                    },
+                    "422": {
+                        "description": "Data tidak valid"
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login user",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "example": "boss"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Abc12345"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User berhasil login"
+                    },
+                    "401": {
+                        "description": "Username dan Password anda salah"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "apiAuth": {
+                "type": "http",
+                "description": "Login with email and password to get the authentication token",
+                "name": "Token based Based",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     }

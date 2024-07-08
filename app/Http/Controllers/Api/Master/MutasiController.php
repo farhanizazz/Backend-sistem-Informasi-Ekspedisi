@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Master;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MutasiRequest\CreateRequest;
 use App\Http\Requests\MutasiRequest\UpdateRequest;
+use App\Http\Resources\MutasiRekening\MutasiRekeningCollection;
 use Illuminate\Http\Request;
 use App\Models\Master\MutasiModel;
 
@@ -21,6 +22,25 @@ class MutasiController extends Controller
     {
         $this->mutasiModel = new MutasiModel();
     }
+
+    /**
+     * @OA\Get(
+     * path="/api/master/rekening/mutasi",
+     * summary="Get data mutasi",
+     * tags={"Mutasi"},
+     * security={{ "apiAuth": {} }},
+     * @OA\Response(
+     *  response=200,
+     *  description="Data mutasi berhasil ditemukan"
+     * ),
+     * ),
+     * @OAS\SecurityScheme(
+     *  securityScheme="bearerAuth",
+     *  type="http",
+     *  scheme="bearer",
+     *  bearerFormat="JWT"
+     * )
+     */
     public function index(Request $request)
     {
         $result = $this->mutasiModel->getAll($request->all());
@@ -56,20 +76,20 @@ class MutasiController extends Controller
     }
     // public function filterByRekeningId($rekening_id)
     // {
-        
+
     //     $transactions = MutasiModel::with(['transaksi_order', 'rekening'])
     //         ->whereHas('rekening', function ($query) use ($rekening_id) {
     //             $query->where('id', $rekening_id);
     //         })
     //         ->get();
-    
+
     //     if ($transactions->isEmpty()) {
     //         return response()->json([
     //             'status' => 'error',
     //             'message' => 'No transactions found'
     //         ]);
     //     }
-    
+
     //     return response()->json([
     //         'status' => 'success',
     //         'message' => 'Data retrieved successfully',
@@ -83,7 +103,7 @@ class MutasiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    
+
     public function show($id)
     {
         try {
@@ -175,5 +195,39 @@ class MutasiController extends Controller
                 ]
             );
         }
+    }
+
+    /**
+     * @OA\Get(
+     * path="/api/master/rekening/{rekening_id}/mutasi",
+     * summary="Get data mutasi rekening",
+     * tags={"Mutasi"},
+     * security={{ "apiAuth": {} }},
+     * @OA\Parameter(
+     *  name="rekening_id",
+     *  description="ID rekening",
+     *  required=true,
+     *  in="path",
+     * ),
+     * @OA\Response(
+     *  response=200,
+     *  description="Data mutasi rekening berhasil ditemukan"
+     * ),
+     * )
+     * 
+     */
+    public function getMutasiByRekening($rekening_id){
+        $result = $this->mutasiModel->getMutasiRekening($rekening_id);
+        if (!$result['status']) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $result['message'],
+                'dev'   => $result['dev']
+            ]);
+        }
+        return response()->json([
+            'status' => 'success',
+            'data' => new MutasiRekeningCollection($result['data'])
+        ]);
     }
 }

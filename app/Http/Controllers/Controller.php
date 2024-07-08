@@ -11,6 +11,15 @@ use Illuminate\Routing\Controller as BaseController;
  *     title="API Documentation",
  *     version="1.0.0",
  *     description="API documentation for the application"
+ * ),
+ * @OA\SecurityScheme(
+ *     type="http",
+ *     description="Login with email and password to get the authentication token",
+ *     name="Token based Based",
+ *     in="header",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     securityScheme="apiAuth",
  * )
  */
 class Controller extends BaseController
