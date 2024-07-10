@@ -330,6 +330,49 @@
                     }
                 }
             }
+        },
+        "/api/update-password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Update password user",
+                "operationId": "b0d1434f194356ab3b59cc8abbed505e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "password_lama",
+                                    "password_baru"
+                                ],
+                                "properties": {
+                                    "password_lama": {
+                                        "type": "string",
+                                        "example": "Abc12345"
+                                    },
+                                    "password_baru": {
+                                        "type": "string",
+                                        "example": "Abc12345"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password berhasil diubah"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {

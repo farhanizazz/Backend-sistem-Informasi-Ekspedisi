@@ -41,7 +41,7 @@ Route::post("/register", [UserController::class, "store"]);
 
 Route::middleware('jwt.verify')->group(function () {
     Route::get("/getProfile", [AuthController::class, "userProfile"]);
-
+    Route::post('update-password', [AuthController::class, 'updatePassword']);
     // Route Master
     Route::group(['prefix' => 'master'], function () {
         Route::group(['prefix' => "penyewa"], function () {
