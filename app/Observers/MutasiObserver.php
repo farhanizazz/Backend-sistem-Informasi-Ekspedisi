@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Enums\JenisTransaksiMutasiEnum;
 use App\Models\Master\MutasiModel;
 use App\Models\Master\RekeningModel;
 
@@ -27,7 +28,7 @@ class MutasiObserver
      */
     public function created(MutasiModel $mutasiModel)
     {
-        if ($mutasiModel->jenis_transaksi == "order") {
+        if ($mutasiModel->jenis_transaksi == JenisTransaksiMutasiEnum::ORDER->value || $mutasiModel->jenis_transaksi == JenisTransaksiMutasiEnum::PEMASUKAN->value) {
             # code...
             $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
                 'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal
@@ -51,8 +52,7 @@ class MutasiObserver
         $mutasiModel->getOriginal('nominal');
         $mutasiModel->getOriginal('master_rekening_id');
         $mutasiModel->getOriginal('jenis_transaksi');
-        if ($mutasiModel->jenis_transaksi == "order") {
-            # code...
+        if ($mutasiModel->jenis_transaksi == JenisTransaksiMutasiEnum::ORDER->value || $mutasiModel->jenis_transaksi == JenisTransaksiMutasiEnum::PEMASUKAN->value) {
             $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
                 'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal - $mutasiModel->getOriginal('nominal')
             ]);

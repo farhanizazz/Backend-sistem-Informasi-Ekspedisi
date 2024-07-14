@@ -196,13 +196,13 @@ class ServisHelper
 
             // Buat Mutasi baru
             $payload_mutasi = $this->masterMutasiModel->create([
-                'asal_transaksi' => 'servis',
+                'asal_transaksi' => 'servis',m
                 'model_type' => 'App\\\Models\\\Transaksi\\\ServisModel',
                 'model_id' => $payload['servis_id'],
                 'tanggal_pembayaran' => date('Y-m-d'),
                 'nominal' => $payload['nominal'],
                 'master_rekening_id' => $payload['master_rekening_id'],
-                'jenis_transaksi' => JenisTransaksiMutasiEnum::PENGELUARAN->value
+                'jenis_transaksi' => $payload['nominal'] > 0 ? JenisTransaksiMutasiEnum::PEMASUKAN->value : JenisTransaksiMutasiEnum::PENGELUARAN->value,
             ]);
 
             // ambil id dari mutasi yang baru dibuat
