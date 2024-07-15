@@ -196,7 +196,7 @@ class ServisHelper
 
             // Buat Mutasi baru
             $payload_mutasi = $this->masterMutasiModel->create([
-                'asal_transaksi' => 'servis',m
+                'asal_transaksi' => 'servis',
                 'model_type' => 'App\\\Models\\\Transaksi\\\ServisModel',
                 'model_id' => $payload['servis_id'],
                 'tanggal_pembayaran' => date('Y-m-d'),
