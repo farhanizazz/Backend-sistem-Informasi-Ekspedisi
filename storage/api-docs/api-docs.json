@@ -98,6 +98,67 @@
                 ]
             }
         },
+        "/api/master/sopir": {
+            "get": {
+                "tags": [
+                    "Sopir"
+                ],
+                "summary": "Get data Sopir",
+                "operationId": "1911849d0595c53e19e594a07680b366",
+                "responses": {
+                    "200": {
+                        "description": "Data Sopir berhasil ditemukan"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Sopir"
+                ],
+                "summary": "Tambah data sopir",
+                "operationId": "fa1baf12bed4b0cca5c46a42f41d1b44",
+                "requestBody": {
+                    "description": "Data yang dibutuhkan untuk menambah data sopir",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama",
+                                    "ktp",
+                                    "sim",
+                                    "nomor_hp",
+                                    "alamat",
+                                    "tanggal_gabung",
+                                    "status"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Data Sopir berhasil ditambahkan"
+                    },
+                    "400": {
+                        "description": "Data Sopir gagal ditambahkan"
+                    },
+                    "422": {
+                        "description": "Data yang dibutuhkan tidak lengkap"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
         "/register": {
             "post": {
                 "tags": [

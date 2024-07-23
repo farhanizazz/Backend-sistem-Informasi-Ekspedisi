@@ -16,10 +16,24 @@ class SopirController extends Controller
     {
         $this->sopirModel = new SopirModel();
     }
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     * path="/api/master/sopir",
+     * summary="Get data Sopir",
+     * security={{ "apiAuth": {} }},
+     * tags={"Sopir"},
+     * @OA\Response(
+     *  response=200,
+     *  description="Data Sopir berhasil ditemukan"
+     * ),
+     * ),
+     * @OAS\SecurityScheme(
+     *  securityScheme="bearerAuth",
+     *  type="http",
+     *  scheme="bearer",
+     *  bearerFormat="JWT"
+     * )
      */
     public function index()
     {
@@ -32,10 +46,38 @@ class SopirController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @OA\Post(
+     * path="/api/master/sopir",
+     * summary="Tambah data sopir",
+     * security={{ "apiAuth": {} }},
+     * tags = {"Sopir"},
+     * @OA\RequestBody(
+     *   required=true,
+     *   description="Data yang dibutuhkan untuk menambah data sopir",
+     *   @OA\JsonContent(
+     *     required={"nama","ktp","sim","nomor_hp","alamat","tanggal_gabung","status"},
+     *     
+     *   )
+     * ),
+     * @OA\Response(
+     *   response=200,
+     *  description="Data Sopir berhasil ditambahkan"
+     *  ),
+     * @OA\Response(
+     *  response=400,
+     * description="Data Sopir gagal ditambahkan"
+     * ),
+     * @OA\Response(
+     * response=422,
+     * description="Data yang dibutuhkan tidak lengkap"
+     * ),
+     * ),
+     * @OAS\SecurityScheme(
+     *  securityScheme="bearerAuth",
+     *  type="http",
+     *  scheme="bearer",
+     *  bearerFormat="JWT"
+     * )
      */
     public function store(CreateRequest $request)
     {
