@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Transaksi\TagihanController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,3 +25,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/transaksi/laporan/invoice/{id}/export',[TagihanController::class, 'generatePDF']);

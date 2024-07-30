@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\Master\TambahanController;
 use App\Http\Controllers\Api\Transaksi\LainLainController;
 use App\Http\Controllers\Api\Transaksi\NotaBeliController;
 use App\Http\Controllers\Api\Transaksi\ServisController;
+use App\Http\Controllers\Api\Transaksi\TagihanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\RegisterController;
@@ -192,6 +193,12 @@ Route::group(['prefix' => 'transaksi'], function () {
         Route::get("/{id}", [NotaBeliController::class, "show"]);
         Route::put("/{id}", [NotaBeliController::class, "update"]);
         Route::delete("/{id}", [NotaBeliController::class, "destroy"]);
+    });
+
+    Route::group(["prefix" => "laporan/invoice"], function(){
+        Route::get("/", [TagihanController::class, "index"]);
+        Route::post("/", [TagihanController::class, "create"]);
+        Route::delete("/{id}", [TagihanController::class, "destroy"]);
     });
 
     

@@ -351,6 +351,76 @@
                 }
             }
         },
+        "/api/transaksi/laporan/invoice": {
+            "get": {
+                "tags": [
+                    "Laporan Invoice"
+                ],
+                "summary": "Get data invoice",
+                "operationId": "d91febac05bf5076279f6914b0425ec2",
+                "responses": {
+                    "200": {
+                        "description": "Data invoice berhasil ditemukan"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Laporan Invoice"
+                ],
+                "summary": "Tambah data invoice",
+                "operationId": "8cfec2ae32cc03fd9c135d5857164e9f",
+                "requestBody": {
+                    "description": "Data yang dibutuhkan untuk menambah data invoice",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "order_detail",
+                                    "singkatan",
+                                    "m_penyewa_id",
+                                    "master_rekening_id"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Data invoice berhasil ditambahkan"
+                    },
+                    "400": {
+                        "description": "Data invoice gagal ditambahkan"
+                    },
+                    "422": {
+                        "description": "Data yang dibutuhkan tidak lengkap"
+                    }
+                }
+            }
+        },
+        "/api/transaksi/laporan/invoice/{id}": {
+            "delete": {
+                "tags": [
+                    "Laporan Invoice"
+                ],
+                "summary": "Hapus data invoice",
+                "operationId": "0e954b4a437edf66da1a19b058abb1d4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID dari invoice/tagihan",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data Invoice/Tagihan berhasil dihapus"
+                    }
+                }
+            }
+        },
         "/api/login": {
             "post": {
                 "tags": [
