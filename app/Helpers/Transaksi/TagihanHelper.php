@@ -21,8 +21,8 @@ class TagihanHelper
         // cek data no_invoice terakhir di tabel transaksi_tagihan
         $getLastTransaksi = TransaksiTagihanModel::orderByRaw(DB::raw("SUBSTRING(no_tagihan, 1, 4) DESC"))->first();
 
-        // date now format DDMMYYYY
-        $dateNow = date("dmy");
+        // date now format ymd
+        $dateNow = date("ymd");
 
         $no_tagihan = "001/IPL/" . $payload['singkatan'] . $dateNow;
         // generate no_invoice baru
