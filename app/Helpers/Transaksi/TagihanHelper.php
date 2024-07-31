@@ -22,14 +22,16 @@ class TagihanHelper
         $getLastTransaksi = TransaksiTagihanModel::orderByRaw(DB::raw("SUBSTRING(no_tagihan, 1, 4) DESC"))->first();
 
         // date now format DDMMYYYY
-        $dateNow = date("dmY");
+        $dateNow = date("dmy");
 
         $no_tagihan = "001/IPL/" . $payload['singkatan'] . $dateNow;
         // generate no_invoice baru
         if (!empty($getLastTransaksi) && !is_null($getLastTransaksi)) {
-            $number_inc = substr($getLastTransaksi->no_tagihan, 1, 3);
-            $format_no_tagihan = substr($getLastTransaksi->no_tagihan, 4);
-            $no_tagihan = $number_inc . $format_no_tagihan;
+            $number_inc = substr($getLastTransaksi->no_tagihan, 0, 3);
+            $number_inc++;
+            $number_inc = str_pad($number_inc,3,0, STR_PAD_LEFT);
+            $format_no_tagihan = substr($getLastTransaksi->no_tagihan, 3,5);
+            $no_tagihan = $number_inc . $format_no_tagihan .$payload['singkatan']. $dateNow;
         }
 
         return $no_tagihan;

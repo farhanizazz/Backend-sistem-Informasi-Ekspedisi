@@ -53,7 +53,7 @@ function terbilang($nilai) {
         <tr>
             <td>No. Invoice</td>
             <td>:</td>
-            <td> 001/IPL/APL240418</td>
+            <td>{{$data->no_tagihan}}</td>
         </tr>
         <tr>
             <td>Hal</td>
