@@ -162,6 +162,11 @@ class OrderModel extends Model
         $data = $this->when($filter['status_kendaraan'],function($query) use($filter){
             $query->where("status_kendaraan", $filter['status_kendaraan']);
         })->with(['penyewa', 'armada', 'sopir', 'subkon'])
+        ->when($filter['nama_penyewa'] && isset($filter['nama_penyewa']),function($query) use($filter){
+            $query->whereHas('penyewa',function($query2) use($filter){
+                $query2->where('nama_perusahaan','like','%'.$filter['nama_penyewa'].'%');
+            });
+        })
         ->when($filter['cari'],function($query) use($filter){
             $query->where(function($query2) use($filter){
                 $query2->where('no_transaksi','like','%'.$filter['cari'].'%')

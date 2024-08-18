@@ -26,7 +26,8 @@ class OrderController extends Controller
     {
         $filter = [
             "status_kendaraan" => $request->status_kendaraan ?? null,
-            "cari"              => $request->cari ?? null
+            "cari"              => $request->cari ?? null,
+            "nama_penyewa"      => $request->nama_penyewa ?? null
         ];
         return response()->json([
             'status' => 'success',
