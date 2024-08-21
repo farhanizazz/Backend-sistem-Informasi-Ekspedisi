@@ -63,6 +63,8 @@ class OrderResource extends JsonResource
             'total_mutasi_order' => $this->mutasi_order->sum('nominal'),
             'total_mutasi_jual' => $this->mutasi_jual->sum('nominal'),
             'total_mutasi_jalan' => $this->mutasi_jalan->sum('nominal'),
+            'status_lunas' => $this->status_lunas,
+            'total_terbayar' => $this->total_terbayar
         ];
     }
 }

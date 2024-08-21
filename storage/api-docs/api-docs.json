@@ -297,6 +297,28 @@
                 }
             }
         },
+        "/api/transaksi/order": {
+            "get": {
+                "tags": [
+                    "Transaksi Order"
+                ],
+                "summary": "Get data Transaksi/order",
+                "operationId": "764a9e3a7560daa8af17ff4fdf5003dd",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Kata kunci untuk mencari data Transaksi order",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data Transaksi order berhasil ditemukan"
+                    }
+                }
+            }
+        },
         "/api/laporan/servis": {
             "get": {
                 "tags": [

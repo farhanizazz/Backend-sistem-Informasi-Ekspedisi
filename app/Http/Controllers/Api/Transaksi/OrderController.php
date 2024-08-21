@@ -22,12 +22,31 @@ class OrderController extends Controller
         $this->orderModel = new OrderModel();
     }
 
+    /**
+     * @OA\Get(
+     * path="/api/transaksi/order",
+     * summary="Get data Transaksi/order",
+     * tags={"Transaksi Order"},
+     * @OA\Parameter(
+     *  name="search",
+     *  description="Kata kunci untuk mencari data Transaksi order",
+     *  required=false,
+     *  in="query",
+     * ),
+     * @OA\Response(
+     *  response=200,
+     *  description="Data Transaksi order berhasil ditemukan"
+     * ),
+     * )
+     */
     public function index(Request $request)
     {
         $filter = [
             "status_kendaraan" => $request->status_kendaraan ?? null,
             "cari"              => $request->cari ?? null,
-            "nama_penyewa"      => $request->nama_penyewa ?? null
+            "nama_penyewa"      => $request->nama_penyewa ?? null,
+            "status_lunas"      => $request->status_lunas ?? null,
+            "ppn"               => $request->ppn ?? null,
         ];
         return response()->json([
             'status' => 'success',

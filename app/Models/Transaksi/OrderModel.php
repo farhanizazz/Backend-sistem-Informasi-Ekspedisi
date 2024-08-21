@@ -190,11 +190,45 @@ class OrderModel extends Model
                 ->orWhere('catatan_surat_jalan','like','%'.$filter['cari'].'%')
                 ->orWhere("harga_order","like","%".$filter['cari']."%");
             });
+        })
+        ->when($filter['ppn'],function($query) use($filter){
+            $query->where("ppn", $filter['ppn']);
+        })
+        ->select(DB::raw(
+            "CASE
+            WHEN transaksi_order.status_kendaraan = 'Sendiri'
+             THEN 
+              (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'order') 
+             ELSE 
+              (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'jual')
+            END
+           AS total_terbayar
+         ,CASE 
+            WHEN transaksi_order.status_kendaraan = 'Sendiri'
+             THEN
+               IF(transaksi_order.harga_order_bersih <= (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'order'),'lunas','belum_lunas') 
+             ELSE
+               IF(transaksi_order.harga_jual_bersih <= (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'jual'),'lunas','belum_lunas')
+             END 
+           AS status_lunas,transaksi_order.*"
+        ))
+        ->when($filter['status_lunas'] == 'lunas', function($q){
+            $q->whereRaw(
+                "IF(true, transaksi_order.harga_order_bersih <= (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'order')
+                ,transaksi_order.harga_jual_bersih <= (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'jual'))"
+            );
+        })
+        ->when($filter['status_lunas'] == 'belum_lunas', function($q){
+            $q->whereRaw(
+                "IF(true, transaksi_order.harga_order_bersih > (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'order')
+                ,transaksi_order.harga_jual_bersih > (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'jual'))"
+            );
         });
         $data = $data->orderByRaw("tanggal_awal DESC," .(DB::raw("CAST(SUBSTRING_INDEX(no_transaksi, '.', -1) AS UNSIGNED) DESC")));
         $sort = "no_transaksi DESC";
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
-        return $data->paginate($itemPerPage)->appends("sort", $sort);
+        // return $data->paginate($itemPerPage)->appends("sort", $sort);
+        return ($data->paginate($itemPerPage)->appends("sort", $sort));
     }
 
     /**
