@@ -92,7 +92,7 @@ class OrderModel extends Model
             return [];
         }
         return array_map(function($data){
-                    $rekeningData = TambahanModel::where('id',$data['m_tambahan_id'])->first();
+                    $rekeningData = TambahanModel::where('id',$data['m_tambahan_id'] ?? '')->first();
                     $sifat = $rekeningData->sifat ?? '';
                     $nama = $rekeningData->nama ?? '';
                     return array_merge($data,['sifat' => $sifat, 'nama' => $nama]);
@@ -191,8 +191,11 @@ class OrderModel extends Model
                 ->orWhere("harga_order","like","%".$filter['cari']."%");
             });
         })
-        ->when($filter['ppn'],function($query) use($filter){
-            $query->where("ppn", $filter['ppn']);
+        ->when($filter['ppn'] == 'ada',function($query) use($filter){
+            $query->whereNotNull("ppn");
+        })
+        ->when($filter['ppn'] == 'tidak_ada',function($query) use($filter){
+            $query->whereNull("ppn");
         })
         ->select(DB::raw(
             "CASE
