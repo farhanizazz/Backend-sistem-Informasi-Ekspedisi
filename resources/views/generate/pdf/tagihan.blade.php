@@ -77,7 +77,7 @@ function terbilang($nilai) {
     </table>
 </div>
 <div class="" style="margin-top: 1rem;margin-left:3rem;margin-right:3rem;">
-    <table border style="border: solid 1px black;border-collapse: collapse;">
+    <table border="1" style="border: solid 1px black;border-collapse: collapse;">
         <thead>
             <tr>
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">TGL MUAT</th>

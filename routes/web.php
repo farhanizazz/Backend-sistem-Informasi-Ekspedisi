@@ -26,4 +26,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/transaksi/laporan/invoice/{id}/export',[TagihanController::class, 'generatePDF']);
+Route::get('/transaksi/laporan/invoice/{id}/export',[TagihanController::class, 'generateWORD']);

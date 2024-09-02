@@ -3,19 +3,24 @@
 namespace App\Http\Controllers\Api\Transaksi;
 
 use App\Helpers\Transaksi\TagihanHelper;
+use App\Helpers\Transaksi\WordHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TagihanRequest\CreateRequest;
 use App\Http\Resources\Tagihan\TagihanCollection;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
 
 class TagihanController extends Controller
 {
-    private $transaksiTagihanHelper;
+    private $transaksiTagihanHelper, $wordHelper;
 
-    public function __construct()
+    public function __construct(WordHelper $wordHelper)
     {
+        $this->wordHelper = $wordHelper;
         $this->transaksiTagihanHelper = new TagihanHelper();
     }
 
@@ -148,7 +153,24 @@ class TagihanController extends Controller
             $date_indo = Carbon::parse($transaksi_tagihan['data']['created_at'])->translatedFormat('j F Y');
             $data = ['data' => $transaksi_tagihan['data'], 'title' => 'Invoice Tagihan '  . 'No. ' . $transaksi_tagihan['data']['no_tagihan'], 'tanggal' => $date_indo];
             $pdf = Pdf::setPaper('A4','portrait')->loadView('generate.pdf.tagihan', $data);
-            return $pdf->stream('Invoice Tagihan '  . 'No. ' . $transaksi_tagihan['data']['no_tagihan']. 'pdf');
+            return $pdf->stream('Invoice Tagihan '  . 'No. ' . $transaksi_tagihan['data']['no_tagihan']. '.docx');
+        }
+        return [
+            'status' => 'error',
+            'message' => $transaksi_tagihan['message'],
+            'dev'     => $transaksi_tagihan['dev']
+        ];
+    }
+
+    public function generateWord(string | int $id){
+
+        $transaksi_tagihan = $this->transaksiTagihanHelper->getById($id);
+
+        if ($transaksi_tagihan['status']) {
+            $result = $this->wordHelper->generateWord($transaksi_tagihan);
+
+            // Mengirim file ke browser untuk diunduh
+            return response()->download($result)->deleteFileAfterSend(true);
         }
         return [
             'status' => 'error',

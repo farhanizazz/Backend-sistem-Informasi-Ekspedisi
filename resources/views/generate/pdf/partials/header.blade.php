@@ -1,1 +1,1 @@
-<img src="assets/images/header-invoice.png" style="object-fit: contain;">
+<img src="assets/images/header-invoice.png" style="object-fit: contain;" />
