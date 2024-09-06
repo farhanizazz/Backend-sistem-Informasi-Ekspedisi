@@ -165,12 +165,16 @@ Route::group(['prefix' => "subkon"], function () {
 });
 // });
 Route::group(['prefix' => 'transaksi'], function () {
-    Route::group(['prefix' => 'hutang_sopir'], function () {
+    Route::group(['prefix' => 'hutang-sopir'], function () {
+        Route::get("/total", [HutangSopirController::class, "total"]);
+        Route::get("/total/{id}", [HutangSopirController::class, "totalById"]);
         Route::get("/", [HutangSopirController::class, "index"]);
         Route::post("/", [HutangSopirController::class, "store"]);
         Route::get("/{id}", [HutangSopirController::class, "show"]);
         Route::put("/{id}", [HutangSopirController::class, "update"]);
         Route::delete("/{id}", [HutangSopirController::class, "destroy"]);
+
+        
     });
 
     Route::group(['prefix' => 'order'], function () {

@@ -212,6 +212,123 @@
                 }
             }
         },
+        "/api/transaksi/hutang-sopir": {
+            "get": {
+                "tags": [
+                    "Transaksi Hutang Sopir"
+                ],
+                "summary": "Get data Hutang Sopir",
+                "operationId": "914df7eeeb7c1700a4e50820fd08305b",
+                "responses": {
+                    "200": {
+                        "description": "Data Hutang Sopir berhasil ditemukan"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Transaksi Hutang Sopir"
+                ],
+                "summary": "Create data Hutang Sopir",
+                "operationId": "e6d45da80feced992e0f0eaaf7b15df3",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tgl_transaksi",
+                                    "master_sopir_id"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Data Hutang Sopir berhasil ditambahkan"
+                    }
+                }
+            }
+        },
+        "/api/transaksi/hutang-sopir/{id}": {
+            "get": {
+                "tags": [
+                    "Transaksi Hutang Sopir"
+                ],
+                "summary": "Get data Hutang Sopir by ID",
+                "operationId": "d4ee7669f2319eadb99e6cacecb3cde2",
+                "responses": {
+                    "200": {
+                        "description": "Data Hutang Sopir berhasil ditemukan"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Transaksi Hutang Sopir"
+                ],
+                "summary": "Update data Hutang Sopir",
+                "operationId": "31c649ef23882733ccfb22985b34ae0b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tgl_transaksi",
+                                    "master_sopir_id"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Data Hutang Sopir berhasil diubah"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Transaksi Hutang Sopir"
+                ],
+                "summary": "Delete data Hutang Sopir",
+                "operationId": "500f3a81d60049224d3113dec8648aa8",
+                "responses": {
+                    "200": {
+                        "description": "Data Hutang Sopir berhasil dihapus"
+                    }
+                }
+            }
+        },
+        "/api/transaksi/hutang-sopir/total": {
+            "get": {
+                "tags": [
+                    "Transaksi Hutang Sopir"
+                ],
+                "summary": "Get total Hutang Sopir",
+                "operationId": "da7bdfcafd0e04c8e6f3475151bc0190",
+                "responses": {
+                    "200": {
+                        "description": "Total Hutang Sopir berhasil ditemukan"
+                    }
+                }
+            }
+        },
+        "/api/transaksi/hutang-sopir/total/{id}": {
+            "get": {
+                "tags": [
+                    "Transaksi Hutang Sopir"
+                ],
+                "summary": "Get total Hutang Sopir by ID",
+                "operationId": "2484de8912729441aa133d9bf3403c15",
+                "responses": {
+                    "200": {
+                        "description": "Total Hutang Sopir berhasil ditemukan"
+                    }
+                }
+            }
+        },
         "/api/laporan/lainlain": {
             "get": {
                 "tags": [
