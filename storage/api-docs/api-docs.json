@@ -336,6 +336,13 @@
                 ],
                 "summary": "Get Hutang Sopir by ID",
                 "operationId": "ca0a02872cfb7420545898335b355a11",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Hutang Sopir berhasil ditemukan"

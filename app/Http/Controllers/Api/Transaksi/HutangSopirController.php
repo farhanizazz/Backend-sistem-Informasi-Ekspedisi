@@ -279,6 +279,11 @@ class HutangSopirController extends Controller
      * @OA\Get(
      * path="/api/transaksi/hutang-sopir/{id}/list",
      * summary="Get Hutang Sopir by ID",
+     * @OA\Parameter(
+     * name="id",
+     * in="path",
+     * required=true,
+     * ),
      * tags = {"Transaksi Hutang Sopir"},
      * @OA\Response(
      * response=200,
