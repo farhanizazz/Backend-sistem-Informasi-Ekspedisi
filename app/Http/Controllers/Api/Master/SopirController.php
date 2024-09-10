@@ -5,16 +5,19 @@ namespace App\Http\Controllers\Api\Master;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SopirRequest\CreateRequest;
 use App\Http\Requests\SopirRequest\UpdateRequest;
+use App\Http\Resources\Sopir\SopirCollection;
 use App\Models\Master\SopirModel;
+use App\Services\SopirService;
 use Illuminate\Http\Request;
 
 class SopirController extends Controller
 {
-    private $sopirModel;
+    private $sopirModel, $sopirService;
 
-    public function __construct()
+    public function __construct(SopirService $sopirService)
     {
         $this->sopirModel = new SopirModel();
+        $this->sopirService = $sopirService;
     }
 
     /**
@@ -22,6 +25,12 @@ class SopirController extends Controller
      * path="/api/master/sopir",
      * summary="Get data Sopir",
      * security={{ "apiAuth": {} }},
+     * @OA\Parameter(
+     * name="itemPerPage",
+     * in="query",
+     * description="Jumlah data per halaman",
+     * required=false,
+     * ),
      * tags={"Sopir"},
      * @OA\Response(
      *  response=200,
@@ -35,14 +44,16 @@ class SopirController extends Controller
      *  bearerFormat="JWT"
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->sopirModel->orderBy('status', 'asc')->get();
+        $data = $this->sopirService->getPaginate($request);
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $data,
-        ]);
+        return response()->json(
+            [
+                'status' => 'success',
+                'data' => new SopirCollection($data)
+            ]
+        );
     }
 
     /**

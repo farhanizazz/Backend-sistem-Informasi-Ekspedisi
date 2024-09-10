@@ -284,6 +284,11 @@ class HutangSopirController extends Controller
      * in="path",
      * required=true,
      * ),
+     * @OA\Parameter(
+     * name="itemPerPage",
+     * in="query",
+     * required=false,
+     * ),
      * tags = {"Transaksi Hutang Sopir"},
      * @OA\Response(
      * response=200,

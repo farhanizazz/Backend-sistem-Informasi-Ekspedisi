@@ -105,6 +105,14 @@
                 ],
                 "summary": "Get data Sopir",
                 "operationId": "1911849d0595c53e19e594a07680b366",
+                "parameters": [
+                    {
+                        "name": "itemPerPage",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Data Sopir berhasil ditemukan"
@@ -159,13 +167,13 @@
                 ]
             }
         },
-        "/register": {
+        "/api/register": {
             "post": {
                 "tags": [
                     "Auth"
                 ],
                 "summary": "Register new user",
-                "operationId": "a97e586990d0776b795fe45dfced8147",
+                "operationId": "033018bfc55e9aa36e8e43da2c3b08d1",
                 "requestBody": {
                     "description": "Data that will be used to register new user",
                     "required": true,
@@ -341,6 +349,11 @@
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "name": "itemPerPage",
+                        "in": "query",
+                        "required": false
                     }
                 ],
                 "responses": {

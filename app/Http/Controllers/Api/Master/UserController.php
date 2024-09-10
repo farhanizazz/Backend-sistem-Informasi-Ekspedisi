@@ -24,7 +24,7 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *  path="/register",
+     *  path="/api/register",
      *  summary="Register new user",
      *  tags={"Auth"},
      *  @OA\RequestBody(
