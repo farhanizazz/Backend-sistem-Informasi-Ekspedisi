@@ -19,7 +19,7 @@ class HutangSopirModel extends Model
     ];
     public function master_sopir()
     {
-        return $this->belongsTo(SopirModel::class);
+        return $this->belongsTo(SopirModel::class, 'master_sopir_id', 'id');
     }
 
     public function getKetTransAttribute(){

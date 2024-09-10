@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Transaksi;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HutangSopirRequest\CreateRequest;
 use App\Http\Requests\HutangSopirRequest\UpdateRequest;
+use App\Http\Resources\HutangSopir\HutangPerSopirCollection;
 use App\Models\Transaksi\HutangSopirModel;
 use App\Services\HutangSopirService;
 use Illuminate\Http\Request;
@@ -271,6 +272,27 @@ class HutangSopirController extends Controller
             [
                 'status' => 'success',
                 'data' => $data
+            ]
+        );
+    }
+    /**
+     * @OA\Get(
+     * path="/api/transaksi/hutang-sopir/{id}/list",
+     * summary="Get Hutang Sopir by ID",
+     * tags = {"Transaksi Hutang Sopir"},
+     * @OA\Response(
+     * response=200,
+     * description="Hutang Sopir berhasil ditemukan"
+     * )
+     * )
+     */
+    public function getListHutangSopirById($id, Request $request)
+    {
+        $data = $this->hutangSopirService->getHutangSopirById($id, $request);
+        return response()->json(
+            [
+                'status' => 'success',
+                'data' => new HutangPerSopirCollection($data['list'], $data['sopir'])
             ]
         );
     }

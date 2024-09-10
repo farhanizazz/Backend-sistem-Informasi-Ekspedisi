@@ -5,6 +5,7 @@ interface HutangSopirRepositoryInterface
 {
     public function getPaginate();
     public function getJumlahHutangSopir();
+    public function getHutangSopirById($id, $itemPerPage);
     public function getJumalhHutangSopirById($id);
     public function getById($id);
     public function create($data);
