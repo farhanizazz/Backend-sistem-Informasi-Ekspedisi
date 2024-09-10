@@ -61,6 +61,7 @@ Route::middleware('jwt.verify')->group(function () {
         });
         Route::group(['prefix' => "sopir"], function () {
             Route::get("/", [SopirController::class, "index"]);
+            Route::get("/paginate", [SopirController::class, "paginate"]);
             Route::post("/", [SopirController::class, "store"]);
             Route::get("/{id}", [SopirController::class, "show"]);
             Route::put("/{id}", [SopirController::class, "update"]);

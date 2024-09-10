@@ -25,6 +25,36 @@ class SopirController extends Controller
      * path="/api/master/sopir",
      * summary="Get data Sopir",
      * security={{ "apiAuth": {} }},
+     * tags={"Sopir"},
+     * @OA\Response(
+     *  response=200,
+     *  description="Data Sopir berhasil ditemukan"
+     * ),
+     * ),
+     * @OAS\SecurityScheme(
+     *  securityScheme="bearerAuth",
+     *  type="http",
+     *  scheme="bearer",
+     *  bearerFormat="JWT"
+     * )
+     */
+    public function index(Request $request)
+    {
+        $data = $this->sopirService->getAll($request);
+
+        return response()->json(
+            [
+                'status' => 'success',
+                'data' => $data
+            ]
+        );
+    }
+
+        /**
+     * @OA\Get(
+     * path="/api/master/sopir/paginate",
+     * summary="Get data Sopir",
+     * security={{ "apiAuth": {} }},
      * @OA\Parameter(
      * name="itemPerPage",
      * in="query",
@@ -44,7 +74,7 @@ class SopirController extends Controller
      *  bearerFormat="JWT"
      * )
      */
-    public function index(Request $request)
+    public function paginate(Request $request)
     {
         $data = $this->sopirService->getPaginate($request);
 

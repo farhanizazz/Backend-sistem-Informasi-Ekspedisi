@@ -13,9 +13,14 @@ class HutangSopirRepository implements HutangSopirRepositoryInterface
     $this->model = $model;
   }
 
-	public function getPaginate()
+	public function getAll(){
+		// implementation goes here
+	}
+
+	public function getPaginate($itemPerPage)
 	{
 		// implementation goes here
+		return $this->model->paginate($itemPerPage);
 	}
 
 	public function getById($id)

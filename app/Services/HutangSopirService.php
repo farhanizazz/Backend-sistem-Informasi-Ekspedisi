@@ -13,6 +13,12 @@ class HutangSopirService{
     $this->hutangSopirRepository = $hutangSopirRepository;
   }
 
+  public function getPaginate(Request $request)
+  {
+    $itemPerPage = $request->get('itemPerPage') ?? 10;
+    return $this->hutangSopirRepository->getPaginate($itemPerPage);
+  }
+
   public function getTotalHutangSopir()
   {
     return $this->hutangSopirRepository->getJumlahHutangSopir();

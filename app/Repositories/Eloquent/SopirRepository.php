@@ -14,6 +14,11 @@ class SopirRepository implements SopirRepositoryInterface
         $this->model = $model;
     }
 
+    public function getAll()
+    {
+        return $this->model->get();
+    }
+
     public function getPaginate($itemPerPage)
     {
         return $this->model->paginate($itemPerPage);

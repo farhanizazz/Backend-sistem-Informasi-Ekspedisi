@@ -105,14 +105,6 @@
                 ],
                 "summary": "Get data Sopir",
                 "operationId": "1911849d0595c53e19e594a07680b366",
-                "parameters": [
-                    {
-                        "name": "itemPerPage",
-                        "in": "query",
-                        "description": "Jumlah data per halaman",
-                        "required": false
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Data Sopir berhasil ditemukan"
@@ -158,6 +150,33 @@
                     },
                     "422": {
                         "description": "Data yang dibutuhkan tidak lengkap"
+                    }
+                },
+                "security": [
+                    {
+                        "apiAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/master/sopir/paginate": {
+            "get": {
+                "tags": [
+                    "Sopir"
+                ],
+                "summary": "Get data Sopir",
+                "operationId": "5277acdb8b332c4d4606d1551c945f78",
+                "parameters": [
+                    {
+                        "name": "itemPerPage",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data Sopir berhasil ditemukan"
                     }
                 },
                 "security": [
@@ -227,6 +246,13 @@
                 ],
                 "summary": "Get data Hutang Sopir",
                 "operationId": "914df7eeeb7c1700a4e50820fd08305b",
+                "parameters": [
+                    {
+                        "name": "itemPerPage",
+                        "in": "query",
+                        "required": false
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Data Hutang Sopir berhasil ditemukan"

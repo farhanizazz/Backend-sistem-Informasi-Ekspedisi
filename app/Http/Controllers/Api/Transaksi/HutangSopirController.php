@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\HutangSopirRequest\CreateRequest;
 use App\Http\Requests\HutangSopirRequest\UpdateRequest;
 use App\Http\Resources\HutangSopir\HutangPerSopirCollection;
+use App\Http\Resources\HutangSopir\HutangSopirCollection;
 use App\Models\Transaksi\HutangSopirModel;
 use App\Services\HutangSopirService;
 use Illuminate\Http\Request;
@@ -30,20 +31,25 @@ class HutangSopirController extends Controller
      * path="/api/transaksi/hutang-sopir",
      * summary="Get data Hutang Sopir",
      * tags={"Transaksi Hutang Sopir"},
+     * @OA\Parameter(
+     * name="itemPerPage",
+     * in="query",
+     * required=false,
+     * ),
      * @OA\Response(
      * response=200,
      * description="Data Hutang Sopir berhasil ditemukan"
      * ),
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = HutangSopirModel::with('master_sopir')->get();
+        $data = $this->hutangSopirService->getPaginate($request);
 
         return response()->json(
             [
                 'status' => 'success',
-                'data' => $data
+                'data' => new HutangSopirCollection($data)
             ]
         );
     }

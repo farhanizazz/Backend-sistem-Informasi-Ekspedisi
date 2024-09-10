@@ -12,6 +12,12 @@ class SopirService
     {
         $this->sopirRepository = $sopirRepository;
     }
+
+    public function getAll()
+    {
+        return $this->sopirRepository->getAll();
+    }
+
     public function getPaginate(Request $request)
     {
         $itemPerPage = $request->input('itemPerPage') ?? 10;

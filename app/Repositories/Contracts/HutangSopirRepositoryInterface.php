@@ -3,7 +3,8 @@
 namespace App\Repositories\Contracts;
 interface HutangSopirRepositoryInterface
 {
-    public function getPaginate();
+    public function getAll();
+    public function getPaginate($itemPerPage);
     public function getJumlahHutangSopir();
     public function getHutangSopirById($id, $itemPerPage);
     public function getJumalhHutangSopirById($id);
