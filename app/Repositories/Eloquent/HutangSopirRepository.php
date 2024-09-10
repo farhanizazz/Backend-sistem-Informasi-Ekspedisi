@@ -20,7 +20,7 @@ class HutangSopirRepository implements HutangSopirRepositoryInterface
 	public function getPaginate($itemPerPage)
 	{
 		// implementation goes here
-		return $this->model->paginate($itemPerPage);
+		return $this->model->with('master_sopir:id,nama')->paginate($itemPerPage);
 	}
 
 	public function getById($id)
