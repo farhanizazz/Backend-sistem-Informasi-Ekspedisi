@@ -342,6 +342,13 @@
                 ],
                 "summary": "Get total Hutang Sopir",
                 "operationId": "da7bdfcafd0e04c8e6f3475151bc0190",
+                "parameters": [
+                    {
+                        "name": "itemPerPage",
+                        "in": "query",
+                        "required": false
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Total Hutang Sopir berhasil ditemukan"

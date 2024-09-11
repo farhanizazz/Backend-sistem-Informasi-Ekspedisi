@@ -7,6 +7,7 @@ use App\Http\Requests\HutangSopirRequest\CreateRequest;
 use App\Http\Requests\HutangSopirRequest\UpdateRequest;
 use App\Http\Resources\HutangSopir\HutangPerSopirCollection;
 use App\Http\Resources\HutangSopir\HutangSopirCollection;
+use App\Http\Resources\HutangSopir\JumlahHutangSopirCollection;
 use App\Models\Transaksi\HutangSopirModel;
 use App\Services\HutangSopirService;
 use Illuminate\Http\Request;
@@ -243,19 +244,24 @@ class HutangSopirController extends Controller
      * path="/api/transaksi/hutang-sopir/total",
      * summary="Get total Hutang Sopir",
      * tags = {"Transaksi Hutang Sopir"},
+     * @OA\Parameter(
+     * name="itemPerPage",
+     * in="query",
+     * required=false,
+     * ),
      * @OA\Response(
      * response=200,
      * description="Total Hutang Sopir berhasil ditemukan"
      * )
      * )
      */
-    public function total()
+    public function total(Request $request)
     {
-        $data = $this->hutangSopirService->getTotalHutangSopir();
+        $data = $this->hutangSopirService->getTotalHutangSopir($request);
         return response()->json(
             [
                 'status' => 'success',
-                'data' => $data
+                'data' => new JumlahHutangSopirCollection($data)
             ]
         );
     }

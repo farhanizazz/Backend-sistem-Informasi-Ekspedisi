@@ -43,14 +43,14 @@ class HutangSopirRepository implements HutangSopirRepositoryInterface
 		// implementation goes here
 	}
 
-	public function getJumlahHutangSopir()
+	public function getJumlahHutangSopir($itemPerPage)
 	{
 		// implementation goes here
     return $this->model
       ->with('master_sopir:id,nama')  
       ->selectRaw('master_sopir_id,sum(nominal_trans) as total_hutang')
       ->groupBy('master_sopir_id')
-      ->get();
+      ->paginate($itemPerPage);
 	}
 
   public function getJumalhHutangSopirById($id)
