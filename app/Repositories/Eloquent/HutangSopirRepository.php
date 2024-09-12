@@ -60,8 +60,11 @@ class HutangSopirRepository implements HutangSopirRepositoryInterface
       ->where('master_sopir_id',$id)->selectRaw('master_sopir_id,sum(nominal_trans) as total_hutang')->first();
   }
 
-	public function getHutangSopirById($id, $itemPerPage)
+	public function getHutangSopirById($id, $itemPerPage,$nama,$nominal,$tanggal)
 	{
-		return $this->model->where('master_sopir_id',$id)->paginate($itemPerPage);
+		return $this->model->where('master_sopir_id',$id)
+		->where('nominal_trans','like','%'.$nominal.'%')
+		->where('tgl_transaksi','like','%'.$tanggal.'%')				
+		->paginate($itemPerPage);
 	}
 }

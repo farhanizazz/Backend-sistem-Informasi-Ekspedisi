@@ -33,7 +33,10 @@ class HutangSopirService{
   public function getHutangSopirById($id,Request $request)
   {
     $itemPerPage = $request->get('itemPerPage') ?? 10;
-    $listHutang = $this->hutangSopirRepository->getHutangSopirById($id, $itemPerPage);
+    $nama = $request->get('nama') ?? '';
+    $nominal = $request->get('nominal') ?? '';
+    $tanggal = $request->get('tanggal') ?? '';
+    $listHutang = $this->hutangSopirRepository->getHutangSopirById($id, $itemPerPage, $nama, $nominal, $tanggal);
     $sopir = $this->getTotalHutangSopirById($id);
     return [
       'list' => $listHutang,

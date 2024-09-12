@@ -387,6 +387,16 @@
                         "name": "itemPerPage",
                         "in": "query",
                         "required": false
+                    },
+                    {
+                        "name": "nominal",
+                        "in": "query",
+                        "required": false
+                    },
+                    {
+                        "name": "tanggal",
+                        "in": "query",
+                        "required": false
                     }
                 ],
                 "responses": {

@@ -301,6 +301,16 @@ class HutangSopirController extends Controller
      * in="query",
      * required=false,
      * ),
+     * @OA\Parameter(
+     * name="nominal",
+     * in="query",
+     * required=false,
+     * ),
+     * @OA\Parameter(
+     * name="tanggal",
+     * in="query",
+     * required=false,
+     * ),
      * tags = {"Transaksi Hutang Sopir"},
      * @OA\Response(
      * response=200,
