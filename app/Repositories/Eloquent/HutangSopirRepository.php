@@ -72,6 +72,6 @@ class HutangSopirRepository implements HutangSopirRepositoryInterface
 			->when($search, function ($query) use ($search) {
 				$query->where('nominal_trans', 'like', '%' . $search . '%')
 					->where('tgl_transaksi', 'like', '%' . $search . '%');
-			})->paginate($itemPerPage)->orderByRaw($orderBy);
+			})->orderByRaw($orderBy)->paginate($itemPerPage);
 	}
 }
