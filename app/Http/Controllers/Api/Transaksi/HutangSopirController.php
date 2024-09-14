@@ -249,6 +249,11 @@ class HutangSopirController extends Controller
      * in="query",
      * required=false,
      * ),
+     * @OA\Parameter(
+     * name="search",
+     * in="query",
+     * required=false,
+     * ),
      * @OA\Response(
      * response=200,
      * description="Total Hutang Sopir berhasil ditemukan"
@@ -302,12 +307,12 @@ class HutangSopirController extends Controller
      * required=false,
      * ),
      * @OA\Parameter(
-     * name="nominal",
+     * name="search",
      * in="query",
      * required=false,
      * ),
      * @OA\Parameter(
-     * name="tanggal",
+     * name="orderBy",
      * in="query",
      * required=false,
      * ),

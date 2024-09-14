@@ -347,6 +347,11 @@
                         "name": "itemPerPage",
                         "in": "query",
                         "required": false
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false
                     }
                 ],
                 "responses": {
@@ -389,12 +394,12 @@
                         "required": false
                     },
                     {
-                        "name": "nominal",
+                        "name": "search",
                         "in": "query",
                         "required": false
                     },
                     {
-                        "name": "tanggal",
+                        "name": "orderBy",
                         "in": "query",
                         "required": false
                     }
