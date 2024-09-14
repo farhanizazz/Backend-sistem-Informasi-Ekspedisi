@@ -22,7 +22,8 @@ class HutangSopirService{
   public function getTotalHutangSopir(Request $request)
   {
     $itemPerPage = $request->get('itemPerPage') ?? 10;
-    return $this->hutangSopirRepository->getJumlahHutangSopir($itemPerPage);
+    $search = $request->get('search') ?? '';
+    return $this->hutangSopirRepository->getJumlahHutangSopir($itemPerPage,$search);
   }
 
   public function getTotalHutangSopirById($id)
@@ -33,10 +34,9 @@ class HutangSopirService{
   public function getHutangSopirById($id,Request $request)
   {
     $itemPerPage = $request->get('itemPerPage') ?? 10;
-    $nama = $request->get('nama') ?? '';
-    $nominal = $request->get('nominal') ?? '';
-    $tanggal = $request->get('tanggal') ?? '';
-    $listHutang = $this->hutangSopirRepository->getHutangSopirById($id, $itemPerPage, $nama, $nominal, $tanggal);
+    $search = $request->get('search') ?? '';
+    $orderBy = $request->get('orderBy') ?? 'created_at DESC';
+    $listHutang = $this->hutangSopirRepository->getHutangSopirById($id, $itemPerPage,$search,$orderBy);
     $sopir = $this->getTotalHutangSopirById($id);
     return [
       'list' => $listHutang,
