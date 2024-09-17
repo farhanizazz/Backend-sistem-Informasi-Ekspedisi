@@ -63,7 +63,7 @@ class OrderModel extends Model
         'sisa_hutang_ke_subkon',
         'biaya_lain_harga_order_arr',
         'biaya_lain_harga_jual_arr',
-        'biaya_lain_uang_jalan_arr'
+        'biaya_lain_uang_jalan_arr',
     ];
 
     public function penyewa()
@@ -124,6 +124,8 @@ class OrderModel extends Model
             return array_merge($data,['sifat' => $sifat, 'nama' => $nama]);
         },$this->biaya_lain_harga_jual);
     }
+
+
 
     public function getSisaTagihanAttribute()
     {

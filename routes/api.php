@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Laporan\LaporanPemasukanCVController;
 use App\Http\Controllers\Api\Master\ArmadaController;
 use App\Http\Controllers\Api\Master\PenyewaController;
 use App\Http\Controllers\Api\Master\RekeningController;
@@ -221,4 +222,8 @@ Route::group(['prefix' => 'pengeluaran'], function () {
     Route::get("/{id}", [PengeluaranContoller::class, "show"]);
     Route::put("/{id}", [PengeluaranContoller::class, "update"]);
     Route::delete("/{id}", [PengeluaranContoller::class, "destroy"]);
+});
+
+Route::group(['prefix' => 'laporan'], function (){
+    Route::get("/pemasukan-cv", [LaporanPemasukanCVController::class, "getLaporanPemasukanCV"]);
 });
