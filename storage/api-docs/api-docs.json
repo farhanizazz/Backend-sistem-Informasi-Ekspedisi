@@ -6,6 +6,96 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/laporan/pemasukan-cv": {
+            "get": {
+                "tags": [
+                    "Laporan"
+                ],
+                "summary": "Get data Laporan Pemasukan CV",
+                "operationId": "9d0e5bc9e7579d1755203fc5e2a7983f",
+                "parameters": [
+                    {
+                        "name": "tanggal_awal",
+                        "in": "query",
+                        "description": "Tanggal awal untuk mencari data Laporan Pemasukan CV",
+                        "required": true
+                    },
+                    {
+                        "name": "tanggal_akhir",
+                        "in": "query",
+                        "description": "Tanggal akhir untuk mencari data Laporan Pemasukan CV",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data Laporan Pemasukan CV berhasil ditemukan"
+                    }
+                }
+            }
+        },
+        "/api/laporan/pemasukan-kendaraan-sendiri": {
+            "get": {
+                "tags": [
+                    "Laporan"
+                ],
+                "summary": "Get data Laporan Pemasukan Kendaraan Sendiri",
+                "operationId": "a73f53bf99964b02603401f26b56454d",
+                "parameters": [
+                    {
+                        "name": "tanggal_awal",
+                        "in": "query",
+                        "description": "Tanggal awal untuk mencari data Laporan Pemasukan Kendaraan Sendiri",
+                        "required": true
+                    },
+                    {
+                        "name": "tanggal_akhir",
+                        "in": "query",
+                        "description": "Tanggal akhir untuk mencari data Laporan Pemasukan Kendaraan Sendiri",
+                        "required": true
+                    },
+                    {
+                        "name": "m_armada_id",
+                        "in": "query",
+                        "description": "ID Armada untuk mencari data Laporan Pemasukan Kendaraan Sendiri",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data Laporan Pemasukan Kendaraan Sendiri berhasil ditemukan"
+                    }
+                }
+            }
+        },
+        "/api/laporan/pemasukan-kendaraan-subkon": {
+            "get": {
+                "tags": [
+                    "Laporan"
+                ],
+                "summary": "Get data Laporan Pemasukan Kendaraan Subkon",
+                "operationId": "7913d5958b15b00079a5eff8aaf83ce7",
+                "parameters": [
+                    {
+                        "name": "tanggal_awal",
+                        "in": "query",
+                        "description": "Tanggal awal untuk mencari data Laporan Pemasukan Kendaraan Subkon",
+                        "required": true
+                    },
+                    {
+                        "name": "tanggal_akhir",
+                        "in": "query",
+                        "description": "Tanggal akhir untuk mencari data Laporan Pemasukan Kendaraan Subkon",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data Laporan Pemasukan Kendaraan Subkon berhasil ditemukan"
+                    }
+                }
+            }
+        },
         "/api/master/rekening/mutasi": {
             "get": {
                 "tags": [

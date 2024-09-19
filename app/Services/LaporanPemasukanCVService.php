@@ -1,22 +1,22 @@
 <?php
   namespace App\Services;
-  
-use App\Repositories\Contracts\LaporanPemasukanCVInterface;
+
+use App\Repositories\Contracts\LaporanInterface;
 use Illuminate\Http\Request;
 
   class LaporanPemasukanCVService
   {
-    protected $laporanPemasukanCVRepository;
+    protected $laporanPemasukan;
   
-    public function __construct(LaporanPemasukanCVInterface $laporanPemasukanCVRepository)
+    public function __construct(LaporanInterface $laporanPemasukan)
     {
-      $this->laporanPemasukanCVRepository = $laporanPemasukanCVRepository;
+      $this->laporanPemasukan = $laporanPemasukan;
     }
   
     public function getLaporanPemasukanCV(Request $request)
     {
       $tanggal_awal = $request->tanggal_awal;
       $tanggal_akhir = $request->tanggal_akhir;
-      return $this->laporanPemasukanCVRepository->getLaporanPemasukanCV($tanggal_awal,$tanggal_akhir);
+      return $this->laporanPemasukan->getLaporanPemasukanCV($tanggal_awal,$tanggal_akhir);
     }
   }

@@ -22,8 +22,8 @@ class AppServiceProvider extends ServiceProvider
             'App\Repositories\Eloquent\SopirRepository'
         );
         $this->app->bind(
-            'App\Repositories\Contracts\LaporanPemasukanCVInterface',
-            'App\Repositories\Eloquent\LaporanPemasukanCVRepository'
+            'App\Repositories\Contracts\LaporanInterface',
+            'App\Repositories\Eloquent\LaporanRepository'
         );
     }
 

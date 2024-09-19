@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Laporan\LaporanPemasukanCVController;
+use App\Http\Controllers\Api\Laporan\LaporanPemasukanKendaraanController;
 use App\Http\Controllers\Api\Master\ArmadaController;
 use App\Http\Controllers\Api\Master\PenyewaController;
 use App\Http\Controllers\Api\Master\RekeningController;
@@ -226,4 +227,6 @@ Route::group(['prefix' => 'pengeluaran'], function () {
 
 Route::group(['prefix' => 'laporan'], function (){
     Route::get("/pemasukan-cv", [LaporanPemasukanCVController::class, "getLaporanPemasukanCV"]);
+    Route::get("/pemasukan-kendaraan-sendiri", [LaporanPemasukanKendaraanController::class, "getLaporanPemasukanKendaraanSendiri"]);
+    Route::get("/pemasukan-kendaraan-subkon", [LaporanPemasukanKendaraanController::class, "getLaporanPemasukanKendaraanSubkon"]);
 });
