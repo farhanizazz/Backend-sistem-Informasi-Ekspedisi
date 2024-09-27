@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
     {
       $tanggal_awal = $request->tanggal_awal;
       $tanggal_akhir = $request->tanggal_akhir;
-      return $this->laporanPemasukan->getLaporanPemasukanCV($tanggal_awal,$tanggal_akhir);
+      $itemPerPage = $request->itemPerPage;
+      return $this->laporanPemasukan->getLaporanPemasukanCV($tanggal_awal,$tanggal_akhir,$itemPerPage);
     }
   }

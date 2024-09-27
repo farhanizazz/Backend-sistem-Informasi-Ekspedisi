@@ -4,7 +4,7 @@ namespace App\Http\Resources\Laporan;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class PemasukanCVCollection extends ResourceCollection
+class PengeluaranServisCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.

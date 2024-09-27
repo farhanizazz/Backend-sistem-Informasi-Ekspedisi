@@ -16,4 +16,9 @@ class NotaBeliModel extends Model
         'jumlah',
         'servis_id',
     ];
+
+    public function servis()
+    {
+        return $this->belongsTo(ServisModel::class);
+    }
 }

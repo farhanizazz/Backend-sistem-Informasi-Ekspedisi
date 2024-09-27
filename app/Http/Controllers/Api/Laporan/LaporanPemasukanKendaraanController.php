@@ -40,6 +40,12 @@ class LaporanPemasukanKendaraanController extends Controller
      * required=false,
      * in="query",
      * ),
+     * @OA\Parameter(
+     * name="itemPerPage",
+     * description="Jumlah data per halaman",
+     * required=false,
+     * in="query",
+     * ),
      * @OA\Response(
      * response=200,
      * description="Data Laporan Pemasukan Kendaraan Sendiri berhasil ditemukan"
@@ -72,6 +78,12 @@ class LaporanPemasukanKendaraanController extends Controller
      * name="tanggal_akhir",
      * description="Tanggal akhir untuk mencari data Laporan Pemasukan Kendaraan Subkon",
      * required=true,
+     * in="query",
+     * ),
+     * @OA\Parameter(
+     * name="itemPerPage",
+     * description="Jumlah data per halaman",
+     * required=false,
      * in="query",
      * ),
      * @OA\Response(

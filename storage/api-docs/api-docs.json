@@ -25,6 +25,12 @@
                         "in": "query",
                         "description": "Tanggal akhir untuk mencari data Laporan Pemasukan CV",
                         "required": true
+                    },
+                    {
+                        "name": "itemPerPage",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false
                     }
                 ],
                 "responses": {
@@ -59,6 +65,12 @@
                         "in": "query",
                         "description": "ID Armada untuk mencari data Laporan Pemasukan Kendaraan Sendiri",
                         "required": false
+                    },
+                    {
+                        "name": "itemPerPage",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false
                     }
                 ],
                 "responses": {
@@ -87,11 +99,119 @@
                         "in": "query",
                         "description": "Tanggal akhir untuk mencari data Laporan Pemasukan Kendaraan Subkon",
                         "required": true
+                    },
+                    {
+                        "name": "itemPerPage",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "Data Laporan Pemasukan Kendaraan Subkon berhasil ditemukan"
+                    }
+                }
+            }
+        },
+        "/api/laporan/pengeluaran-servis": {
+            "get": {
+                "tags": [
+                    "Laporan"
+                ],
+                "summary": "Get data Laporan Pengeluaran Servis",
+                "operationId": "468bbe3ab8e4394d09bfc410179fe3e9",
+                "parameters": [
+                    {
+                        "name": "tanggal_awal",
+                        "in": "query",
+                        "description": "Tanggal awal untuk mencari data Laporan Pengeluaran Servis",
+                        "required": true
+                    },
+                    {
+                        "name": "tanggal_akhir",
+                        "in": "query",
+                        "description": "Tanggal akhir untuk mencari data Laporan Pengeluaran Servis",
+                        "required": true
+                    },
+                    {
+                        "name": "itemPerPage",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data Laporan Pengeluaran Servis berhasil ditemukan"
+                    }
+                }
+            }
+        },
+        "/api/laporan/pengeluaran-lain": {
+            "get": {
+                "tags": [
+                    "Laporan"
+                ],
+                "summary": "Get data Laporan Pengeluaran Lain",
+                "operationId": "6d8e5a5858909bc093b1e481984dc3cf",
+                "parameters": [
+                    {
+                        "name": "tanggal_awal",
+                        "in": "query",
+                        "description": "Tanggal awal untuk mencari data Laporan Pengeluaran Lain",
+                        "required": true
+                    },
+                    {
+                        "name": "tanggal_akhir",
+                        "in": "query",
+                        "description": "Tanggal akhir untuk mencari data Laporan Pengeluaran Lain",
+                        "required": true
+                    },
+                    {
+                        "name": "itemPerPage",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data Laporan Pengeluaran Lain berhasil ditemukan"
+                    }
+                }
+            }
+        },
+        "/api/laporan/pengeluaran-semua": {
+            "get": {
+                "tags": [
+                    "Laporan"
+                ],
+                "summary": "Get data Laporan Pengeluaran Semua",
+                "operationId": "583420450a115db2ca5caa1efd212676",
+                "parameters": [
+                    {
+                        "name": "tanggal_awal",
+                        "in": "query",
+                        "description": "Tanggal awal untuk mencari data Laporan Pengeluaran Semua",
+                        "required": true
+                    },
+                    {
+                        "name": "tanggal_akhir",
+                        "in": "query",
+                        "description": "Tanggal akhir untuk mencari data Laporan Pengeluaran Semua",
+                        "required": true
+                    },
+                    {
+                        "name": "itemPerPage",
+                        "in": "query",
+                        "description": "Jumlah data per halaman",
+                        "required": false
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data Laporan Pengeluaran Semua berhasil ditemukan"
                     }
                 }
             }

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Laporan\LaporanPemasukanCVController;
 use App\Http\Controllers\Api\Laporan\LaporanPemasukanKendaraanController;
+use App\Http\Controllers\Api\Laporan\LaporanPengeluaranController;
 use App\Http\Controllers\Api\Master\ArmadaController;
 use App\Http\Controllers\Api\Master\PenyewaController;
 use App\Http\Controllers\Api\Master\RekeningController;
@@ -20,7 +21,6 @@ use App\Http\Controllers\Api\Transaksi\ServisController;
 use App\Http\Controllers\Api\Transaksi\TagihanController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NotifikasiController;
-use App\Http\Controllers\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -229,4 +229,7 @@ Route::group(['prefix' => 'laporan'], function (){
     Route::get("/pemasukan-cv", [LaporanPemasukanCVController::class, "getLaporanPemasukanCV"]);
     Route::get("/pemasukan-kendaraan-sendiri", [LaporanPemasukanKendaraanController::class, "getLaporanPemasukanKendaraanSendiri"]);
     Route::get("/pemasukan-kendaraan-subkon", [LaporanPemasukanKendaraanController::class, "getLaporanPemasukanKendaraanSubkon"]);
+    Route::get("/pengeluaran-servis", [LaporanPengeluaranController::class, "getLaporanPengeluaranServis"]);
+    Route::get("/pengeluaran-lain", [LaporanPengeluaranController::class, "getLaporanPengeluaranLain"]);
+    Route::get("/pengeluaran-semua", [LaporanPengeluaranController::class, "getLaporanPengeluaranSemua"]);
 });

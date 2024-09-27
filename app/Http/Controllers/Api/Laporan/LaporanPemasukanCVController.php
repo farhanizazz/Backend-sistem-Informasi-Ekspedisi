@@ -33,6 +33,12 @@ class LaporanPemasukanCVController extends Controller
      * required=true,
      * in="query",
      * ),
+     * @OA\Parameter(
+     * name="itemPerPage",
+     * description="Jumlah data per halaman",
+     * required=false,
+     * in="query",
+     * ),
      * @OA\Response(
      * response=200,
      * description="Data Laporan Pemasukan CV berhasil ditemukan"
