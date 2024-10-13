@@ -15,18 +15,24 @@ use App\Repositories\Contracts\LaporanInterface;
       $this->notaBeliModel = $notaBeliModel;
     }
 
-    public function getLaporanPemasukanCV($tanggal_awal,$tanggal_akhir,$itemPerPage=10)
+    public function getLaporanPemasukanCV($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10)
     {
       return $this->model
             ->whereBetween('tanggal_awal',[$tanggal_awal,$tanggal_akhir])
+            ->when($m_armada_id, function($query) use ($m_armada_id){
+              return $query->whereIn('m_armada_id',$m_armada_id);
+            })
             ->with(['mutasi_order:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jual:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jalan:nominal,transaksi_order_id,jenis_transaksi', 'sopir:id,nama', 'penyewa:id,nama_perusahaan', 'subkon:id,nama_perusahaan', 'armada:id,nopol'])
             ->paginate($itemPerPage);
     }
 
-    public function getLaporanPemasukanKendaraanSubkon($tanggal_awal,$tanggal_akhir,$itemPerPage=10)
+    public function getLaporanPemasukanKendaraanSubkon($tanggal_awal,$tanggal_akhir, $m_armada_id,$itemPerPage=10)
     {
       return $this->model
             ->whereBetween('tanggal_awal',[$tanggal_awal,$tanggal_akhir])
+            ->when($m_armada_id, function($query) use ($m_armada_id){
+              return $query->whereIn('m_armada_id',$m_armada_id);
+            })
             ->where('status_kendaraan','Subkon')
             ->with(['mutasi_order:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jual:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jalan:nominal,transaksi_order_id,jenis_transaksi', 'sopir:id,nama', 'penyewa:id,nama_perusahaan', 'subkon:id,nama_perusahaan', 'armada:id,nopol'])
             ->paginate($itemPerPage);
@@ -37,41 +43,50 @@ use App\Repositories\Contracts\LaporanInterface;
       return $this->model
             ->whereBetween('tanggal_awal',[$tanggal_awal,$tanggal_akhir])
             ->when($m_armada_id, function($query) use ($m_armada_id){
-              return $query->where('m_armada_id',$m_armada_id);
+              return $query->whereIn('m_armada_id',$m_armada_id);
             })
             ->where('status_kendaraan','Sendiri')
             ->with(['mutasi_order:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jual:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jalan:nominal,transaksi_order_id,jenis_transaksi', 'sopir:id,nama', 'penyewa:id,nama_perusahaan', 'subkon:id,nama_perusahaan', 'armada:id,nopol'])
             ->paginate($itemPerPage);
     }
     
-    public function getLaporanPengeluaranServis($tanggal_awal,$tanggal_akhir,$itemPerPage=10)
+    public function getLaporanPengeluaranServis($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10)
     {
       return $this->notaBeliModel
             ->with(['servis:id,nomor_nota,tanggal_servis,master_armada_id', 'servis.master_armada:id,nopol'])
-            ->whereHas('servis', function($query) use ($tanggal_awal,$tanggal_akhir){
+            ->whereHas('servis', function($query) use ($tanggal_awal,$tanggal_akhir,$m_armada_id){
               $query->whereBetween('tanggal_servis',[$tanggal_awal,$tanggal_akhir])
-                    ->where('kategori_servis', 'servis');
+                    ->where('kategori_servis', 'servis')
+                    ->when($m_armada_id, function($query) use ($m_armada_id){
+                      return $query->whereIn('master_armada_id',$m_armada_id);
+                    });
             })
             ->paginate($itemPerPage);
     }
 
-    public function getLaporanPengeluaranLain($tanggal_awal,$tanggal_akhir,$itemPerPage=10)
+    public function getLaporanPengeluaranLain($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10)
     {
       return $this->notaBeliModel
             ->with(['servis:id,nomor_nota,tanggal_servis,master_armada_id', 'servis.master_armada:id,nopol'])
-            ->whereHas('servis', function($query) use ($tanggal_awal,$tanggal_akhir){
+            ->whereHas('servis', function($query) use ($tanggal_awal,$tanggal_akhir,$m_armada_id){
               $query->whereBetween('tanggal_servis',[$tanggal_awal,$tanggal_akhir])
-                    ->where('kategori_servis', 'lain');
+                    ->where('kategori_servis', 'lain')
+                    ->when($m_armada_id, function($query) use ($m_armada_id){
+                      return $query->whereIn('master_armada_id',$m_armada_id);
+                    });
             })
             ->paginate($itemPerPage);
     }
 
-    public function getLaporanPengeluaranSemua($tanggal_awal,$tanggal_akhir,$itemPerPage=10)
+    public function getLaporanPengeluaranSemua($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10)
     {
       return $this->notaBeliModel
-            ->with(['servis:id,nomor_nota,tanggal_servis,,master_armada_id', 'servis.master_armada:id,nopol'])
-            ->whereHas('servis', function($query) use ($tanggal_awal,$tanggal_akhir){
-              $query->whereBetween('tanggal_servis',[$tanggal_awal,$tanggal_akhir]);
+            ->with(['servis:id,nomor_nota,tanggal_servis,master_armada_id', 'servis.master_armada:id,nopol'])
+            ->whereHas('servis', function($query) use ($tanggal_awal,$tanggal_akhir,$m_armada_id){
+              $query->whereBetween('tanggal_servis',[$tanggal_awal,$tanggal_akhir])
+              ->when($m_armada_id, function($query) use ($m_armada_id){
+                return $query->whereIn('master_armada_id',$m_armada_id);
+              });
             })
             ->whereBetween('tanggal_servis',[$tanggal_awal,$tanggal_akhir])
             ->paginate($itemPerPage);

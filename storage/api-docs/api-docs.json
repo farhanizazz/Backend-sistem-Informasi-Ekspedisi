@@ -63,8 +63,14 @@
                     {
                         "name": "m_armada_id",
                         "in": "query",
-                        "description": "ID Armada untuk mencari data Laporan Pemasukan Kendaraan Sendiri",
-                        "required": false
+                        "description": "ID Armada",
+                        "required": false,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
                     },
                     {
                         "name": "itemPerPage",

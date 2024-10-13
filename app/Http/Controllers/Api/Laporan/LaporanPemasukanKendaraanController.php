@@ -35,12 +35,6 @@ class LaporanPemasukanKendaraanController extends Controller
      * in="query",
      * ),
      * @OA\Parameter(
-     * name="m_armada_id",
-     * description="ID Armada untuk mencari data Laporan Pemasukan Kendaraan Sendiri",
-     * required=false,
-     * in="query",
-     * ),
-     * @OA\Parameter(
      * name="itemPerPage",
      * description="Jumlah data per halaman",
      * required=false,
