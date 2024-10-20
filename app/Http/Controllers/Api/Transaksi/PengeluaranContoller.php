@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PengeluaranRequest\CreateRequest;
 use App\Http\Requests\PengeluaranRequest\UpdateRequest;
 use App\Models\Transaksi\PengeluaranModel;
+use Illuminate\Http\Request;
 
 class PengeluaranContoller extends Controller
 {
@@ -19,10 +20,14 @@ class PengeluaranContoller extends Controller
     {
         $this->pengeluaranModel = new PengeluaranModel();
     }
-    public function index()
+    public function index(Request $request)
     {
-        $data = PengeluaranModel::with('master_armada:nopol')->get();
-
+        $m_armada_id = isset($request->m_armada_id) ? json_decode($request->m_armada_id) : [];
+        $data = PengeluaranModel::with('master_armada:nopol')
+        ->when($m_armada_id, function ($query) use ($m_armada_id) {
+            return $query->whereIn('master_armada_id', $m_armada_id);
+        })
+        ->get();
         return response()->json(
             [
                 'status' => 'success',
