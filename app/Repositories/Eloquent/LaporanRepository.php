@@ -26,6 +26,17 @@ use App\Repositories\Contracts\LaporanInterface;
             ->paginate($itemPerPage);
     }
 
+    public function getLaporanPemasukanCVAll($tanggal_awal,$tanggal_akhir,$m_armada_id)
+    {
+      return $this->model
+            ->whereBetween('tanggal_awal',[$tanggal_awal,$tanggal_akhir])
+            ->when($m_armada_id, function($query) use ($m_armada_id){
+              return $query->whereIn('m_armada_id',$m_armada_id);
+            })
+            ->with(['mutasi_order:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jual:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jalan:nominal,transaksi_order_id,jenis_transaksi', 'sopir:id,nama', 'penyewa:id,nama_perusahaan', 'subkon:id,nama_perusahaan', 'armada:id,nopol'])
+            ->get();
+    }
+
     public function getLaporanPemasukanKendaraanSubkon($tanggal_awal,$tanggal_akhir, $m_armada_id,$itemPerPage=10)
     {
       return $this->model

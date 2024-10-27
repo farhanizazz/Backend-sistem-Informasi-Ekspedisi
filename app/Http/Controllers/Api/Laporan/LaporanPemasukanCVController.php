@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\Api\Laporan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Laporan\PemasukanCVALL;
+use App\Http\Resources\Laporan\PemasukanCVAllCollection;
+use App\Http\Resources\Laporan\PemasukanCVAllResource;
 use App\Http\Resources\Laporan\PemasukanCVCollection;
 use App\Services\LaporanPemasukanCVService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanPemasukanCVController extends Controller
 {
@@ -55,4 +60,20 @@ class LaporanPemasukanCVController extends Controller
             ]
         );
     }
+
+    public function generatePemasukanCVPDF(Request $request)
+    {
+        $result = $this->laporanPemasukanCVService->getLaporanPemasukanCVAll($request);
+
+        Carbon::setLocale('id');
+        $filename = 'Laporan Pemasukan CV Periode ' . Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y');
+        $data = [
+            'filename' => $filename,
+            'data' => (new PemasukanCVCollection($result))->toArray($result),
+        ];
+        $pdf = Pdf::setPaper('A4', 'portrait')->loadView('generate.pdf.pemasukan-cv', $data);
+        return $pdf->stream($filename .'.pdf');
+    }
+
+
 }

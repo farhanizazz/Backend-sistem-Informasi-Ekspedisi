@@ -21,4 +21,12 @@ use Illuminate\Http\Request;
       $m_armada_id = isset($request->m_armada_id)? json_decode($request->m_armada_id) :[];
       return $this->laporanPemasukan->getLaporanPemasukanCV($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage);
     }
+  
+    public function getLaporanPemasukanCVAll(Request $request)
+    {
+      $tanggal_awal = $request->tanggal_awal;
+      $tanggal_akhir = $request->tanggal_akhir;
+      $m_armada_id = isset($request->m_armada_id)? json_decode($request->m_armada_id) :[];
+      return $this->laporanPemasukan->getLaporanPemasukanCVAll($tanggal_awal,$tanggal_akhir,$m_armada_id);
+    }
   }

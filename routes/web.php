@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Laporan\LaporanPemasukanCVController;
 use App\Http\Controllers\Api\Transaksi\TagihanController;
 use Illuminate\Support\Facades\Route;
 
@@ -27,3 +28,5 @@ Route::get('/', function () {
 });
 
 Route::get('/transaksi/laporan/invoice/{id}/export',[TagihanController::class, 'generateWORD']);
+
+Route::get('/transaksi/laporan/pemasukan-cv', [LaporanPemasukanCVController::class, 'generatePemasukanCVPDF']);
