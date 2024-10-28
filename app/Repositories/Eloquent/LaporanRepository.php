@@ -37,7 +37,7 @@ use App\Repositories\Contracts\LaporanInterface;
             ->get();
     }
 
-    public function getLaporanPemasukanKendaraanSubkon($tanggal_awal,$tanggal_akhir, $m_armada_id,$itemPerPage=10)
+    public function getLaporanPemasukanKendaraanSubkon($tanggal_awal,$tanggal_akhir, $m_armada_id,$itemPerPage=10, $all)
     {
       return $this->model
             ->whereBetween('tanggal_awal',[$tanggal_awal,$tanggal_akhir])
@@ -46,10 +46,15 @@ use App\Repositories\Contracts\LaporanInterface;
             })
             ->where('status_kendaraan','Subkon')
             ->with(['mutasi_order:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jual:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jalan:nominal,transaksi_order_id,jenis_transaksi', 'sopir:id,nama', 'penyewa:id,nama_perusahaan', 'subkon:id,nama_perusahaan', 'armada:id,nopol'])
-            ->paginate($itemPerPage);
+            ->when($all, function($query) use ($all){
+              return $query->get();
+            })
+            ->when(!$all, function($query) use ($all, $itemPerPage){
+              return $query->paginate($itemPerPage);
+            });
     }
 
-    public function getLaporanPemasukanKendaraanSendiri($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10)
+    public function getLaporanPemasukanKendaraanSendiri($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10,$all)
     {
       return $this->model
             ->whereBetween('tanggal_awal',[$tanggal_awal,$tanggal_akhir])
@@ -58,10 +63,15 @@ use App\Repositories\Contracts\LaporanInterface;
             })
             ->where('status_kendaraan','Sendiri')
             ->with(['mutasi_order:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jual:nominal,transaksi_order_id,jenis_transaksi', 'mutasi_jalan:nominal,transaksi_order_id,jenis_transaksi', 'sopir:id,nama', 'penyewa:id,nama_perusahaan', 'subkon:id,nama_perusahaan', 'armada:id,nopol'])
-            ->paginate($itemPerPage);
+            ->when($all, function($query) use ($all){
+              return $query->get();
+            })
+            ->when(!$all, function($query) use ($all, $itemPerPage){
+              return $query->paginate($itemPerPage);
+            });
     }
     
-    public function getLaporanPengeluaranServis($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10)
+    public function getLaporanPengeluaranServis($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10,$all)
     {
       return $this->notaBeliModel
             ->with(['servis:id,nomor_nota,tanggal_servis,master_armada_id', 'servis.master_armada:id,nopol'])
@@ -72,10 +82,15 @@ use App\Repositories\Contracts\LaporanInterface;
                       return $query->whereIn('master_armada_id',$m_armada_id);
                     });
             })
-            ->paginate($itemPerPage);
+            ->when($all, function($query) use ($all){
+              return $query->get();
+            })
+            ->when(!$all, function($query) use ($all, $itemPerPage){
+              return $query->paginate($itemPerPage);
+            });
     }
 
-    public function getLaporanPengeluaranLain($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10)
+    public function getLaporanPengeluaranLain($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10,$all)
     {
       return $this->notaBeliModel
             ->with(['servis:id,nomor_nota,tanggal_servis,master_armada_id', 'servis.master_armada:id,nopol'])
@@ -86,10 +101,15 @@ use App\Repositories\Contracts\LaporanInterface;
                       return $query->whereIn('master_armada_id',$m_armada_id);
                     });
             })
-            ->paginate($itemPerPage);
+            ->when($all, function($query) use ($all){
+              return $query->get();
+            })
+            ->when(!$all, function($query) use ($all, $itemPerPage){
+              return $query->paginate($itemPerPage);
+            });
     }
 
-    public function getLaporanPengeluaranSemua($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10)
+    public function getLaporanPengeluaranSemua($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10,$all)
     {
       return $this->notaBeliModel
             ->with(['servis:id,nomor_nota,tanggal_servis,master_armada_id', 'servis.master_armada:id,nopol'])
@@ -100,6 +120,11 @@ use App\Repositories\Contracts\LaporanInterface;
               });
             })
             ->whereBetween('tanggal_servis',[$tanggal_awal,$tanggal_akhir])
-            ->paginate($itemPerPage);
+            ->when($all, function($query) use ($all){
+              return $query->get();
+            })
+            ->when(!$all, function($query) use ($all, $itemPerPage){
+              return $query->paginate($itemPerPage);
+            });
     }
   }

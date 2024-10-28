@@ -43,23 +43,22 @@ function penyebut($nilai) {
         }
 </style>
 
-<h3 style="text-align: center;margin-bottom:0px">Laporan Pemasukan</h3>
+<h3 style="text-align: center;margin-bottom:0px">{{$title}}</h3>
 <p style="margin-top: 0px;text-align:center;font-size:.8rem">
   ({{$periode}})
 </p>
 <div class="" style="margin-top: 1rem;margin-left:1rem;margin-right:1rem;">
-    <table border="1" style="border: solid 1px black;border-collapse: collapse;">
+    <table border="1" style="border: solid 1px black;border-collapse: collapse;width:100%">
         <thead style="margin-top: 1rem">
             <tr  style="font-size:.9rem">
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">No</th>
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Tgl</th>
-                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">No Transaksi</th>
-                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Status</th>
-                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Nopol / Sopir</th>
-                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Penyewa</th>
-                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Muatan</th>
-                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Asal - Tujuan</th>
-                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Pemasukan</th>
+                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Nopol</th>
+                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Nama / No. Nota</th>
+                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Keterangan</th>
+                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Harga</th>
+                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Jumlah</th>
+                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Subtotal</th>
             </tr>
         </thead>
         <tbody>
@@ -67,13 +66,12 @@ function penyebut($nilai) {
               <tr style="font-size:.7rem">
                   <td style="text-align : center;">{{$loop->iteration}}</td>
                   <td>{{date('d/m/Y', strtotime($dt['tanggal']))}}</td>
-                  <td style="text-align: center;">{{$dt['no_transaksi']}}</td>
-                  <td style="text-align: center;">{{ucwords($dt['status'])}}</td>
-                  <td style="text-align: center;">{{$dt['armada']['nopol'] ?? $dt['nopol_subkon']}}/{{$dt['sopir']['nama'] ?? $dt['sopir_subkon']}}</td>
-                  <td>{{($dt['penyewa']['nama_perusahaan'] ?? $dt['subkon']['nama_perusahaan']) ?? '' }}</td>
-                  <td>{{$dt['muatan']}}</td>
-                  <td>{{$dt['asal']}} - {{$dt['tujuan']}}</td>
-                  <td>{{rupiah($dt['pemasukan'])}}</td>
+                  <td style="text-align: center;">{{$dt['nopol']}}</td>
+                  <td style="text-align: left;">{{ucwords($dt['nama_barang'])}} / {{$dt['nomor_nota']}} </td>
+                  <td style="text-align: center;">{{$dt['keterangan'] ?? '-'}}</td>
+                  <td>{{rupiah($dt['harga'])}}</td>
+                  <td style="text-align: center">{{$dt['jumlah']}}</td>
+                  <td>{{rupiah($dt['subtotal'])}}</td>
               </tr>
           @endforeach
       </tbody>

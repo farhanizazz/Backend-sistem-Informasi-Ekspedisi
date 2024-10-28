@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Laporan;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Laporan\PengeluaranServisCollection;
 use App\Services\LaporanPengeluaranService;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LaporanPengeluaranController extends Controller
@@ -135,5 +137,112 @@ class LaporanPengeluaranController extends Controller
             ]
         );
     }
+
+    public function generatePengeluaranServisPDF(Request $request)
+    {
+        $request->merge(['is_all' => true]);
+        $result = $this->laporanPengeluaranService->getLaporanPengeluaranServis($request);
+        Carbon::setLocale('id');
+        $filename = 'Laporan Pengeluaran Servis Periode ' . Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y');
+        $title = "Laporan Pengeluaran Servis";
+        $data = [
+            'filename' => $filename,
+            'periode' => Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y'),
+            'data' => (new PengeluaranServisCollection($result))->toArray($result),
+            'title' => $title
+        ];
+        $pdf = Pdf::setPaper('A4', 'portrait')->loadView('generate.pdf.pengeluaran', $data);
+        return $pdf->stream($filename .'.pdf');
+    }
     
+    public function generatePengeluaranLainPDF(Request $request)
+    {
+        $request->merge(['is_all' => true]);
+        $result = $this->laporanPengeluaranService->getLaporanPengeluaranLain($request);
+        Carbon::setLocale('id');
+        $filename = 'Laporan Pengeluaran Lain Periode ' . Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y');
+        $title = "Laporan Pengeluaran Lain";
+        $data = [
+            'filename' => $filename,
+            'periode' => Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y'),
+            'data' => (new PengeluaranServisCollection($result))->toArray($result),
+            'title' => $title
+        ];
+        $pdf = Pdf::setPaper('A4', 'portrait')->loadView('generate.pdf.pengeluaran', $data);
+        return $pdf->stream($filename .'.pdf');
+    }
+
+    public function generatePengeluaranSemuaPDF(Request $request)
+    {
+        $request->merge(['is_all' => true]);
+        $result = $this->laporanPengeluaranService->getLaporanPengeluaranSemua($request);
+        Carbon::setLocale('id');
+        $filename = 'Laporan Pengeluaran Semua Periode ' . Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y');
+        $title = "Laporan Pengeluaran Semua";
+        $data = [
+            'filename' => $filename,
+            'periode' => Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y'),
+            'data' => (new PengeluaranServisCollection($result))->toArray($result),
+            'title' => $title
+        ];
+        $pdf = Pdf::setPaper('A4', 'portrait')->loadView('generate.pdf.pengeluaran', $data);
+        return $pdf->stream($filename .'.pdf');
+    }
+    
+    public function generatePengeluaranServisWORD(Request $request)
+    {
+        $request->merge(['is_all' => true]);
+        $result = $this->laporanPengeluaranService->getLaporanPengeluaranSemua($request);
+        Carbon::setLocale('id');
+        $filename = 'Laporan Pengeluaran Semua Periode ' . Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y');
+        $title = "Laporan Pengeluaran Semua";
+        $data = [
+            'filename' => $filename,
+            'periode' => Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y'),
+            'data' => (new PengeluaranServisCollection($result))->toArray($result),
+            'title' => $title
+        ];
+        $generated = $this->laporanPengeluaranService->generateWord($data);
+
+         // Mengirim file ke browser untuk diunduh
+         return response()->download($generated)->deleteFileAfterSend(true);
+    }
+
+    public function generatePengeluaranLainWORD(Request $request)
+    {
+        $request->merge(['is_all' => true]);
+        $result = $this->laporanPengeluaranService->getLaporanPengeluaranLain($request);
+        Carbon::setLocale('id');
+        $filename = 'Laporan Pengeluaran Lain Periode ' . Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y');
+        $title = "Laporan Pengeluaran Lain";
+        $data = [
+            'filename' => $filename,
+            'periode' => Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y'),
+            'data' => (new PengeluaranServisCollection($result))->toArray($result),
+            'title' => $title
+        ];
+        $generated = $this->laporanPengeluaranService->generateWord($data);
+
+         // Mengirim file ke browser untuk diunduh
+         return response()->download($generated)->deleteFileAfterSend(true);
+    }
+
+    public function generatePengeluaranSemuaWORD(Request $request)
+    {
+        $request->merge(['is_all' => true]);
+        $result = $this->laporanPengeluaranService->getLaporanPengeluaranSemua($request);
+        Carbon::setLocale('id');
+        $filename = 'Laporan Pengeluaran Semua Periode ' . Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y');
+        $title = "Laporan Pengeluaran Semua";
+        $data = [
+            'filename' => $filename,
+            'periode' => Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y'),
+            'data' => (new PengeluaranServisCollection($result))->toArray($result),
+            'title' => $title
+        ];
+        $generated = $this->laporanPengeluaranService->generateWord($data);
+
+         // Mengirim file ke browser untuk diunduh
+         return response()->download($generated)->deleteFileAfterSend(true);
+    }
 }

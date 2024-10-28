@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\Laporan\LaporanPemasukanCVController;
+use App\Http\Controllers\Api\Laporan\LaporanPemasukanKendaraanController;
+use App\Http\Controllers\Api\Laporan\LaporanPengeluaranController;
 use App\Http\Controllers\Api\Transaksi\TagihanController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,4 +31,21 @@ Route::get('/', function () {
 
 Route::get('/transaksi/laporan/invoice/{id}/export',[TagihanController::class, 'generateWORD']);
 
-Route::get('/transaksi/laporan/pemasukan-cv', [LaporanPemasukanCVController::class, 'generatePemasukanCVPDF']);
+Route::group(['prefix'=> 'export-pdf'], function () {
+    Route::get('export-pdf/transaksi/laporan/pemasukan-cv', [LaporanPemasukanCVController::class, 'generatePemasukanCVPDF']);
+    Route::get('export-pdf/transaksi/laporan/pemasukan-kendaraan-subkon', [LaporanPemasukanKendaraanController::class, 'generatePemasukanKendaraanSubkonPDF']);
+    Route::get('export-pdf/transaksi/laporan/pemasukan-kendaraan-sendiri', [LaporanPemasukanKendaraanController::class, 'generatePemasukanKendaraanSendiriPDF']);
+    Route::get('export-pdf/transaksi/laporan/pengeluaran-servis', [LaporanPengeluaranController::class, 'generatePengeluaranServisPDF']);
+    Route::get('export-pdf/transaksi/laporan/pengeluaran-lain', [LaporanPengeluaranController::class, 'generatePengeluaranLainPDF']);
+    Route::get('export-pdf/transaksi/laporan/pengeluaran-semua', [LaporanPengeluaranController::class, 'generatePengeluaranSemuaPDF']);
+});
+
+
+Route::group(['prefix'=> 'export-word'], function () {
+    Route::get('/transaksi/laporan/pengeluaran-servis', [LaporanPengeluaranController::class, 'generatePengeluaranServisWORD']);
+    Route::get('/transaksi/laporan/pengeluaran-lain', [LaporanPengeluaranController::class, 'generatePengeluaranLainWORD']);
+    Route::get('/transaksi/laporan/pengeluaran-semua', [LaporanPengeluaranController::class, 'generatePengeluaranSemuaWORD']);
+});
+
+
+

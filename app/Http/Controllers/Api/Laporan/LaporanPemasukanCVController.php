@@ -69,6 +69,7 @@ class LaporanPemasukanCVController extends Controller
         $filename = 'Laporan Pemasukan CV Periode ' . Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y');
         $data = [
             'filename' => $filename,
+            'periode' => Carbon::parse($request->tanggal_awal)->translatedFormat('j F Y') . ' - ' . Carbon::parse($request->tanggal_akhir)->translatedFormat('j F Y'),
             'data' => (new PemasukanCVCollection($result))->toArray($result),
         ];
         $pdf = Pdf::setPaper('A4', 'portrait')->loadView('generate.pdf.pemasukan-cv', $data);

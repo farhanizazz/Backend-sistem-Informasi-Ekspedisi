@@ -19,7 +19,8 @@ class LaporanPemasukanKendaraanService
         $tanggal_akhir = $request->tanggal_akhir;
         $m_armada_id = isset($request->m_armada_id)? json_decode($request->m_armada_id) :[];
         $itemPerPage = $request->itemPerPage;
-        return $this->laporanPemasukan->getLaporanPemasukanKendaraanSendiri($tanggal_awal,$tanggal_akhir, $m_armada_id,$itemPerPage);
+        $all = $request->is_all ?? false;
+        return $this->laporanPemasukan->getLaporanPemasukanKendaraanSendiri($tanggal_awal,$tanggal_akhir, $m_armada_id,$itemPerPage,$all);
     }
 
     public function getLaporanPemasukanKendaraanSubkon(Request $request)
@@ -27,7 +28,8 @@ class LaporanPemasukanKendaraanService
         $tanggal_awal = $request->tanggal_awal;
         $tanggal_akhir = $request->tanggal_akhir;
         $itemPerPage = $request->itemPerPage;
+        $all = $request->is_all ?? false;
         $m_armada_id = isset($request->m_armada_id)? json_decode($request->m_armada_id) :[];
-        return $this->laporanPemasukan->getLaporanPemasukanKendaraanSubkon($tanggal_awal,$tanggal_akhir, $m_armada_id,$itemPerPage);
+        return $this->laporanPemasukan->getLaporanPemasukanKendaraanSubkon($tanggal_awal,$tanggal_akhir, $m_armada_id,$itemPerPage, $all);
     }
 }

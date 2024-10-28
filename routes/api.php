@@ -177,8 +177,6 @@ Route::group(['prefix' => 'transaksi'], function () {
         Route::get("/{id}/list", [HutangSopirController::class, "getListHutangSopirById"]);
         Route::put("/{id}", [HutangSopirController::class, "update"]);
         Route::delete("/{id}", [HutangSopirController::class, "destroy"]);
-
-        
     });
 
     Route::group(['prefix' => 'order'], function () {

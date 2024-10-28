@@ -43,7 +43,7 @@ function penyebut($nilai) {
         }
 </style>
 
-<h3 style="text-align: center;margin-bottom:0px">Laporan Pemasukan</h3>
+<h3 style="text-align: center;margin-bottom:0px">{{$title}}</h3>
 <p style="margin-top: 0px;text-align:center;font-size:.8rem">
   ({{$periode}})
 </p>
@@ -59,7 +59,7 @@ function penyebut($nilai) {
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Penyewa</th>
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Muatan</th>
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Asal - Tujuan</th>
-                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Pemasukan</th>
+                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Setor</th>
             </tr>
         </thead>
         <tbody>
@@ -69,11 +69,11 @@ function penyebut($nilai) {
                   <td>{{date('d/m/Y', strtotime($dt['tanggal']))}}</td>
                   <td style="text-align: center;">{{$dt['no_transaksi']}}</td>
                   <td style="text-align: center;">{{ucwords($dt['status'])}}</td>
-                  <td style="text-align: center;">{{$dt['armada']['nopol'] ?? $dt['nopol_subkon']}}/{{$dt['sopir']['nama'] ?? $dt['sopir_subkon']}}</td>
+                  <td style="text-align: center;">{{($dt['armada']['nopol'] ?? $dt['nopol_subkon'])}} / {{($dt['sopir']['nama'] ?? $dt['sopir_subkon'])}}</td>
                   <td>{{($dt['penyewa']['nama_perusahaan'] ?? $dt['subkon']['nama_perusahaan']) ?? '' }}</td>
                   <td>{{$dt['muatan']}}</td>
                   <td>{{$dt['asal']}} - {{$dt['tujuan']}}</td>
-                  <td>{{rupiah($dt['pemasukan'])}}</td>
+                  <td>{{rupiah($dt['setor'])}}</td>
               </tr>
           @endforeach
       </tbody>

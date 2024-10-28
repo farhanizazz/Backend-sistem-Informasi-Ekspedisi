@@ -14,12 +14,17 @@ class PemasukanKendaraanSubkonCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return [
-            'list' => $this->collection,
-            'meta' => [
-                'links' => $this->getUrlRange(1, $this->lastPage()),
-                'total' => $this->total()
-            ]
-        ];
+        if ($this->collection instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            return [
+                'list' => $this->collection,
+                'meta' => [
+                    'links' => $this->getUrlRange(1, $this->lastPage()),
+                    'total' => $this->total()
+                ]
+            ];
+        }else{
+            return parent::toArray($request);
+        }
+
     }
 }
