@@ -32,12 +32,12 @@ Route::get('/', function () {
 Route::get('/transaksi/laporan/invoice/{id}/export',[TagihanController::class, 'generateWORD']);
 
 Route::group(['prefix'=> 'export-pdf'], function () {
-    Route::get('export-pdf/transaksi/laporan/pemasukan-cv', [LaporanPemasukanCVController::class, 'generatePemasukanCVPDF']);
-    Route::get('export-pdf/transaksi/laporan/pemasukan-kendaraan-subkon', [LaporanPemasukanKendaraanController::class, 'generatePemasukanKendaraanSubkonPDF']);
-    Route::get('export-pdf/transaksi/laporan/pemasukan-kendaraan-sendiri', [LaporanPemasukanKendaraanController::class, 'generatePemasukanKendaraanSendiriPDF']);
-    Route::get('export-pdf/transaksi/laporan/pengeluaran-servis', [LaporanPengeluaranController::class, 'generatePengeluaranServisPDF']);
-    Route::get('export-pdf/transaksi/laporan/pengeluaran-lain', [LaporanPengeluaranController::class, 'generatePengeluaranLainPDF']);
-    Route::get('export-pdf/transaksi/laporan/pengeluaran-semua', [LaporanPengeluaranController::class, 'generatePengeluaranSemuaPDF']);
+    Route::get('transaksi/laporan/pemasukan-cv', [LaporanPemasukanCVController::class, 'generatePemasukanCVPDF']);
+    Route::get('transaksi/laporan/pemasukan-kendaraan-subkon', [LaporanPemasukanKendaraanController::class, 'generatePemasukanKendaraanSubkonPDF']);
+    Route::get('transaksi/laporan/pemasukan-kendaraan-sendiri', [LaporanPemasukanKendaraanController::class, 'generatePemasukanKendaraanSendiriPDF']);
+    Route::get('transaksi/laporan/pengeluaran-servis', [LaporanPengeluaranController::class, 'generatePengeluaranServisPDF']);
+    Route::get('transaksi/laporan/pengeluaran-lain', [LaporanPengeluaranController::class, 'generatePengeluaranLainPDF']);
+    Route::get('transaksi/laporan/pengeluaran-semua', [LaporanPengeluaranController::class, 'generatePengeluaranSemuaPDF']);
 });
 
 
