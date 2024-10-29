@@ -15,7 +15,7 @@ class PemasukanCVCollection extends ResourceCollection
     public function toArray($request)
     {
         // check is paginated or not
-        if ($this->collection instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+        if ($this->resource instanceof \Illuminate\Pagination\LengthAwarePaginator) {
             return [
                 'list' => $this->collection,
                 'meta' => [

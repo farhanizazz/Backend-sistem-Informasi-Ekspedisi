@@ -14,7 +14,7 @@ class PemasukanKendaraanSendiriCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-                if ($this->collection instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+        if ($this->resource instanceof \Illuminate\Pagination\LengthAwarePaginator) {
             return [
                 'list' => $this->collection,
                 'meta' => [
