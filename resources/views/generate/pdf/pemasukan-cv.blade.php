@@ -63,7 +63,11 @@ function penyebut($nilai) {
             </tr>
         </thead>
         <tbody>
+            $total = 0;
           @foreach($data as $dt)
+                @php
+                    $total += $dt['pemasukan'];
+                @endphp
               <tr style="font-size:.7rem">
                   <td style="text-align : center;">{{$loop->iteration}}</td>
                   <td>{{date('d/m/Y', strtotime($dt['tanggal']))}}</td>
@@ -76,6 +80,10 @@ function penyebut($nilai) {
                   <td>{{rupiah($dt['pemasukan'])}}</td>
               </tr>
           @endforeach
+          <tr style="font-size:.8rem">
+            <td colspan="8" style="text-align: center;">Subtotal</td>
+            <td>{{rupiah($total)}}</td>
+          </tr>
       </tbody>
     </table>
 </div>
