@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Laporan\LaporanPemasukanCVController;
 use App\Http\Controllers\Api\Laporan\LaporanPemasukanKendaraanController;
 use App\Http\Controllers\Api\Laporan\LaporanPengeluaranController;
+use App\Http\Controllers\Api\Laporan\LaporanV2Controller;
 use App\Http\Controllers\Api\Master\ArmadaController;
 use App\Http\Controllers\Api\Master\PenyewaController;
 use App\Http\Controllers\Api\Master\RekeningController;
@@ -230,4 +231,11 @@ Route::group(['prefix' => 'laporan'], function (){
     Route::get("/pengeluaran-servis", [LaporanPengeluaranController::class, "getLaporanPengeluaranServis"]);
     Route::get("/pengeluaran-lain", [LaporanPengeluaranController::class, "getLaporanPengeluaranLain"]);
     Route::get("/pengeluaran-semua", [LaporanPengeluaranController::class, "getLaporanPengeluaranSemua"]);
+});
+
+
+Route::prefix('laporan-v2')->group(function() {
+    Route::get('hutang-sopir', [LaporanV2Controller::class, 'hutangSopir']);
+    Route::get('hutang-customer', [LaporanV2Controller::class, 'hutangPiutangCustomer']);
+    Route::get('hutang-subkon', [LaporanV2Controller::class, 'hutangPiutangSubkon']);
 });
