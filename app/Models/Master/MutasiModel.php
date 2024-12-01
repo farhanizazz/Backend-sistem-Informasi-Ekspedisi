@@ -116,18 +116,6 @@ class MutasiModel extends Model
 
     public function hitungTotalBiayaLain($listBiayaLain = [])
     {
-        $tambahanModel = new RekeningModel();
-        $listId = array_column($listBiayaLain, 'm_tambahan_id');
-        $listRekening = $tambahanModel->whereIn('id', $listId)->get();
-
-        foreach ($listBiayaLain as $key => $value) {
-            foreach ($listRekening as $key2 => $value2) {
-                if ($value['m_tambahan_id'] == $value2->id) {
-                    $listBiayaLain[$key]["nominal"] *= $this->getSifatRekening($value2->sifat);
-                }
-            }
-        }
-
         $total = 0;
         foreach ($listBiayaLain as $key => $value) {
             $total += $value['nominal'];

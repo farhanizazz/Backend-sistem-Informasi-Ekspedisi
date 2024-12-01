@@ -266,19 +266,9 @@ class OrderHelper
 
   public function hitungTotalBiayaLain($listBiayaLain)
   {
-    $listId = array_column($listBiayaLain, 'm_tambahan_id');
-    $listRekening = $this->tambahanModel->whereIn('id', $listId)->get();
-    
-    foreach ($listBiayaLain as $key => $value) {
-      foreach ($listRekening as $key2 => $value2) {
-        if ($value['m_tambahan_id'] == $value2->id) {
-          $listBiayaLain[$key]["nominal"] *= $this->getSifatRekening($value2->sifat);
-        }
-      }
-    }
 
     $total = 0;
-    foreach ($listBiayaLain as $key => $value) {
+    foreach ($listBiayaLain as $value) {
       $total += $value['nominal'];
     }
     return $total;
