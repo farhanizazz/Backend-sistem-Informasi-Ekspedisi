@@ -26,25 +26,29 @@ class LaporanV2Controller extends Controller
             ], 400);
         }
 
-        $sopir = SopirModel::where('id', $sopirId)->first();
-        if (!$sopir) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Sopir not found'
-            ], 404);
+        $orderQuery = OrderModel::whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir]);
+
+        $sopir = [];
+        if ($sopirId) {
+            $sopirIds = explode(',', $sopirId);
+            $sopir = SopirModel::whereIn('id', $sopirIds)->get();
+
+            // check is SopirIds exist
+            $orderQuery = $orderQuery->whereIn('m_sopir_id', $sopirIds);
+        } else {
+            $orderQuery = $orderQuery->whereNotNull('m_sopir_id');
         }
 
-        $orderQuery = OrderModel::where('m_sopir_id', '=', $sopirId)
-            ->whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir]);
+        $clonedQuerySisaUangJalan = clone $orderQuery;
+        $clonedQueryTotalHutang = clone $orderQuery;
+
         $orders = $orderQuery->paginate();
 
-        $totalSisaUangJalan = OrderModel::where('m_sopir_id', '=', $sopirId)
-            ->whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir])
+        $totalSisaUangJalan = $clonedQuerySisaUangJalan
             ->withSum('mutasi_jalan as total_pembayaran', 'nominal')
             ->get()
             ->sum(fn($order) => $order->uang_jalan_bersih - $order->total_pembayaran);
-        $totalHutang = OrderModel::where('m_sopir_id', '=', $sopirId)
-            ->whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir])
+        $totalHutang = $clonedQueryTotalHutang
             ->withSum('mutasi_jalan as total_pembayaran', 'nominal')
             ->get()
             ->sum(function ($order) {

@@ -8,7 +8,7 @@ class HutangPiutangSopirCollection extends ResourceCollection
 {
     protected $totalSisaUangJalan = 0;
     protected $totalHutang = 0;
-    protected $sopir;
+    protected $sopir = [];
     public function __construct($collection, $totalSisaUangJalan, $totalHutang, $sopir)
     {
         parent::__construct($collection);
@@ -25,6 +25,16 @@ class HutangPiutangSopirCollection extends ResourceCollection
      */
     public function toArray($request)
     {
+        $namaSopir = "Semua Sopir";
+        if ($this->sopir) {
+            $namaSopir = [];
+            foreach ($this->sopir as $sopir) {
+                $namaSopir[] = $sopir->nama;
+            }
+
+            $namaSopir = implode(", ", $namaSopir);
+        }
+
         return [
             'list' => HutangPiutangSopirResource::collection($this->collection),
             'meta' => [
@@ -35,7 +45,7 @@ class HutangPiutangSopirCollection extends ResourceCollection
                 'start' => $request->get('tanggalAwal'),
                 'end' => $request->get('tanggalAkhir'),
             ],
-            'nama_sopir' => $this->sopir->nama,
+            'nama_sopir' => $namaSopir,
             'total_hutang' => $this->totalHutang,
             'total_sisa_uang_jalan' => $this->totalSisaUangJalan,
         ];
