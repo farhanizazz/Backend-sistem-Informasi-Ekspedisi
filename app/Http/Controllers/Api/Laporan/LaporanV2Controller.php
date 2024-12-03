@@ -57,12 +57,12 @@ class LaporanV2Controller extends Controller
         } else {
             // Kalkulasi data per sopir
             $orderQuery = OrderModel::whereNotNull('m_sopir_id');
-            $totalSisaUangJalan = OrderModel::kalkulasSisaUangJalan($orderQuery);
-            $totalHutang = OrderModel::kalkulasSisaUangJalan($orderQuery, TipeKalkulasiSisaUangJalanEnum::HUTANG);
+            // $totalSisaUangJalan = OrderModel::kalkulasSisaUangJalan($orderQuery);
+            // $totalHutang = OrderModel::kalkulasSisaUangJalan($orderQuery, TipeKalkulasiSisaUangJalanEnum::HUTANG);
             $items[0] = new HutangSopirObject(
                 'Semua Sopir',
-                $totalSisaUangJalan,
-                $totalHutang
+                0,
+                0
             );
 
             // Dapatkan paginasi dari semua item transaksi
