@@ -6,15 +6,11 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class HutangPiutangSopirCollection extends ResourceCollection
 {
-    protected $totalSisaUangJalan = 0;
-    protected $totalHutang = 0;
-    protected $sopir = [];
-    public function __construct($collection, $totalSisaUangJalan, $totalHutang, $sopir)
+    protected $items = [];
+    public function __construct($collection, $items)
     {
         parent::__construct($collection);
-        $this->totalSisaUangJalan = $totalSisaUangJalan;
-        $this->totalHutang = $totalHutang;
-        $this->sopir = $sopir;
+        $this->items = $items;
     }
 
     /**
@@ -25,16 +21,6 @@ class HutangPiutangSopirCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        $namaSopir = "Semua Sopir";
-        if ($this->sopir) {
-            $namaSopir = [];
-            foreach ($this->sopir as $sopir) {
-                $namaSopir[] = $sopir->nama;
-            }
-
-            $namaSopir = implode(", ", $namaSopir);
-        }
-
         return [
             'list' => HutangPiutangSopirResource::collection($this->collection),
             'meta' => [
@@ -45,9 +31,7 @@ class HutangPiutangSopirCollection extends ResourceCollection
                 'start' => $request->get('tanggalAwal'),
                 'end' => $request->get('tanggalAkhir'),
             ],
-            'nama_sopir' => $namaSopir,
-            'total_hutang' => $this->totalHutang,
-            'total_sisa_uang_jalan' => $this->totalSisaUangJalan,
+            'sopir' => $this->items
         ];
     }
 }

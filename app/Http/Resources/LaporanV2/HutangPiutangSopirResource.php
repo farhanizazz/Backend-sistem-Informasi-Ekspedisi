@@ -3,7 +3,6 @@
 namespace App\Http\Resources\LaporanV2;
 
 use App\Models\Master\TambahanModel;
-use App\Models\Transaksi\OrderModel;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class HutangPiutangSopirResource extends JsonResource

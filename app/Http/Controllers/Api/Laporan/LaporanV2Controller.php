@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api\Laporan;
 
+use App\DataTransferObjects\HutangSopirObject;
+use App\Enums\TipeKalkulasiSisaUangJalanEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LaporanV2\HutangPiutangCustomerCollection;
 use App\Http\Resources\LaporanV2\HutangPiutangSopirCollection;
@@ -26,43 +28,54 @@ class LaporanV2Controller extends Controller
             ], 400);
         }
 
-        $orderQuery = OrderModel::whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir]);
+        $items = [];
+        $sopirs = [];
 
-        $sopir = [];
         if ($sopirId) {
+            // Ambil data per sopir berdasarkan id yang valid
             $sopirIds = explode(',', $sopirId);
-            $sopir = SopirModel::whereIn('id', $sopirIds)->get();
+            $sopirs = SopirModel::whereIn('id', $sopirIds)->get();
 
-            // check is SopirIds exist
-            $orderQuery = $orderQuery->whereIn('m_sopir_id', $sopirIds);
+            // Kalkulasi data per sopir
+            foreach ($sopirs as $index => $sopir) {
+                $orderQuery = OrderModel::where('m_sopir_id', $sopir->id);
+
+                $totalSisaUangJalan = OrderModel::kalkulasSisaUangJalan($orderQuery);
+                $totalHutang = OrderModel::kalkulasSisaUangJalan($orderQuery, TipeKalkulasiSisaUangJalanEnum::HUTANG);
+
+                $items[$index] = new HutangSopirObject(
+                    $sopir->nama,
+                    $totalSisaUangJalan,
+                    $totalHutang
+                );
+            }
+
+            // Dapatkan paginasi dari semua item transaksi
+            $orders = OrderModel::whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir])
+                ->whereIn('m_sopir_id', $sopirIds)
+                ->paginate();
         } else {
-            $orderQuery = $orderQuery->whereNotNull('m_sopir_id');
+            // Kalkulasi data per sopir
+            $orderQuery = OrderModel::whereNotNull('m_sopir_id');
+            $totalSisaUangJalan = OrderModel::kalkulasSisaUangJalan($orderQuery);
+            $totalHutang = OrderModel::kalkulasSisaUangJalan($orderQuery, TipeKalkulasiSisaUangJalanEnum::HUTANG);
+            $items[0] = new HutangSopirObject(
+                'Semua Sopir',
+                $totalSisaUangJalan,
+                $totalHutang
+            );
+
+            // Dapatkan paginasi dari semua item transaksi
+            $orders = $orderQuery
+                ->whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir])
+                ->paginate();
         }
-
-        $clonedQuerySisaUangJalan = clone $orderQuery;
-        $clonedQueryTotalHutang = clone $orderQuery;
-
-        $orders = $orderQuery->paginate();
-
-        $totalSisaUangJalan = $clonedQuerySisaUangJalan
-            ->withSum('mutasi_jalan as total_pembayaran', 'nominal')
-            ->get()
-            ->sum(fn($order) => $order->uang_jalan_bersih - $order->total_pembayaran);
-        $totalHutang = $clonedQueryTotalHutang
-            ->withSum('mutasi_jalan as total_pembayaran', 'nominal')
-            ->get()
-            ->sum(function ($order) {
-                $value = $order->uang_jalan_bersih - $order->total_pembayaran;
-                return $value > 0 ? 0 : $value;
-            });
 
         return response()->json([
             'status' => 'success',
             'data' => new HutangPiutangSopirCollection(
                 $orders,
-                $totalSisaUangJalan,
-                $totalHutang,
-                $sopir
+                $items
             ),
         ]);
     }
@@ -130,13 +143,13 @@ class LaporanV2Controller extends Controller
             ], 404);
         }
 
-        $orderQuery = OrderModel::query()
-            ->where('m_subkon_id', $subkonId)
-            ->whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir]);
-        $orders = $orderQuery->paginate();
-        $totalHutang = OrderModel::query()
+        $orders = OrderModel::query()
             ->where('m_subkon_id', $subkonId)
             ->whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir])
+            ->paginate();
+        $totalHutang = OrderModel::query()
+            ->where('m_subkon_id', $subkonId)
+            // ->whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir])
             ->withSum('mutasi_jual as total_pembayaran', 'nominal')
             ->get()
             ->sum(fn($order) => $order->harga_jual_bersih - $order->total_pembayaran);
