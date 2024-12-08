@@ -2,160 +2,160 @@
 
 namespace App\Http\Controllers\Api\Laporan;
 
-use App\DataTransferObjects\HutangSopirObject;
-use App\Enums\TipeKalkulasiSisaUangJalanEnum;
+use App\DataTransferObjects\HutangCustomerParam;
+use App\DataTransferObjects\HutangSopirParam;
+use App\DataTransferObjects\HutangSubkonParam;
+use App\Helpers\LaporanV2Helper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LaporanRequest\V2\HutangCustomerRequest;
+use App\Http\Requests\LaporanRequest\V2\HutangSopirRequest;
+use App\Http\Requests\LaporanRequest\V2\HutangSubkonRequest;
 use App\Http\Resources\LaporanV2\HutangPiutangCustomerCollection;
+use App\Http\Resources\LaporanV2\HutangPiutangCustomerResource;
 use App\Http\Resources\LaporanV2\HutangPiutangSopirCollection;
+use App\Http\Resources\LaporanV2\HutangPiutangSopirResource;
 use App\Http\Resources\LaporanV2\HutangPiutangSubkonCollection;
-use App\Models\Master\SopirModel;
-use App\Models\Master\SubkonModel;
-use App\Models\Transaksi\OrderModel;
-use Illuminate\Http\Request;
+use App\Http\Resources\LaporanV2\HutangPiutangSubkonResource;
+use Illuminate\Support\Facades\App;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class LaporanV2Controller extends Controller
 {
-    public function hutangSopir(Request $request)
+    public function hutangSopir(HutangSopirRequest $request)
     {
         $sopirId = $request->get('sopirId');
         $tanggalAwal = $request->get('tanggalAwal');
         $tanggalAkhir = $request->get('tanggalAkhir');
 
-        if (!$tanggalAwal || !$tanggalAkhir) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Tanggal awal and tanggal akhir are required'
-            ], 400);
-        }
+        $export = boolval($request->get('export', false));
 
-        $items = [];
-        $sopirs = [];
-
-        if ($sopirId) {
-            // Ambil data per sopir berdasarkan id yang valid
-            $sopirIds = explode(',', $sopirId);
-            $sopirs = SopirModel::whereIn('id', $sopirIds)->get();
-
-            // Kalkulasi data per sopir
-            foreach ($sopirs as $index => $sopir) {
-                $orderQuery = OrderModel::where('m_sopir_id', $sopir->id);
-
-                $totalSisaUangJalan = OrderModel::kalkulasSisaUangJalan($orderQuery);
-                $totalHutang = OrderModel::kalkulasSisaUangJalan($orderQuery, TipeKalkulasiSisaUangJalanEnum::HUTANG);
-
-                $items[$index] = new HutangSopirObject(
-                    $sopir->nama,
-                    $totalSisaUangJalan,
-                    $totalHutang
-                );
-            }
-
-            // Dapatkan paginasi dari semua item transaksi
-            $orders = OrderModel::whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir])
-                ->whereIn('m_sopir_id', $sopirIds)
-                ->paginate();
-        } else {
-            // Kalkulasi data per sopir
-            $orderQuery = OrderModel::whereNotNull('m_sopir_id');
-            // $totalSisaUangJalan = OrderModel::kalkulasSisaUangJalan($orderQuery);
-            // $totalHutang = OrderModel::kalkulasSisaUangJalan($orderQuery, TipeKalkulasiSisaUangJalanEnum::HUTANG);
-            $items[0] = new HutangSopirObject(
-                'Semua Sopir',
-                0,
-                0
+        try {
+            $response = LaporanV2Helper::getHutangSopir(
+                new HutangSopirParam($tanggalAwal, $tanggalAkhir, $sopirId),
+                $export
             );
 
-            // Dapatkan paginasi dari semua item transaksi
-            $orders = $orderQuery
-                ->whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir])
-                ->paginate();
-        }
+            if ($export) {
+                $pdf = App::make('dompdf.wrapper');
+                $pdf->loadView('generate.pdf.v2.hutang-sopir', [
+                    'filename' => 'Laporan Hutang Sopir',
+                    'orders' => HutangPiutangSopirResource::collection($response['orders'])->toArray($request),
+                    'sopir' => implode(", ", array_map(function ($item) {
+                        return $item->sopir;
+                    }, $response['items'])),
+                    'tanggalAwal' => $tanggalAwal,
+                    'tanggalAkhir' => $tanggalAkhir,
+                ]);
+                return $pdf->stream();
+            }
 
-        return response()->json([
-            'status' => 'success',
-            'data' => new HutangPiutangSopirCollection(
-                $orders,
-                $items
-            ),
-        ]);
+            return response()->json([
+                'status' => 'success',
+                'data' => new HutangPiutangSopirCollection(
+                    $response['orders'],
+                    items: $response['items']
+                ),
+            ]);
+        } catch (\Throwable $th) {
+            if ($th instanceof HttpException) {
+                return response()->json([
+                    'message' => $th->getMessage(),
+                ], $th->getCode());
+            }
+
+            return response()->json([
+                'message' => 'Terjadi kesalahan pada server ',
+            ], 500);
+        }
     }
 
-
-    public function hutangPiutangCustomer(Request $request)
+    public function hutangPiutangCustomer(HutangCustomerRequest $request)
     {
         $penyewaId = $request->get('penyewaId');
         $subkon = $request->get('subkon');
         $status = $request->get('status');
         $tanggalAwal = $request->get('tanggalAwal');
         $tanggalAkhir = $request->get('tanggalAkhir');
+        $export = boolval($request->get('export', false));
 
-        if (!$subkon || !$status || !$tanggalAwal || !$tanggalAkhir || !$penyewaId) {
+        try {
+            $response = LaporanV2Helper::getHutangCustomer(
+                new HutangCustomerParam($tanggalAwal, $tanggalAkhir, $subkon, $status, $penyewaId),
+                $export
+            );
+
+            if ($export) {
+                $pdf = App::make('dompdf.wrapper');
+                $pdf->loadView('generate.pdf.v2.hutang-customer', [
+                    'filename' => 'Laporan Hutang Pelanggan',
+                    'orders' => HutangPiutangCustomerResource::collection($response['orders'])->toArray($request),
+                    'customer' => $response['customer'],
+                    'totalHutang' => $response['totalHutang'],
+                    'totalHutangRange' => $response['totalHutangRange'],
+                    'tanggalAwal' => $tanggalAwal,
+                    'tanggalAkhir' => $tanggalAkhir,
+                ]);
+                return $pdf->stream();
+            }
+
             return response()->json([
-                'status' => 'error',
-                'message' => 'Subkon, status, tanggal awal, tanggal akhir, and penyewa ID are required'
-            ], 400);
+                'status' => 'success',
+                'data' => new HutangPiutangCustomerCollection($response['orders'], $response['totalHutang']),
+            ]);
+        } catch (\Throwable $th) {
+            if ($th instanceof HttpException) {
+                return response()->json([
+                    'message' => $th->getMessage(),
+                ], $th->getCode());
+            }
+
+            return response()->json([
+                'message' => 'Terjadi kesalahan pada server',
+            ], 500);
         }
-
-        $orders = OrderModel::query()->where('m_penyewa_id', $penyewaId);
-
-        if ($subkon !== 'all') {
-            $orders->where('m_subkon_id', '=', $subkon);
-        }
-
-        if ($status !== 'all') {
-            $orders->where('status', '=', $status);
-        }
-
-        $cloneOrderQuery = clone $orders;
-        $orders->whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir]);
-        $orders = $orders->paginate();
-
-        $totalHutang = $cloneOrderQuery
-            ->withSum('mutasi_order as total_pembayaran', 'nominal')
-            ->get()
-            ->sum(fn($order) => $order->harga_order_bersih - $order->total_pembayaran);
-
-        return response()->json([
-            'status' => 'success',
-            'data' => new HutangPiutangCustomerCollection($orders, $totalHutang),
-        ]);
     }
 
-    public function hutangPiutangSubkon(Request $request)
+    public function hutangPiutangSubkon(HutangSubkonRequest $request)
     {
         $subkonId = $request->get('subkonId');
         $tanggalAwal = $request->get('tanggalAwal');
         $tanggalAkhir = $request->get('tanggalAkhir');
 
-        if (!$subkonId || !$tanggalAwal || !$tanggalAkhir) {
+        $export = boolval($request->get('export', false));
+
+        try {
+            $response = LaporanV2Helper::getHutangSubkon(
+                new HutangSubkonParam($tanggalAwal, $tanggalAkhir, $subkonId),
+                $export
+            );
+
+            if ($export) {
+                $pdf = App::make('dompdf.wrapper');
+                $pdf->loadView('generate.pdf.v2.hutang-subkon', [
+                    'filename' => 'Laporan Hutang Customer',
+                    'orders' => HutangPiutangSubkonResource::collection($response['orders'])->toArray($request),
+                    'subkon' => $response['subkon'],
+                    'totalHutangRange' => $response['totalHutangRange'],
+                    'tanggalAwal' => $tanggalAwal,
+                    'tanggalAkhir' => $tanggalAkhir,
+                ]);
+                return $pdf->stream();
+            }
+
             return response()->json([
-                'status' => 'error',
-                'message' => 'Subkon ID, tanggal awal, and tanggal akhir are required'
-            ], 400);
-        }
+                'status' => 'success',
+                'data' => new HutangPiutangSubkonCollection($response['orders'], $response['totalHutang'])
+            ]);
+        } catch (\Throwable $th) {
+            if ($th instanceof HttpException) {
+                return response()->json([
+                    'message' => $th->getMessage(),
+                ], $th->getCode());
+            }
 
-        $subkon = SubkonModel::find($subkonId);
-
-        if (!$subkon) {
             return response()->json([
-                'status' => 'error',
-                'message' => 'Subkon not found'
-            ], 404);
+                'message' => 'Terjadi kesalahan pada server' . $th->getMessage(),
+            ], 500);
         }
-
-        $orders = OrderModel::query()
-            ->where('m_subkon_id', $subkonId)
-            ->whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir])
-            ->paginate();
-        $totalHutang = OrderModel::query()
-            ->where('m_subkon_id', $subkonId)
-            // ->whereBetween('tanggal_awal', [$tanggalAwal, $tanggalAkhir])
-            ->withSum('mutasi_jual as total_pembayaran', 'nominal')
-            ->get()
-            ->sum(fn($order) => $order->harga_jual_bersih - $order->total_pembayaran);
-        return response()->json([
-            'status' => 'success',
-            'data' => new HutangPiutangSubkonCollection($orders, $totalHutang)
-        ]);
     }
 }
