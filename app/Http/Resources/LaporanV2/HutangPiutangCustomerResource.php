@@ -30,7 +30,8 @@ class HutangPiutangCustomerResource extends JsonResource
             'harga_order' => $this->harga_order_bersih,
             'biaya_tambah_kurang' => $jumlahPembayaran,
             'pph' => $this->total_pajak,
-            'sisa_tagihan' => $this->harga_order_bersih - $jumlahPembayaran
+            'sisa_tagihan' => $this->harga_order_bersih - $jumlahPembayaran,
+            'status' => $this->status_lunas,
         ];
     }
 
