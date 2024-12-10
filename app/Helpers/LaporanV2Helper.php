@@ -11,6 +11,7 @@ use App\Models\Master\PenyewaModel;
 use App\Models\Master\SopirModel;
 use App\Models\Master\SubkonModel;
 use App\Models\Transaksi\OrderModel;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class LaporanV2Helper
@@ -83,7 +84,16 @@ class LaporanV2Helper
       throw new HttpException(404, 'Penyewa not found');
     }
 
-    $orders = OrderModel::query()->where('m_penyewa_id', $penyewa->id);
+    $orders = OrderModel::query()->where('m_penyewa_id', $penyewa->id)
+      ->select('transaksi_order.*', DB::raw("CASE 
+            WHEN IF(true, transaksi_order.harga_order_bersih <= (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'order')
+              ,transaksi_order.harga_jual_bersih <= (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'jual'))
+             THEN
+               'lunas'
+             ELSE
+               'belum_lunas'
+             END 
+            AS status_lunas"));
 
     if ($param->subkon !== 'all') {
       $orders->where('m_subkon_id', '=', $param->subkon);
