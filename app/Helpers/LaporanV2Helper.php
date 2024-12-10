@@ -90,7 +90,17 @@ class LaporanV2Helper
     }
 
     if ($param->status !== 'all') {
-      $orders->where('status', '=', $param->status);
+      $orders->when($param->status == 'lunas', function ($q) {
+        $q->whereRaw(
+          "IF(true, transaksi_order.harga_order_bersih <= (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'order')
+          ,transaksi_order.harga_jual_bersih <= (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'jual'))"
+        );
+      })->when($param->status == 'belum_lunas', function ($q) {
+        $q->whereRaw(
+          "IF(true, transaksi_order.harga_order_bersih > (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'order')
+          ,transaksi_order.harga_jual_bersih > (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'jual'))"
+        );
+      });
     }
 
     $cloneOrderQuery = clone $orders;
