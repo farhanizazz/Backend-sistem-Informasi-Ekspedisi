@@ -60,7 +60,7 @@ class LaporanV2Controller extends Controller
             if ($th instanceof HttpException) {
                 return response()->json([
                     'message' => $th->getMessage(),
-                ], $th->getCode() ?? 500);
+                ], $th->getStatusCode() ?? 500);
             }
 
             return response()->json([
@@ -112,7 +112,7 @@ class LaporanV2Controller extends Controller
             if ($th instanceof HttpException) {
                 return response()->json([
                     'message' => $th->getMessage(),
-                ], $th->getCode() ?? 500);
+                ], $th->getStatusCode() ?? 500);
             }
 
             return response()->json([
@@ -156,7 +156,7 @@ class LaporanV2Controller extends Controller
             if ($th instanceof HttpException) {
                 return response()->json([
                     'message' => $th->getMessage(),
-                ], $th->getCode() ?? 500);
+                ], $th->getStatusCode() ?? 500);
             }
 
             return response()->json([
