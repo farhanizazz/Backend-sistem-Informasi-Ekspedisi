@@ -138,7 +138,7 @@ class LaporanV2Controller extends Controller
             if ($export) {
                 $pdf = App::make('dompdf.wrapper');
                 $pdf->loadView('generate.pdf.v2.hutang-subkon', [
-                    'filename' => 'Laporan Hutang Customer',
+                    'filename' => 'Laporan Hutang Subkon',
                     'orders' => HutangPiutangSubkonResource::collection($response['orders'])->toArray($request),
                     'subkon' => $response['subkon'],
                     'totalHutangRange' => $response['totalHutangRange'],

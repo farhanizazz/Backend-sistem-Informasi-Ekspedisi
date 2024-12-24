@@ -57,7 +57,7 @@
                     </tbody>
                 </table>
 
-                <table class="table bordering-bottom" style="margin-top: 1rem;margin-bottom:1rem">
+                <table class="table bordered bordering-bottom" style="margin-top: 1rem;margin-bottom:1rem">
                     <tbody>
                         <tr>
                             <td><strong>Total Tagihan</strong></td>
@@ -72,7 +72,7 @@
                     </tbody>
                 </table>
             </div>
-            <table class="table table-text-left">
+            <table class="table bordered table-text-left">
                 <thead>
                     <tr>
                         <th>Tgl Bayar</th>
