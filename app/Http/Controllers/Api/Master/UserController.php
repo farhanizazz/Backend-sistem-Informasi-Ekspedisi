@@ -194,7 +194,8 @@ class UserController extends Controller
             return response()->json(
                 [
                     'status' => 'success',
-                    'message' => 'Data berhasil diubah'
+                    'message' => 'Data berhasil diubah',
+                    'data' => $this->userModel->findOrFail($id)
                 ]
             );
         } catch (\Throwable $th) {

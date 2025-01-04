@@ -68,10 +68,11 @@ class MutasiController extends Controller
                 ]
             );
         }
-        $this->mutasiModel->create($request->all());
+        $result = $this->mutasiModel->create($request->all());
         return response()->json([
             'status' => 'success',
-            'message' => 'Data berhasil ditambahkan'
+            'message' => 'Data berhasil ditambahkan',
+            'data' => $result
         ]);
     }
     // public function filterByRekeningId($rekening_id)
@@ -157,7 +158,8 @@ class MutasiController extends Controller
             return response()->json(
                 [
                     'status' => 'success',
-                    'message' => 'Data berhasil diubah'
+                    'message' => 'Data berhasil diubah',
+                    'data' => $this->mutasiModel->findOrFail($id)
                 ]
             );
         } catch (\Throwable $th) {

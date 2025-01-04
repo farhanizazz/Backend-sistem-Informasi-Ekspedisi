@@ -46,11 +46,12 @@ class TambahanController extends Controller
                 ]
             );
         }
-        $this->tambahanModel->create($request->all());
+        $result = $this->tambahanModel->create($request->all());
         return response()->json([
             // 'total' => $total,
             'status' => 'success',
-            'message' => 'Data berhasil ditambahkan'
+            'message' => 'Data berhasil ditambahkan',
+            'data' => $result
         ]);
     }
 
@@ -119,7 +120,8 @@ class TambahanController extends Controller
             return response()->json(
                 [
                     'status' => 'success',
-                    'message' => 'Data berhasil diubah'
+                    'message' => 'Data berhasil diubah',
+                    'data' => $this->tambahanModel->findOrFail($id)
                 ]
             );
         } catch (\Throwable $th) {

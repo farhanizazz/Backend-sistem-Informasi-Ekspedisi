@@ -61,12 +61,13 @@ class PengeluaranContoller extends Controller
                 ]
             );
         }
-        $this->pengeluaranModel->create($request->all());
+        $result = $this->pengeluaranModel->create($request->all());
 
         return response()->json(
             [
                 'status' => 'success',
-                'message' => 'Data berhasil ditambahkan'
+                'message' => 'Data berhasil ditambahkan',
+                'data' => $result
             ]
         );
     }
@@ -141,7 +142,8 @@ class PengeluaranContoller extends Controller
             return response()->json(
                 [
                     'status' => 'success',
-                    'message' => 'Data berhasil diubah'
+                    'message' => 'Data berhasil diubah',
+                    'data' => $this->pengeluaranModel->findOrFail($id)
                 ]
             );
         } catch (\Throwable $th) {

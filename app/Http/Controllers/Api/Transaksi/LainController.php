@@ -51,7 +51,8 @@ class LainController extends Controller
         }
         return response()->json([
             'status' => 'success',
-            'message' => $result['message']
+            'message' => $result['message'],
+            'data' => $result['data']
         ]);
     }
     public function update(UpdateRequest $request, $id)
@@ -74,7 +75,8 @@ class LainController extends Controller
         }
         return response()->json([
             'status' => 'success',
-            'message' => $result['message']
+            'message' => $result['message'],
+            'data' => $result['data']
         ]);
     }
     public function destroy($id)

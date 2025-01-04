@@ -46,11 +46,12 @@ class SubkonController extends Controller
                 ]
             );
         }
-        $this->subkonModel->create($request->all());
+        $result = $this->subkonModel->create($request->all());
 
         return response()->json([
                 'status' => 'success',
-                'message' => 'Data berhasil ditambahkan'
+                'message' => 'Data berhasil ditambahkan',
+                'data' => $result
             ]
         );
     }
@@ -128,7 +129,8 @@ class SubkonController extends Controller
         }
         return response()->json([
                 'status' => 'success',
-                'message' => 'Data berhasil diubah'
+                'message' => 'Data berhasil diubah',
+                'data' => $this->subkonModel->findOrFail($id)
             ]
         );
         } catch (\Throwable $th) {

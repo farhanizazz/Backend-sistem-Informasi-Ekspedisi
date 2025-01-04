@@ -130,12 +130,13 @@ class SopirController extends Controller
                 ]
             );
         }
-        $this->sopirModel->create($request->all());
+        $result = $this->sopirModel->create($request->all());
 
         return response()->json(
             [
                 'status' => 'success',
-                'message' => 'Data berhasil ditambahkan'
+                'message' => 'Data berhasil ditambahkan',
+                'data' => $result
             ]
         );
     }
@@ -218,7 +219,8 @@ class SopirController extends Controller
             return response()->json(
                 [
                     'status' => 'success',
-                    'message' => 'Data berhasil diubah'
+                    'message' => 'Data berhasil diubah',
+                    'data' => $this->sopirModel->findOrFail($id)
                 ]
             );
         } catch (\Throwable $th) {

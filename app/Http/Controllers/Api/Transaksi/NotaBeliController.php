@@ -34,11 +34,12 @@ class NotaBeliController extends Controller
                 ]
             );
         }
-        $this->notaBeliModel->create($request->all());
+        $result = $this->notaBeliModel->create($request->all());
 
         return response()->json([
                 'status' => 'success',
-                'message' => 'Data berhasil ditambahkan'
+                'message' => 'Data berhasil ditambahkan',
+                'data' => $result
             ]
         );
     }
@@ -65,7 +66,8 @@ class NotaBeliController extends Controller
         }
         return response()->json([
                 'status' => 'success',
-                'message' => 'Data berhasil diubah'
+                'message' => 'Data berhasil diubah',
+                'data' => $this->notaBeliModel->findOrFail($id)
             ]
         );
         } catch (\Throwable $th) {

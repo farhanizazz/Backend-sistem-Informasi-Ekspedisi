@@ -93,12 +93,13 @@ class HutangSopirController extends Controller
                 ]
             );
         }
-        $this->hutangSopirModel->create($request->all());
+        $result =$this->hutangSopirModel->create($request->all());
 
         return response()->json(
             [
                 'status' => 'success',
-                'message' => 'Data berhasil ditambahkan'
+                'message' => 'Data berhasil ditambahkan',
+                'data' => $result
             ]
         );
     }

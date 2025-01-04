@@ -46,11 +46,12 @@ class PenyewaController extends Controller
                 ]
             );
         }
-        $this->penyewaModel->create($request->all());
+        $result = $this->penyewaModel->create($request->all());
 
         return response()->json([
                 'status' => 'success',
-                'message' => 'Data berhasil ditambahkan'
+                'message' => 'Data berhasil ditambahkan',
+                'data' => $result
             ]
         );
     }
@@ -109,7 +110,8 @@ class PenyewaController extends Controller
         }
         return response()->json([
                 'status' => 'success',
-                'message' => 'Data berhasil diubah'
+                'message' => 'Data berhasil diubah',
+                'data' => $this->penyewaModel->findOrFail($id)
             ]
         );
         } catch (\Throwable $th) {

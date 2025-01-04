@@ -45,10 +45,11 @@ class RoleController extends Controller
             );
         }
 
-        $this->roleModel->create($request->all());
+        $result = $this->roleModel->create($request->all());
         return response()->json([
             'status' => 'success',
-            'message' => 'Data berhasil ditambahkan'
+            'message' => 'Data berhasil ditambahkan',
+            'data' => $result
         ]);
     }
 
@@ -106,7 +107,8 @@ class RoleController extends Controller
         }
         return response()->json([
                 'status' => 'success',
-                'message' => 'Data berhasil diubah'
+                'message' => 'Data berhasil diubah',
+                'data' => $this->roleModel->findOrFail($id)
             ]
         );
         } catch (\Throwable $th) {

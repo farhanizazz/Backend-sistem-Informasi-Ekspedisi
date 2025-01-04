@@ -59,11 +59,12 @@ class RekeningController extends Controller
                 ]
             );
         }
-        $this->rekeningModel->create($request->all());
+        $result = $this->rekeningModel->create($request->all());
         return response()->json([
             // 'total' => $total,
             'status' => 'success',
-            'message' => 'Data berhasil ditambahkan'
+            'message' => 'Data berhasil ditambahkan',
+            'data' => $result
         ]);
     }
 
@@ -144,7 +145,8 @@ class RekeningController extends Controller
                 return response()->json(
                     [
                         'status' => 'error',
-                        'message' => 'Data gagal diubah'
+                        'message' => 'Data gagal diubah',
+                        'data' => $this->rekeningModel->findOrFail($id)
                     ]
                 );
             }

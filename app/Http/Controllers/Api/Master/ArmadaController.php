@@ -7,6 +7,7 @@ use App\Http\Requests\ArmadaRequest\CreateRequest;
 use App\Http\Requests\ArmadaRequest\UpdateRequest;
 use App\Models\Master\ArmadaModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ArmadaController extends Controller
 {
@@ -46,10 +47,11 @@ class ArmadaController extends Controller
             );
         }
 
-        $this->armadaModel->create($request->all());
+        $result = $this->armadaModel->create($request->all());
         return response()->json([
             'status' => 'success',
-            'message' => 'Data berhasil ditambahkan'
+            'message' => 'Data berhasil ditambahkan',
+            'data' => $result
         ]);
     }
 
@@ -96,7 +98,7 @@ class ArmadaController extends Controller
                 ]
             );
         }
-
+        
         $response = $this->armadaModel->findOrFail($id)->update($request->all());
         if (!$response) {
             return response()->json([
@@ -107,7 +109,8 @@ class ArmadaController extends Controller
         }
         return response()->json([
                 'status' => 'success',
-                'message' => 'Data berhasil diubah'
+                'message' => 'Data berhasil diubah',
+                'data' => $this->armadaModel->findOrFail($id)
             ]
         );
         } catch (\Throwable $th) {
