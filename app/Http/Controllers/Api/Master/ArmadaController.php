@@ -6,8 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ArmadaRequest\CreateRequest;
 use App\Http\Requests\ArmadaRequest\UpdateRequest;
 use App\Models\Master\ArmadaModel;
+use App\Models\Master\MutasiModel;
+use App\Models\Transaksi\NotaBeliModel;
+use App\Models\Transaksi\OrderModel;
+use App\Models\Transaksi\ServisModel;
+use App\Models\Transaksi\ServisMutasiModel;
+use App\Models\Transaksi\TransaksiTagihanDetModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ArmadaController extends Controller
 {
@@ -129,16 +136,46 @@ class ArmadaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         try {
-            $this->armadaModel->findOrfail($id)->delete();
+            DB::beginTransaction();
+            if($request->force == "true"){
+                $servis = ServisModel::where('master_armada_id', $id)->get();
+                NotaBeliModel::whereIn('servis_id', $servis->pluck('id'))->delete();
+                ServisMutasiModel::whereIn('servis_id', $servis->pluck('id'))->delete();
+                ServisModel::where('master_armada_id', $id)->delete();
+
+                $order = OrderModel::where('m_armada_id', $id)->get();
+                    TransaksiTagihanDetModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
+                    MutasiModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
+                    OrderModel::where('m_armada_id', $id)->delete();
+
+                $this->armadaModel->findOrfail($id)->delete();
+            }else{
+                $this->armadaModel->findOrfail($id)->delete();
+            
+            }
+            DB::commit();
             return response()->json([
-                    'status' => 'success',
-                    'message' => 'Data berhasil dihapus'
-                ]
-            );
+                'status' => 'success',
+                'message' => 'Data berhasil dihapus'
+            ]
+        );
+            
         } catch (\Throwable $th) {
+            dd($th);
+            DB::rollBack();
+            if ($th->getCode() == 23000) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Data ini tidak dapat diubah karena sedang digunakan di tabel lain.'
+                    ]
+                );
+            }
+
+
             return response()->json([
                     'status' => 'error',
                     'message' => 'Data tidak ditemukan'

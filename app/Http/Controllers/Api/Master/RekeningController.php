@@ -5,8 +5,14 @@ namespace App\Http\Controllers\Api\Master;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RekeningRequest\CreateRequest;
 use App\Http\Requests\RekeningRequest\UpdateRequest;
+use App\Models\Master\MutasiModel;
 use App\Models\Master\RekeningModel;
+use App\Models\Transaksi\ServisMutasiModel;
+use App\Models\Transaksi\TransaksiTagihanDetModel;
+use App\Models\Transaksi\TransaksiTagihanModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use TransaksiTagihan;
 
 class RekeningController extends Controller
 {
@@ -173,10 +179,23 @@ class RekeningController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         try {
-            $this->rekeningModel->findOrfail($id)->delete();
+            DB::beginTransaction();
+            if($request->force == "true"){
+                $mutasi = MutasiModel::where('master_rekening_id', $id)->get(); 
+                ServisMutasiModel::whereIn('master_mutasi_id', $mutasi->pluck('id'))->delete();
+                MutasiModel::whereIn('id', $mutasi->pluck('id'))->delete();
+
+                $tagihan = TransaksiTagihanModel::where('master_rekening_id', $id)->get();
+                TransaksiTagihanDetModel::whereIn('transaksi_tagihan_id', $tagihan->pluck('id'))->delete();
+                TransaksiTagihanModel::whereIn('id', $tagihan->pluck('id'))->delete();
+                $this->rekeningModel->findOrfail($id)->delete();
+            }else{
+                $this->rekeningModel->findOrfail($id)->delete();
+            }
+            DB::commit();
             return response()->json(
                 [
                     'status' => 'success',
@@ -184,6 +203,16 @@ class RekeningController extends Controller
                 ]
             );
         } catch (\Throwable $th) {
+            DB::rollBack();
+            if ($th->getCode() == 23000) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Data ini tidak dapat diubah karena sedang digunakan di tabel lain.'
+                    ]
+                );
+            }
+
             return response()->json(
                 [
                     'status' => 'error',

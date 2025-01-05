@@ -6,9 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SopirRequest\CreateRequest;
 use App\Http\Requests\SopirRequest\UpdateRequest;
 use App\Http\Resources\Sopir\SopirCollection;
+use App\Models\Master\MutasiModel;
 use App\Models\Master\SopirModel;
+use App\Models\Transaksi\OrderModel;
+use App\Models\Transaksi\TransaksiTagihanDetModel;
+use App\Models\Transaksi\TransaksiTagihanModel;
 use App\Services\SopirService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SopirController extends Controller
 {
@@ -240,10 +245,20 @@ class SopirController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         try {
-            $this->sopirModel->findOrfail($id)->delete();
+            DB::beginTransaction();
+            if($request->force == "true"){
+                $order = OrderModel::where('m_sopir_id', $id)->get();
+                TransaksiTagihanDetModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
+                MutasiModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
+                OrderModel::where('m_sopir_id', $id)->delete();
+                $this->sopirModel->findOrfail($id)->delete();
+            }else{
+                $this->sopirModel->findOrfail($id)->delete();
+            }
+            DB::commit();
             return response()->json(
                 [
                     'status' => 'success',
@@ -251,6 +266,16 @@ class SopirController extends Controller
                 ]
             );
         } catch (\Throwable $th) {
+            DB::rollBack();
+            if ($th->getCode() == 23000) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Data ini tidak dapat diubah karena sedang digunakan di tabel lain.'
+                    ]
+                );
+            }
+
             return response()->json(
                 [
                     'status' => 'error',
