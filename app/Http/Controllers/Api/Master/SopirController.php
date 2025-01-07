@@ -8,6 +8,7 @@ use App\Http\Requests\SopirRequest\UpdateRequest;
 use App\Http\Resources\Sopir\SopirCollection;
 use App\Models\Master\MutasiModel;
 use App\Models\Master\SopirModel;
+use App\Models\Transaksi\HutangSopirModel;
 use App\Models\Transaksi\OrderModel;
 use App\Models\Transaksi\TransaksiTagihanDetModel;
 use App\Models\Transaksi\TransaksiTagihanModel;
@@ -254,6 +255,7 @@ class SopirController extends Controller
                 TransaksiTagihanDetModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
                 MutasiModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
                 OrderModel::where('m_sopir_id', $id)->delete();
+                HutangSopirModel::where('master_sopir_id', $id)->delete();
                 $this->sopirModel->findOrfail($id)->delete();
             }else{
                 $this->sopirModel->findOrfail($id)->delete();
