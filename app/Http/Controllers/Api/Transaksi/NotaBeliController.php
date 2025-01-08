@@ -83,7 +83,7 @@ class NotaBeliController extends Controller
     public function destroy($id)
     {
         try{
-            $this->notaBeliModel->find($id)->delete();
+            $this->notaBeliModel->findOrFail($id)->delete();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil dihapus'

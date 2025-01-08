@@ -9,6 +9,7 @@ use App\Http\Resources\Order\OrderCollection;
 use App\Http\Resources\Order\OrderResource;
 use App\Models\Master\MutasiModel;
 use App\Models\Transaksi\OrderModel;
+use App\Models\Transaksi\TransaksiTagihanDetModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -104,16 +105,23 @@ class OrderController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy($id,Request $request)
     {
         try {
             //code...
+            DB::beginTransaction();
             $order = OrderModel::find($id);
             if ($order) {
-                $order -> mutasi()->delete();
+                if($request->force == "true"){
+                    $order = OrderModel::where('m_armada_id', $id)->get();
+                    TransaksiTagihanDetModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
+                    MutasiModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
+                    OrderModel::where('m_armada_id', $id)->delete();
+                }else{
+                    $order->delete();
+                }
 
-                $order->delete();
-            
+            DB::commit();
             return response()->json([
                 'status' => 'success',
                 'message' => 'Data berhasil dihapus'
@@ -122,6 +130,16 @@ class OrderController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
+
+            if ($th->getCode() == 23000) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Data ini tidak dapat diubah karena sedang digunakan di tabel lain.'
+                    ]
+                );
+            }
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data tidak ditemukan'

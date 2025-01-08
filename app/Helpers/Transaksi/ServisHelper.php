@@ -233,16 +233,25 @@ class ServisHelper
             if (!$result) {
                 return [
                     'status' => false,
-                    'message' => 'Servis mutasi not found',
+                    'message' => 'Data tidak ditemukan'
                 ];
             }
             $result->delete();
             $result->master_mutasi->delete();
             return [
                 'status' => true,
-                'message' => 'Servis mutasi deleted successfully',
+                'message' => 'Data berhasil dihapus'
             ];
         } catch (\Throwable $th) {
+            if ($th->getCode() == 23000) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Data ini tidak dapat diubah karena sedang digunakan di tabel lain.'
+                    ]
+                );
+            }
+
             return [
                 'status' => false,
                 'message' => 'Failed to delete Servis mutasi',

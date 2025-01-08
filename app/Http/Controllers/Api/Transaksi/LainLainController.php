@@ -12,6 +12,7 @@ use App\Http\Requests\ServisRequest\UpdateRequest;
 use App\Http\Resources\LainLain\LainLainCollection;
 use App\Http\Resources\LainLain\LainLainResource;
 use App\Http\Resources\Servis\ServisResource;
+use Illuminate\Support\Facades\DB;
 
 class LainLainController extends Controller
 {
@@ -128,20 +129,25 @@ class LainLainController extends Controller
             'data' => $result['data']
         ]);
     }
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         try {
             $service = ServisModel::find($id);
             if ($service) {
-                // $service->servis_mutasi->master_mutasi()->delete();
-                // $service->servis_mutasi()->delete();
+                DB::beginTransaction();
+                if($request->force == "true"){
+                $service->servis_mutasi()->delete();
                 $service->nota_beli_items()->delete();
                 $service->delete();
+                }else{
+                    $service->delete();
+                }
 
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Data berhasil dihapus'
                 ]);
+                DB::commit();
             } else {
                 return response()->json([
                     'status' => 'error',
@@ -149,6 +155,16 @@ class LainLainController extends Controller
                 ]);
             }
         } catch (\Throwable $th) {
+            DB::rollBack();
+            if ($th->getCode() == 23000) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Data ini tidak dapat diubah karena sedang digunakan di tabel lain.'
+                    ]
+                );
+            }
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data tidak ditemukan'

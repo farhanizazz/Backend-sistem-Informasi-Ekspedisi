@@ -11,6 +11,7 @@ use App\Helpers\Transaksi\ServisHelper;
 use App\Http\Requests\ServisMutasiRequest\CreateServisMutasiRequest;
 use App\Http\Requests\ServisRequest\CreateRequest;
 use App\Http\Requests\ServisRequest\UpdateRequest;
+use Illuminate\Support\Facades\DB;
 
 class ServisController extends Controller
 {
@@ -100,16 +101,21 @@ class ServisController extends Controller
             'data' => $result['data']
         ]);
     }
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         try {
             $service = ServisModel::find($id);
             if ($service) {
-                // $service->servis_mutasi->master_mutasi()->delete();
-                // $service->servis_mutasi()->delete();
-                $service->nota_beli_items()->delete();
-                $service->delete();
-
+                DB::beginTransaction(); 
+                if($request->force == "true"){
+                    $service->nota_beli_items()->delete();
+                    $service->servis_mutasi()->delete();
+                    $service->delete();
+                }else{
+                    $service->delete();
+                }
+            
+                DB::commit();
                 return response()->json([
                     'status' => 'success',
                     'message' => 'Data berhasil dihapus'
@@ -121,6 +127,17 @@ class ServisController extends Controller
                 ]);
             }
         } catch (\Throwable $th) {
+            DB::rollBack();
+
+            if ($th->getCode() == 23000) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => 'Data ini tidak dapat diubah karena sedang digunakan di tabel lain.'
+                    ]
+                );
+            }
+
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data tidak ditemukan'
