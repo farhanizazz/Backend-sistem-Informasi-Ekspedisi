@@ -164,7 +164,6 @@ class ArmadaController extends Controller
         );
             
         } catch (\Throwable $th) {
-            dd($th);
             DB::rollBack();
             if ($th->getCode() == 23000) {
                 return response()->json(
