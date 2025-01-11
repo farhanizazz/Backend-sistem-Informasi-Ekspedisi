@@ -223,6 +223,8 @@ Route::middleware('jwt.verify')->group(function () {
         Route::put("/{id}", [PengeluaranContoller::class, "update"]);
         Route::delete("/{id}", [PengeluaranContoller::class, "destroy"]);
     });
+
+    Route::post("/logout", [AuthController::class, "logout"]);
 });
 
 Route::get("/log",[LogController::class, "index"]);
