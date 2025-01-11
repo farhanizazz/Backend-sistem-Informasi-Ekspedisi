@@ -324,6 +324,7 @@ class OrderHelper
           return [
             "status" => true,
             "message" => "Berhasil mengedit order",
+            "data" => $this->orderModel->findOrFail($id)
           ];
           break;
         case 'Subkon':
@@ -374,7 +375,8 @@ class OrderHelper
           }
           return [
             "status" => true,
-            "message" => "Berhasil mengedit order"
+            "message" => "Berhasil mengedit order",
+            "data" => $this->orderModel->findOrFail($id)
           ];
           break;
         default:
