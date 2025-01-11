@@ -113,10 +113,10 @@ class OrderController extends Controller
             $order = OrderModel::find($id);
             if ($order) {
                 if($request->force == "true"){
-                    $order = OrderModel::where('m_armada_id', $id)->get();
+                    $order = OrderModel::where('id', $id)->get();
                     TransaksiTagihanDetModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
                     MutasiModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
-                    OrderModel::where('m_armada_id', $id)->delete();
+                    OrderModel::where('id', $id)->delete();
                 }else{
                     $order->delete();
                 }

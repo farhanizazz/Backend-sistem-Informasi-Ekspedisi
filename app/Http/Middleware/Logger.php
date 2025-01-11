@@ -20,6 +20,9 @@ class Logger
 
         if($request->isMethod('post') || $request->isMethod('put') || $request->isMethod('delete')){
             $response_data = $response->getOriginalContent();
+            if(!isset($response_data['status'])) {
+                return;
+            }
             if($response_data['status'] == 'success'){
                 $data = $request->all();
                 $data['user_id'] = auth()->user()->id ?? null;

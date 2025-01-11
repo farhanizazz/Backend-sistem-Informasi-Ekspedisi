@@ -185,14 +185,15 @@ class HutangSopirController extends Controller
                 return response()->json(
                     [
                         'status' => 'error',
-                        'message' => 'Data gagal diubah'
+                        'message' => 'Data gagal diubah',
                     ]
                 );
             }
             return response()->json(
                 [
                     'status' => 'success',
-                    'message' => 'Data berhasil diubah'
+                    'message' => 'Data berhasil diubah',
+                    'data' => $this->hutangSopirModel->findOrFail($id)
                 ]
             );
         } catch (\Throwable $th) {
