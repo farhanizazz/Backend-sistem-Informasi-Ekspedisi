@@ -42,6 +42,8 @@ class MutasiModel extends Model
 
     public function getAll($payload)
     {
+        $itemPerPage = $payload['itemPerPage'] ?? 20;
+
         $data = $this->with(['pembuat', 'master_rekening', 'transaksi_order' => function ($q) {
                 $q->select('id', 'no_transaksi');
             }])
@@ -56,16 +58,10 @@ class MutasiModel extends Model
             })->when(isset($payload['jenis_transaksi']) && $payload['jenis_transaksi'], function ($query) use ($payload) {
                 $query->where('jenis_transaksi', $payload['jenis_transaksi']);
             })
-            ->orderBy('tanggal_pembayaran', 'desc')->orderBy('created_at', 'DESC')->get();
-
-        // get detail order
-        if (isset($payload['transaksi_order_id']) && $payload['transaksi_order_id'] && $data->count() > 0) {
-            $data = $data->map(function ($item) {
-                $item['detail'] = $this->detailOrder($item->transaksi_order_id);
-                return $item;
-            });
-        }
-        return $data;
+            ->orderBy('tanggal_pembayaran', 'desc')->orderBy('created_at', 'DESC')
+            ->paginate($itemPerPage);
+        
+            return $data;
     }
 
     /**

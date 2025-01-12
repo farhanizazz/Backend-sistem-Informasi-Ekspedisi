@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Master;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MutasiRequest\CreateRequest;
 use App\Http\Requests\MutasiRequest\UpdateRequest;
+use App\Http\Resources\Mutasi\MutasiCollection;
 use App\Http\Resources\MutasiRekening\MutasiRekeningCollection;
 use Illuminate\Http\Request;
 use App\Models\Master\MutasiModel;
@@ -47,7 +48,7 @@ class MutasiController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => $result
+            'data' => new MutasiCollection($result)
         ]);
     }
 
