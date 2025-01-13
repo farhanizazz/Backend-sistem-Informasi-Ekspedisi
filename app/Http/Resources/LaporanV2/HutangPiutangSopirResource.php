@@ -46,6 +46,7 @@ class HutangPiutangSopirResource extends JsonResource
             'total_uang_jalan' => $totalUangJalan,
 
             'rincian' => $rincian,
+            'rincian_lain' => $this->biayaLainUangJalanArr,
 
             'jumlah_pembayaran' => $jumlahPembayaran,
             'sisa_uang_jalan' => $totalUangJalan - $jumlahPembayaran
