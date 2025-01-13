@@ -22,7 +22,7 @@ class HutangPiutangCustomerResource extends JsonResource
             'no_transaksi' => $this->no_transaksi,
             'nopol' => $this->armada ? $this->armada->nopol : $this->nopol_subkon,
             'sopir' => $this->sopir ? $this->sopir->nama : $this->sopir_subkon,
-            'penyewa' => $this->penyewa->nama_perusahaan,
+            'penyewa' => $this->penyewa?->nama_perusahaan ?? null,
             'muatan' => $this->muatan,
             'asal' => $this->asal,
             'tujuan' => $this->tujuan,
