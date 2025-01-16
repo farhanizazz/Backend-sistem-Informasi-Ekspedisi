@@ -79,21 +79,30 @@ class LaporanV2Controller extends Controller
         $export = boolval($request->get('export', false));
 
         try {
+            $hutangCustomerParam = new HutangCustomerParam(
+                $tanggalAwal,
+                $tanggalAkhir,
+                $subkon,
+                $status,
+                $penyewaId
+            );
+
             $response = LaporanV2Helper::getHutangCustomer(
-                new HutangCustomerParam(
-                    $tanggalAwal,
-                    $tanggalAkhir,
-                    $subkon,
-                    $status,
-                    $penyewaId
-                ),
+                $hutangCustomerParam,
                 $export
             );
 
             if ($export) {
                 $pdf = App::make('dompdf.wrapper');
+
+                if ($response['customer']) {
+                    $title = 'Laporan Hutang Pelanggan';
+                } else {
+                    $title = 'Laporan Hutang Seluruh Pelanggan';
+                }
+
                 $pdf->loadView('generate.pdf.v2.hutang-customer', [
-                    'filename' => 'Laporan Hutang Pelanggan',
+                    'filename' => $title,
                     'orders' => HutangPiutangCustomerResource::collection($response['orders'])->toArray($request),
                     'customer' => $response['customer'],
                     'totalHutang' => $response['totalHutang'],

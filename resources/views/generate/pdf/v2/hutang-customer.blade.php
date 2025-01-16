@@ -5,10 +5,12 @@
         <h3 style="text-align: center">{{ $filename }}</h3>
         <table class="table bordered">
             <tbody>
+                @if($customer)
                 <tr>
                     <td><strong>Pelanggan</strong></td>
                     <td>{{ $customer->nama_perusahaan }}</td>
                 </tr>
+                @endif
                 {{-- <tr>
                     <td><strong>Total</strong> Hutang Realtime</td>
                     <td>{{ rupiah($totalHutang) }}</td>
