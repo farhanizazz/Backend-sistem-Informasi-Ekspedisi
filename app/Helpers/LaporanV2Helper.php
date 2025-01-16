@@ -77,14 +77,20 @@ class LaporanV2Helper
   }
 
 
-  public static function getHutangCustomer(HutangCustomerParam $param, bool $export)
+  public static function getHutangCustomer(HutangCustomerParam $param, bool $export): array
   {
-    $penyewa = PenyewaModel::find($param->penyewaId);
-    if (!$penyewa) {
-      throw new HttpException(404, 'Penyewa not found');
+    if ($param->penyewaId != null) {
+      $penyewa = PenyewaModel::find($param->penyewaId);
+      if (!$penyewa) {
+        throw new HttpException(404, 'Penyewa not found');
+      }
+
+      $query = OrderModel::query()->where('m_penyewa_id', $penyewa->id);
+    } else {
+      $query = OrderModel::query();
     }
 
-    $orders = OrderModel::query()->where('m_penyewa_id', $penyewa->id)
+    $orders = $query
       ->select('transaksi_order.*', DB::raw("CASE 
             WHEN IF(true, transaksi_order.harga_order_bersih <= (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'order')
               ,transaksi_order.harga_jual_bersih <= (select SUM(nominal) FROM master_mutasi WHERE master_mutasi.transaksi_order_id = transaksi_order.id AND master_mutasi.jenis_transaksi = 'jual'))
@@ -138,7 +144,7 @@ class LaporanV2Helper
       'orders' => $orders,
       'totalHutang' => $totalHutang,
       'totalHutangRange' => $totalHutangRange,
-      'customer' => $penyewa
+      'customer' => $penyewa ?? null
     ];
   }
 

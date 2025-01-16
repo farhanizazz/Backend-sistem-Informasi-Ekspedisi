@@ -13,7 +13,7 @@ class HutangCustomerRequest extends FormRequest
             'tanggalAkhir' => 'required|date',
             'subkon' => 'required',
             'status' => 'required',
-            'penyewaId' => 'required',
+            'penyewaId' => 'nullable',
         ];
     }
 }

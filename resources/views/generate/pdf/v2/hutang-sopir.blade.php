@@ -36,18 +36,40 @@
                         </tr>
                         <tr>
                             <td style="width: 50%"><strong>No Transaksi</strong>: {{ $order['no_transaksi'] }}</td>
-                            <td><strong>Biaya Tambah / Kurang</strong>: {{ rupiah($order['biaya_tambahan']) }} /
-                                {{ rupiah($order['biaya_kurang']) }}</td>
-                        </tr>
-                        <tr>
-                            <td style="width: 50%"><strong>Penyewa/muat</strong>: {{ $order['penyewa'] }} /
-                                {{ $order['muatan'] }}</td>
                             <td><strong>Potongan THR</strong>: {{ rupiah($order['pot_thr']) }}</td>
                         </tr>
                         <tr>
                             <td style="width: 50%"><strong>Asal/Tujuan</strong>: {{ $order['asal'] }} /
                                 {{ $order['tujuan'] }}</td>
-                            <td></td>
+                            <td><strong>Biaya Lain-lain</strong>:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 50%;vertical-align: top"><strong>Penyewa/muat</strong>:
+                                {{ $order['penyewa'] }} /
+                                {{ $order['muatan'] }}</td>
+                            <td>
+                                @if (count($order['rincian_lain']) != 0)
+                                    <table class="table bordered">
+                                        <tr>
+                                            <th>Ket</th>
+                                            <th>Jml</th>
+                                        </tr>
+                                        @foreach ($order['rincian_lain'] as $item)
+                                            <tr>
+                                                <td>{{ $item['nama'] }}</td>
+                                                <td>{{ rupiah($item['nominal']) }}</td>
+                                            </tr>
+                                        @endforeach
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                {{ rupiah($order['biaya_tambahan'] + $order['biaya_kurang']) }}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                @endif
+                            </td>
                         </tr>
                     </tbody>
                 </table>
