@@ -9,6 +9,6 @@ class HutangCustomerParam
     public string $tanggalAkhir,
     public string $subkon,
     public string $status,
-    public string $penyewaId,
+    public string|null $penyewaId,
   ) {}
 }
