@@ -16,6 +16,7 @@ class Logger
      */
     public function handle(Request $request, Closure $next)
     {
+        $user_id = auth()->user()->id ?? null;
         $response = $next($request);
 
         if($request->isMethod('post') || $request->isMethod('put') || $request->isMethod('delete')){
@@ -25,10 +26,10 @@ class Logger
             }
             if($response_data['status'] == 'success'){
                 $data = $request->all();
-                $data['user_id'] = auth()->user()->id ?? null;
+                $user_id = $user_id ?? (auth()->user()->id ?? null);
 
                 \App\Models\LogModel::create([
-                    'user_id' => $data['user_id'],
+                    'user_id' => $user_id,
                     'path' => $request->path(),
                     'method' => $request->method(),
                     'request' => json_encode($data),
