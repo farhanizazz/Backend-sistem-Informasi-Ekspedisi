@@ -27,8 +27,8 @@ class WordHelper{
                 'muat' => $transaksi_tagihan_det->transaksi_order->muatan,
                 'asal_tujuan' => $transaksi_tagihan_det->transaksi_order->asal . "/" .$transaksi_tagihan_det->transaksi_order->tujuan,
                 'lampiran' => ($transaksi_tagihan_det->transaksi_order->nomor_sj ?? '-') .",". ($transaksi_tagihan_det->transaksi_order->nomor_po ?? '-') .",". ($transaksi_tagihan_det->transaksi_order->nomor_do ?? '-'),
-                'biaya' => $this->rupiah($transaksi_tagihan_det->transaksi_order->harga_order),
-                'ppn' => $this->rupiah($transaksi_tagihan_det->transaksi_order->ppn),
+                'biaya' => $this->rupiah($transaksi_tagihan_det->transaksi_order->harga_order_bersih),
+                'ppn' => $this->rupiah($transaksi_tagihan_det->transaksi_order->total_pajak),
                 'sisa_tagihan' => $this->rupiah($transaksi_tagihan_det->transaksi_order->sisa_tagihan)
             ];
         });
@@ -52,6 +52,7 @@ class WordHelper{
 
         return storage_path($fileName);
     }
+    
 
     function rupiah($angka){
 	
