@@ -28,8 +28,7 @@ class MutasiObserver
      */
     public function created(MutasiModel $mutasiModel)
     {
-        if ($mutasiModel->jenis_transaksi == JenisTransaksiMutasiEnum::ORDER->value || $mutasiModel->jenis_transaksi == JenisTransaksiMutasiEnum::PEMASUKAN->value) {
-            # code...
+        if ($mutasiModel->jenis_transaksi->value == JenisTransaksiMutasiEnum::ORDER->value || $mutasiModel->jenis_transaksi->value == JenisTransaksiMutasiEnum::PEMASUKAN->value) {
             $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
                 'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal
             ]);
@@ -52,7 +51,7 @@ class MutasiObserver
         $mutasiModel->getOriginal('nominal');
         $mutasiModel->getOriginal('master_rekening_id');
         $mutasiModel->getOriginal('jenis_transaksi');
-        if ($mutasiModel->jenis_transaksi == JenisTransaksiMutasiEnum::ORDER->value || $mutasiModel->jenis_transaksi == JenisTransaksiMutasiEnum::PEMASUKAN->value) {
+        if ($mutasiModel->jenis_transaksi->value == JenisTransaksiMutasiEnum::ORDER->value || $mutasiModel->jenis_transaksi->value == JenisTransaksiMutasiEnum::PEMASUKAN->value) {
             $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
                 'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal - $mutasiModel->getOriginal('nominal')
             ]);
@@ -73,7 +72,7 @@ class MutasiObserver
      */
     public function deleted(MutasiModel $mutasiModel)
     {
-        if($mutasiModel->jenis_transaksi == "uang_jalan") {
+        if($mutasiModel->jenis_transaksi->value == "uang_jalan") {
             $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
                 'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal
             ]);
