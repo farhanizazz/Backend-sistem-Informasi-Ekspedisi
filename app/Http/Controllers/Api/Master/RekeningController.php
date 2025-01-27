@@ -184,9 +184,11 @@ class RekeningController extends Controller
         try {
             DB::beginTransaction();
             if($request->force == "true"){
-                $mutasi = MutasiModel::where('master_rekening_id', $id)->get(); 
-                ServisMutasiModel::whereIn('master_mutasi_id', $mutasi->pluck('id'))->delete();
-                MutasiModel::whereIn('id', $mutasi->pluck('id'))->delete();
+                $mutasis = MutasiModel::where('master_rekening_id', $id)->get(); 
+                ServisMutasiModel::whereIn('master_mutasi_id', $mutasis->pluck('id'))->delete();
+                foreach ($mutasis as $key => $mutasi) {
+                    $mutasi->delete();
+                }
 
                 $tagihan = TransaksiTagihanModel::where('master_rekening_id', $id)->get();
                 TransaksiTagihanDetModel::whereIn('transaksi_tagihan_id', $tagihan->pluck('id'))->delete();
