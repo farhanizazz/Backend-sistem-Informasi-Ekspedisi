@@ -153,7 +153,10 @@ class PenyewaController extends Controller
                 if($request->force == "true"){
                     $order = OrderModel::where('m_penyewa_id', $id)->get();
                     TransaksiTagihanDetModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
-                    MutasiModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
+                    $mutasis = MutasiModel::whereIn('transaksi_order_id', $order->pluck('id'))->get();
+                    foreach ($mutasis as $key => $mutasi) {
+                        $mutasi->delete();
+                    }
                     OrderModel::where('m_penyewa_id', $id)->delete();
                     TransaksiTagihanModel::where('m_penyewa_id', $id)->delete();
                     $this->penyewaModel->findOrfail($id)->delete();

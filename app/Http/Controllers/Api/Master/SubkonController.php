@@ -161,7 +161,10 @@ class SubkonController extends Controller
             if($request->force == "true"){
                 $order = OrderModel::where('m_subkon_id', $id)->get();
                 TransaksiTagihanDetModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
-                MutasiModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
+                $mutasis = MutasiModel::whereIn('transaksi_order_id', $order->pluck('id'))->get();
+                foreach ($mutasis as $key => $mutasi) {
+                    $mutasi->delete();
+                }
                 OrderModel::where('m_subkon_id', $id)->delete();
 
                 $this->subkonModel->findOrFail($id)->forceDelete();

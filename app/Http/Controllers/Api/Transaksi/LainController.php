@@ -84,8 +84,6 @@ class LainController extends Controller
         try {
             $service = ServisModel::find($id);
             if ($service) {
-                // $service->servis_mutasi->master_mutasi()->delete();
-                // $service->servis_mutasi()->delete();
                 $service->nota_beli_items()->delete();
                 $service->delete();
 

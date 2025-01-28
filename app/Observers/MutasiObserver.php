@@ -72,7 +72,7 @@ class MutasiObserver
      */
     public function deleted(MutasiModel $mutasiModel)
     {
-        if($mutasiModel->jenis_transaksi->value == "uang_jalan") {
+        if($mutasiModel->jenis_transaksi->value == "uang_jalan" || $mutasiModel->jenis_transaksi->value == JenisTransaksiMutasiEnum::PENGELUARAN->value) {
             $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->update([
                 'saldo' => $this->rekeningModel->where('id',$mutasiModel->master_rekening_id)->first()->saldo + $mutasiModel->nominal
             ]);
