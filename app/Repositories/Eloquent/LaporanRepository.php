@@ -74,57 +74,68 @@ use App\Repositories\Contracts\LaporanInterface;
     public function getLaporanPengeluaranServis($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10,$all)
     {
       return $this->notaBeliModel
-            ->with(['servis:id,nomor_nota,tanggal_servis,master_armada_id', 'servis.master_armada:id,nopol'])
-            ->whereHas('servis', function($query) use ($tanggal_awal,$tanggal_akhir,$m_armada_id){
-              $query->whereBetween('tanggal_servis',[$tanggal_awal,$tanggal_akhir])
-                    ->where('kategori_servis', 'servis')
-                    ->when($m_armada_id, function($query) use ($m_armada_id){
-                      return $query->whereIn('master_armada_id',$m_armada_id);
-                    });
+            ->leftJoin('servis', 'nota_beli.servis_id', '=', 'servis.id')
+            ->leftJoin('master_armada', 'servis.master_armada_id', '=', 'master_armada.id')
+            ->whereBetween('servis.tanggal_servis',[$tanggal_awal,$tanggal_akhir])
+            ->where('servis.kategori_servis', 'servis')
+            ->when($m_armada_id, function($query) use ($m_armada_id){
+              return $query->whereIn('master_armada_id',$m_armada_id);
             })
+            ->select('nota_beli.id', 'servis.tanggal_servis', 'master_armada.nopol', 'nota_beli.nama_barang', 'servis.nomor_nota','servis.keterangan_lain', 'nota_beli.harga', 'nota_beli.jumlah')
             ->when($all, function($query) use ($all){
-              return $query->get();
+              return $query
+              ->orderBy('servis.tanggal_servis', 'DESC')
+              ->get();
             })
             ->when(!$all, function($query) use ($all, $itemPerPage){
-              return $query->paginate($itemPerPage);
+              return $query
+              ->orderBy('servis.tanggal_servis', 'DESC')
+              ->paginate($itemPerPage);
             });
     }
 
     public function getLaporanPengeluaranLain($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10,$all)
     {
-      return $this->notaBeliModel
-            ->with(['servis:id,nomor_nota,tanggal_servis,master_armada_id', 'servis.master_armada:id,nopol'])
-            ->whereHas('servis', function($query) use ($tanggal_awal,$tanggal_akhir,$m_armada_id){
-              $query->whereBetween('tanggal_servis',[$tanggal_awal,$tanggal_akhir])
-                    ->where('kategori_servis', 'lain')
-                    ->when($m_armada_id, function($query) use ($m_armada_id){
-                      return $query->whereIn('master_armada_id',$m_armada_id);
-                    });
+          return $this->notaBeliModel
+            ->leftJoin('servis', 'nota_beli.servis_id', '=', 'servis.id')
+            ->leftJoin('master_armada', 'servis.master_armada_id', '=', 'master_armada.id')
+            ->whereBetween('servis.tanggal_servis',[$tanggal_awal,$tanggal_akhir])
+            ->where('servis.kategori_servis', 'lain')
+            ->when($m_armada_id, function($query) use ($m_armada_id){
+              return $query->whereIn('master_armada_id',$m_armada_id);
             })
+            ->select('nota_beli.id', 'servis.tanggal_servis', 'master_armada.nopol', 'nota_beli.nama_barang', 'servis.nomor_nota','servis.keterangan_lain', 'nota_beli.harga', 'nota_beli.jumlah')
             ->when($all, function($query) use ($all){
-              return $query->get();
+              return $query
+              ->orderBy('servis.tanggal_servis', 'DESC')
+              ->get();
             })
             ->when(!$all, function($query) use ($all, $itemPerPage){
-              return $query->paginate($itemPerPage);
+              return $query
+              ->orderBy('servis.tanggal_servis', 'DESC')
+              ->paginate($itemPerPage);
             });
     }
 
     public function getLaporanPengeluaranSemua($tanggal_awal,$tanggal_akhir,$m_armada_id,$itemPerPage=10,$all)
     {
-      return $this->notaBeliModel
-            ->with(['servis:id,nomor_nota,tanggal_servis,master_armada_id', 'servis.master_armada:id,nopol'])
-            ->whereHas('servis', function($query) use ($tanggal_awal,$tanggal_akhir,$m_armada_id){
-              $query->whereBetween('tanggal_servis',[$tanggal_awal,$tanggal_akhir])
-              ->when($m_armada_id, function($query) use ($m_armada_id){
-                return $query->whereIn('master_armada_id',$m_armada_id);
-              });
-            })
-            ->whereBetween('tanggal_servis',[$tanggal_awal,$tanggal_akhir])
-            ->when($all, function($query) use ($all){
-              return $query->get();
-            })
-            ->when(!$all, function($query) use ($all, $itemPerPage){
-              return $query->paginate($itemPerPage);
-            });
+        return $this->notaBeliModel
+        ->leftJoin('servis', 'nota_beli.servis_id', '=', 'servis.id')
+        ->leftJoin('master_armada', 'servis.master_armada_id', '=', 'master_armada.id')
+        ->whereBetween('servis.tanggal_servis',[$tanggal_awal,$tanggal_akhir])
+        ->when($m_armada_id, function($query) use ($m_armada_id){
+          return $query->whereIn('master_armada_id',$m_armada_id);
+        })
+        ->select('nota_beli.id', 'servis.tanggal_servis', 'master_armada.nopol', 'nota_beli.nama_barang', 'servis.nomor_nota','servis.keterangan_lain', 'nota_beli.harga', 'nota_beli.jumlah')
+        ->when($all, function($query) use ($all){
+          return $query
+          ->orderBy('servis.tanggal_servis', 'DESC')
+          ->get();
+        })
+        ->when(!$all, function($query) use ($all, $itemPerPage){
+          return $query
+          ->orderBy('servis.tanggal_servis', 'DESC')
+          ->paginate($itemPerPage);
+        });
     }
   }

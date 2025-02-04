@@ -22,7 +22,7 @@ class Logger
         if($request->isMethod('post') || $request->isMethod('put') || $request->isMethod('delete')){
             $response_data = $response->getOriginalContent();
             if(!isset($response_data['status'])) {
-                return;
+                return $response;
             }
             if($response_data['status'] == 'success'){
                 $data = $request->all();

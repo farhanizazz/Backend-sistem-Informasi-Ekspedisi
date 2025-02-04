@@ -244,3 +244,11 @@ Route::prefix('laporan-v2')->group(function() {
     Route::get('hutang-customer', [LaporanV2Controller::class, 'hutangPiutangCustomer']);
     Route::get('hutang-subkon', [LaporanV2Controller::class, 'hutangPiutangSubkon']);
 });
+
+// other route force to not found
+Route::any('{any}', function () {
+    return response()->json([
+        'status' => 'error',
+        'message' => 'Not Found'
+    ], 404);
+})->where('any', '.*');
