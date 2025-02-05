@@ -40,8 +40,7 @@
                 <tbody>
                     @if (count($data) == 0)
                         <tr>
-                            <td style="text-align: center" colspan="3">Rincian tidak tersedia</td>
-                            <td rowspan="{{ count($data) }}">{{ rupiah($order['sisa_hutang']) }}</td>
+                            <td style="text-align: center" colspan="4">Rincian tidak tersedia</td>
                         </tr>
                     @endif
                     @foreach ($data as $index => $detail)
