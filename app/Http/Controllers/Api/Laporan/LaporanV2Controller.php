@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Laporan;
 use App\DataTransferObjects\HutangCustomerParam;
 use App\DataTransferObjects\HutangSopirParam;
 use App\DataTransferObjects\HutangSubkonParam;
+use App\DataTransferObjects\KasHarianParam;
+use App\Helpers\Laporan\V2\KasHarian;
 use App\Helpers\LaporanV2Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LaporanRequest\V2\HutangCustomerRequest;
@@ -16,6 +18,7 @@ use App\Http\Resources\LaporanV2\HutangPiutangSopirCollection;
 use App\Http\Resources\LaporanV2\HutangPiutangSopirResource;
 use App\Http\Resources\LaporanV2\HutangPiutangSubkonCollection;
 use App\Http\Resources\LaporanV2\HutangPiutangSubkonResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -171,6 +174,37 @@ class LaporanV2Controller extends Controller
             return response()->json([
                 'message' => 'Terjadi kesalahan pada server' . $th->getMessage(),
             ], 500);
+        }
+    }
+
+    public function kasHarian(Request $request)
+    {
+        try {
+            $service = new KasHarian(
+                param: new KasHarianParam(
+                    tanggalAwal: $request->get('tanggalAwal'),
+                    tanggalAkhir: $request->get('tanggalAkhir'),
+                    rekeningId: $request->get('rekeningId'),
+                    export: boolval($request->get('export', false))
+                )
+            );
+
+            return $service->execute();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function thrSopir(Request $request)
+    {
+        $sopirId = $request->get('sopirId');
+        $tahun = $request->get('tahun');
+
+        try {
+        } catch (\Throwable $th) {
+            //throw $th;
         }
     }
 }
