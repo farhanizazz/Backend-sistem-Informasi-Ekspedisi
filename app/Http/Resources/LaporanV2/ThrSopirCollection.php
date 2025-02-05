@@ -23,9 +23,10 @@ class ThrSopirCollection extends ResourceCollection
   {
     return [
       'list' => ThrSopirResource::collection($this->collection),
+      'total_thr' => intval($this->totalThr),
       'meta' => [
         'links' => $this->getUrlRange(1, $this->lastPage()),
-        'total' => $this->totalThr
+        'total' => $this->total(),
       ]
     ];
   }
