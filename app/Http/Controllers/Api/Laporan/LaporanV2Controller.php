@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api\Laporan;
 
+use App\DataTransferObjects\ArmadaRugiLabaParam;
 use App\DataTransferObjects\HutangCustomerParam;
 use App\DataTransferObjects\HutangSopirParam;
 use App\DataTransferObjects\HutangSubkonParam;
 use App\DataTransferObjects\KasHarianParam;
 use App\DataTransferObjects\ThrSopirParam;
+use App\Helpers\Laporan\V2\ArmadaRugiLabaHelper;
 use App\Helpers\Laporan\V2\KasHarianHelper;
 use App\Helpers\Laporan\V2\ThrSopirHelper;
 use App\Helpers\LaporanV2Helper;
@@ -208,6 +210,26 @@ class LaporanV2Controller extends Controller
                     tanggalAwal: $request->get('tanggalAwal'),
                     tanggalAkhir: $request->get('tanggalAkhir'),
                     sopirId: $request->get('sopirId'),
+                    export: boolval($request->get('export', false))
+                )
+            );
+
+            return $service->execute();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+    public function armadaRugiLaba(Request $request)
+    {
+        try {
+
+            $service = new ArmadaRugiLabaHelper(
+                param: new ArmadaRugiLabaParam(
+                    tanggalAwal: $request->get('tanggalAwal'),
+                    tanggalAkhir: $request->get('tanggalAkhir'),
+                    armadaId: $request->get('armadaId'),
                     export: boolval($request->get('export', false))
                 )
             );
