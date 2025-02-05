@@ -44,7 +44,7 @@
                 <tbody>
                     @if (count($data) == 0)
                         <tr>
-                            <td style="text-align: center" colspan="3">Rincian tidak tersedia</td>
+                            <td style="text-align: center" colspan="8">Rincian tidak tersedia</td>
                         </tr>
                     @endif
                     @foreach ($data as $index => $detail)
