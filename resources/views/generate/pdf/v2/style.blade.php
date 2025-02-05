@@ -1,16 +1,3 @@
-<?php
-
-function format_date($date)
-{
-    return Carbon\Carbon::parse($date)->locale('id')->format('d F Y');
-}
-
-function rupiah($angka)
-{
-    $hasil_rupiah = 'Rp ' . number_format($angka, 2, ',', '.');
-    return $hasil_rupiah;
-}
-?>
 <style>
     body {
         font-family: Arial, sans-serif;

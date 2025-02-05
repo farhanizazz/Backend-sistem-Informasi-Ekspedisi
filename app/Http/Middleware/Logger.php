@@ -28,13 +28,13 @@ class Logger
                 $data = $request->all();
                 $user_id = $user_id ?? (auth()->user()->id ?? null);
 
-                \App\Models\LogModel::create([
-                    'user_id' => $user_id,
-                    'path' => $request->path(),
-                    'method' => $request->method(),
-                    'request' => json_encode($data),
-                    'response' => json_encode($response_data['data'] ?? []),	
-                ]);
+                // \App\Models\LogModel::create([
+                //     'user_id' => $user_id,
+                //     'path' => $request->path(),
+                //     'method' => $request->method(),
+                //     'request' => json_encode($data),
+                //     'response' => json_encode($response_data['data'] ?? []),	
+                // ]);
             }
 
         }
