@@ -7,7 +7,7 @@ use App\DataTransferObjects\HutangSopirParam;
 use App\DataTransferObjects\HutangSubkonParam;
 use App\DataTransferObjects\KasHarianParam;
 use App\DataTransferObjects\ThrSopirParam;
-use App\Helpers\Laporan\V2\KasHarian;
+use App\Helpers\Laporan\V2\KasHarianHelper;
 use App\Helpers\Laporan\V2\ThrSopirHelper;
 use App\Helpers\LaporanV2Helper;
 use App\Http\Controllers\Controller;
@@ -182,7 +182,7 @@ class LaporanV2Controller extends Controller
     public function kasHarian(Request $request)
     {
         try {
-            $service = new KasHarian(
+            $service = new KasHarianHelper(
                 param: new KasHarianParam(
                     tanggalAwal: $request->get('tanggalAwal'),
                     tanggalAkhir: $request->get('tanggalAkhir'),

@@ -3,26 +3,28 @@
 namespace App\Helpers\Laporan\V2;
 
 use App\DataTransferObjects\KasHarianParam;
+use App\Http\Resources\LaporanV2\KasHarianCollection;
 use App\Models\Master\MutasiModel;
 use App\Models\Master\RekeningModel;
 
-class KasHarian
+class KasHarianHelper
 {
   public RekeningModel $rekening;
   public function __construct(
     public KasHarianParam $param
   ) {
     // Validate if rekeningId exist
-    $this->rekening = RekeningModel::find($param->rekeningId);
-    if (!$this->rekening) {
-      throw new \Exception("Rekening ID '{$param->rekeningId}' tidak ditemukan");
+    if ($param->rekeningId !== 'all') {
+      $this->rekening = RekeningModel::find($param->rekeningId);
+      if (!$this->rekening) {
+        throw new \Exception("Rekening ID '{$param->rekeningId}' tidak ditemukan");
+      }
     }
   }
 
   public function getResources()
   {
-    return MutasiModel::query()
-      ->where('master_rekening_id', $this->param->rekeningId)
+    $query = MutasiModel::query()
       ->where('tanggal_pembayaran', '>=', $this->param->tanggalAwal)
       ->where('tanggal_pembayaran', '<=', $this->param->tanggalAkhir)
       ->with([
@@ -32,8 +34,17 @@ class KasHarian
           $q->select('id', 'no_transaksi');
         }
       ])
-      ->orderBy('tanggal_pembayaran', 'asc')
-      ->get();
+      ->orderBy('tanggal_pembayaran', 'asc');
+
+    if ($this->param->rekeningId !== 'all') {
+      $query->where('master_rekening_id', $this->rekening->id);
+    }
+
+    if ($this->param->export) {
+      return $query->get();
+    } else {
+      return $query->paginate();
+    }
   }
 
   public function execute()
@@ -62,7 +73,7 @@ class KasHarian
 
     return response()->json([
       'status' => 'success',
-      'data' => $resources
+      'data' => new KasHarianCollection($resources)
     ]);
   }
 }
