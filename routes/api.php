@@ -244,6 +244,7 @@ Route::prefix('laporan-v2')->group(function() {
     Route::get('hutang-customer', [LaporanV2Controller::class, 'hutangPiutangCustomer']);
     Route::get('hutang-subkon', [LaporanV2Controller::class, 'hutangPiutangSubkon']);
     Route::get('kas-harian', [LaporanV2Controller::class, 'kasHarian']);
+    Route::get('thr-sopir', [LaporanV2Controller::class, 'thrSopir']);
 });
 
 // other route force to not found

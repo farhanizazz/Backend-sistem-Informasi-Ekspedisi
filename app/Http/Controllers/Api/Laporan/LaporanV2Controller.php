@@ -6,7 +6,9 @@ use App\DataTransferObjects\HutangCustomerParam;
 use App\DataTransferObjects\HutangSopirParam;
 use App\DataTransferObjects\HutangSubkonParam;
 use App\DataTransferObjects\KasHarianParam;
+use App\DataTransferObjects\ThrSopirParam;
 use App\Helpers\Laporan\V2\KasHarian;
+use App\Helpers\Laporan\V2\ThrSopirHelper;
 use App\Helpers\LaporanV2Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LaporanRequest\V2\HutangCustomerRequest;
@@ -193,18 +195,28 @@ class LaporanV2Controller extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'message' => $th->getMessage(),
-            ], 500);
+            ], 400);
         }
     }
 
     public function thrSopir(Request $request)
     {
-        $sopirId = $request->get('sopirId');
-        $tahun = $request->get('tahun');
-
         try {
+
+            $service = new ThrSopirHelper(
+                param: new ThrSopirParam(
+                    tanggalAwal: $request->get('tanggalAwal'),
+                    tanggalAkhir: $request->get('tanggalAkhir'),
+                    sopirId: $request->get('sopirId'),
+                    export: boolval($request->get('export', false))
+                )
+            );
+
+            return $service->execute();
         } catch (\Throwable $th) {
-            //throw $th;
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
         }
     }
 }
