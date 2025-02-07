@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers\Api\Laporan;
 
+use App\DataTransferObjects\ArmadaRugiLabaParam;
 use App\DataTransferObjects\HutangCustomerParam;
 use App\DataTransferObjects\HutangSopirParam;
 use App\DataTransferObjects\HutangSubkonParam;
+use App\DataTransferObjects\KasHarianParam;
+use App\DataTransferObjects\ThrSopirParam;
+use App\Helpers\Laporan\V2\ArmadaRugiLabaHelper;
+use App\Helpers\Laporan\V2\KasHarianHelper;
+use App\Helpers\Laporan\V2\ThrSopirHelper;
 use App\Helpers\LaporanV2Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LaporanRequest\V2\HutangCustomerRequest;
@@ -16,6 +22,7 @@ use App\Http\Resources\LaporanV2\HutangPiutangSopirCollection;
 use App\Http\Resources\LaporanV2\HutangPiutangSopirResource;
 use App\Http\Resources\LaporanV2\HutangPiutangSubkonCollection;
 use App\Http\Resources\LaporanV2\HutangPiutangSubkonResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -171,6 +178,67 @@ class LaporanV2Controller extends Controller
             return response()->json([
                 'message' => 'Terjadi kesalahan pada server' . $th->getMessage(),
             ], 500);
+        }
+    }
+
+    public function kasHarian(Request $request)
+    {
+        try {
+            $service = new KasHarianHelper(
+                param: new KasHarianParam(
+                    tanggalAwal: $request->get('tanggalAwal'),
+                    tanggalAkhir: $request->get('tanggalAkhir'),
+                    rekeningId: $request->get('rekeningId'),
+                    export: boolval($request->get('export', false))
+                )
+            );
+
+            return $service->execute();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function thrSopir(Request $request)
+    {
+        try {
+
+            $service = new ThrSopirHelper(
+                param: new ThrSopirParam(
+                    tanggalAwal: $request->get('tanggalAwal'),
+                    tanggalAkhir: $request->get('tanggalAkhir'),
+                    sopirId: $request->get('sopirId'),
+                    export: boolval($request->get('export', false))
+                )
+            );
+
+            return $service->execute();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+    public function armadaRugiLaba(Request $request)
+    {
+        try {
+
+            $service = new ArmadaRugiLabaHelper(
+                param: new ArmadaRugiLabaParam(
+                    tanggalAwal: $request->get('tanggalAwal'),
+                    tanggalAkhir: $request->get('tanggalAkhir'),
+                    armadaId: $request->get('armadaId'),
+                    export: boolval($request->get('export', false))
+                )
+            );
+
+            return $service->execute();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
         }
     }
 }
