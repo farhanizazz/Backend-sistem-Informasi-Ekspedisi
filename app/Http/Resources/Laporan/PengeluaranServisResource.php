@@ -16,10 +16,10 @@ class PengeluaranServisResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'tanggal' => $this->servis->tanggal_servis,
-            'nopol' => $this->servis->master_armada->nopol ?? null,
+            'tanggal' => $this->tanggal_servis,
+            'nopol' => $this->nopol ?? null,
             'nama_barang' => $this->nama_barang,
-            'nomor_nota' => $this->servis->nomor_nota,
+            'nomor_nota' => $this->nomor_nota,
             'keterangan' => $this->keterangan_lain,
             'harga' => $this->harga,
             'jumlah' => $this->jumlah,

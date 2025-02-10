@@ -64,24 +64,41 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        if (isset($request->validator) && $request->validator->fails()) {
-            return response()->json(
-                [
-                    'status' => 'error',
-                    'message' => $request->validator->errors()
-                ]
-            );
+        try {
+            //code...
+            if (isset($request->validator) && $request->validator->fails()) {
+                return response()->json(
+                    [
+                        'status' => 'error',
+                        'message' => $request->validator->errors()
+                    ]
+                );
+            }
+    
+            $credentials = $request->only('username', 'password');
+    
+            if ($token = FacadesJWTAuth::attempt($credentials)) {
+                // dd(JWTAuth::attempt($credentials));
+                $user = $this->guard()->user();
+                return response()->json(['status' => 'success', 'data' => ($this->respondWithToken($token, $user))->original], 200);
+            }
+            
+            return response()->json(['status' => 'error', 'message' => 'Username dan Password anda salah'], 401);
+        } catch (\Throwable $th) {
+            //throw $th;
+            if($th instanceof \Illuminate\Database\QueryException){
+                switch ($th->getCode()) {
+                    case '1045':
+                        return response()->json(['status' => 'error', 'message' => 'Database tidak ditemukan'], 500);
+                        break;
+                    default:
+                        return response()->json(['status' => 'error', 'message' => $th->getMessage()], 500);
+                        # code...
+                        break;
+                }
+            }
         }
 
-        $credentials = $request->only('username', 'password');
-
-        if ($token = FacadesJWTAuth::attempt($credentials)) {
-            // dd(JWTAuth::attempt($credentials));
-            $user = $this->guard()->user();
-            return response()->json(['status' => 'success', 'data' => ($this->respondWithToken($token, $user))->original], 200);
-        }
-
-        return response()->json(['status' => 'error', 'message' => 'Username dan Password anda salah'], 401);
     }
 
     /**
