@@ -61,6 +61,7 @@ class LaporanPengeluaranService
         'nopol' => htmlspecialchars($item['nopol']),
         'nama_barang' => htmlspecialchars($item['nama_barang']),
         'nomor_nota' => htmlspecialchars($item['nomor_nota']),
+        'nama_toko' => htmlspecialchars($item['nama_toko']),
         'keterangan' => htmlspecialchars($item['keterangan']),
         'harga' => $this->rupiah(htmlspecialchars($item['harga'])),
         'jumlah' => htmlspecialchars($item['jumlah']),
