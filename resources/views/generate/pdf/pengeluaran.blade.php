@@ -1,9 +1,5 @@
 <?php
 $total = 0; 
-function rupiah($angka){
-	$hasil_rupiah = "Rp " . number_format($angka,2,',','.');
-	return $hasil_rupiah;
-}
 
 function penyebut($nilai) {
     $nilai = abs($nilai);
@@ -75,6 +71,12 @@ function penyebut($nilai) {
               </tr>
           @endforeach
       </tbody>
+      <tfoot>
+        <tr style="font-size:.7rem; font-weight:bold">
+            <td colspan="7" style="border: none; text-align: right;">Total:</td>
+            <td style="border: 1px solid black;">{{ rupiah(array_sum(array_column($data, 'subtotal'))) }}</td>
+        </tr>
+    </tfoot>
     </table>
 </div>
 @endsection
