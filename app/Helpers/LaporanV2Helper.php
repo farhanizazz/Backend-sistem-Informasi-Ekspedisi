@@ -35,7 +35,7 @@ class LaporanV2Helper
         // $totalHutang = OrderModel::kalkulasSisaUangJalan($orderQuery, TipeKalkulasiSisaUangJalanEnum::HUTANG);
         $totalHutang = $sopir->hutangs()->sum('nominal_trans');
         $customOrderQuery = $orderQuery->whereBetween('tanggal_awal', [$params->tanggalAwal, $params->tanggalAkhir]);
-        $sisaUangJalanRange = OrderModel::kalkulasSisaUangJalan($customOrderQuery, TipeKalkulasiSisaUangJalanEnum::HUTANG);
+        $sisaUangJalanRange = OrderModel::kalkulasSisaUangJalan($customOrderQuery, TipeKalkulasiSisaUangJalanEnum::ALL);
 
         $items[$index] = new HutangSopirObject(
           $sopir->nama,
