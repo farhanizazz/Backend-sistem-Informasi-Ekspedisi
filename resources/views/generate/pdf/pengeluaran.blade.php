@@ -50,6 +50,7 @@ function penyebut($nilai) {
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">No</th>
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Tgl</th>
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Nopol</th>
+                <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Nama Toko</th>
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Nama / No. Nota</th>
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Keterangan</th>
                 <th style="padding-left: .5rem;padding-right:.5rem;background-color: #97befc;">Harga</th>
@@ -63,6 +64,7 @@ function penyebut($nilai) {
                   <td style="text-align : center;">{{$loop->iteration}}</td>
                   <td>{{date('d/m/Y', strtotime($dt['tanggal']))}}</td>
                   <td style="text-align: center;">{{$dt['nopol']}}</td>
+                  <td style="text-align: center;">{{$dt['nama_toko']}}</td>
                   <td style="text-align: left;">{{ucwords($dt['nama_barang'])}} / {{$dt['nomor_nota']}} </td>
                   <td style="text-align: center;">{{$dt['keterangan'] ?? '-'}}</td>
                   <td>{{rupiah($dt['harga'])}}</td>
@@ -73,7 +75,7 @@ function penyebut($nilai) {
       </tbody>
       <tfoot>
         <tr style="font-size:.7rem; font-weight:bold">
-            <td colspan="7" style="border: none; text-align: right;">Total:</td>
+            <td colspan="8" style="border: none; text-align: right;">Total:</td>
             <td style="border: 1px solid black;">{{ rupiah(array_sum(array_column($data, 'subtotal'))) }}</td>
         </tr>
     </tfoot>
