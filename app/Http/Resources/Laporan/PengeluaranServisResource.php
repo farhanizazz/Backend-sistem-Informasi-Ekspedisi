@@ -20,6 +20,7 @@ class PengeluaranServisResource extends JsonResource
             'nopol' => $this->nopol ?? null,
             'nama_barang' => $this->nama_barang,
             'nomor_nota' => $this->nomor_nota,
+            'nama_toko' => $this->nama_toko,
             'keterangan' => $this->keterangan_lain,
             'harga' => $this->harga,
             'jumlah' => $this->jumlah,

@@ -81,7 +81,7 @@ use App\Repositories\Contracts\LaporanInterface;
             ->when($m_armada_id, function($query) use ($m_armada_id){
               return $query->whereIn('master_armada_id',$m_armada_id);
             })
-            ->select('nota_beli.id', 'servis.tanggal_servis', 'master_armada.nopol', 'nota_beli.nama_barang', 'servis.nomor_nota','servis.keterangan_lain', 'nota_beli.harga', 'nota_beli.jumlah')
+            ->select('nota_beli.id', 'servis.tanggal_servis', 'master_armada.nopol', 'nota_beli.nama_barang', 'servis.nomor_nota','servis.keterangan_lain', 'nota_beli.harga', 'nota_beli.jumlah', 'servis.nama_toko')
             ->when($all, function($query) use ($all){
               return $query
               ->orderBy('servis.tanggal_servis', 'DESC')
@@ -104,7 +104,7 @@ use App\Repositories\Contracts\LaporanInterface;
             ->when($m_armada_id, function($query) use ($m_armada_id){
               return $query->whereIn('master_armada_id',$m_armada_id);
             })
-            ->select('nota_beli.id', 'servis.tanggal_servis', 'master_armada.nopol', 'nota_beli.nama_barang', 'servis.nomor_nota','servis.keterangan_lain', 'nota_beli.harga', 'nota_beli.jumlah')
+            ->select('nota_beli.id', 'servis.tanggal_servis', 'master_armada.nopol', 'nota_beli.nama_barang', 'servis.nomor_nota','servis.keterangan_lain', 'nota_beli.harga', 'nota_beli.jumlah', 'servis.nama_toko')
             ->when($all, function($query) use ($all){
               return $query
               ->orderBy('servis.tanggal_servis', 'DESC')
@@ -126,7 +126,7 @@ use App\Repositories\Contracts\LaporanInterface;
         ->when($m_armada_id, function($query) use ($m_armada_id){
           return $query->whereIn('master_armada_id',$m_armada_id);
         })
-        ->select('nota_beli.id', 'servis.tanggal_servis', 'master_armada.nopol', 'nota_beli.nama_barang', 'servis.nomor_nota','servis.keterangan_lain', 'nota_beli.harga', 'nota_beli.jumlah')
+        ->select('nota_beli.id', 'servis.tanggal_servis', 'master_armada.nopol', 'nota_beli.nama_barang', 'servis.nomor_nota','servis.keterangan_lain', 'nota_beli.harga', 'nota_beli.jumlah', 'servis.nama_toko')
         ->when($all, function($query) use ($all){
           return $query
           ->orderBy('servis.tanggal_servis', 'DESC')
