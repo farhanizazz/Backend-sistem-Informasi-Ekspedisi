@@ -58,6 +58,7 @@ class LaporanPengeluaranService
     $values = array_map(function ($item) use (&$increment, &$total) {
       $increment++;
       $total += (int)$item['subtotal'];
+
       return [
         'no' => $increment,
         'tanggal' => htmlspecialchars($item['tanggal']),
