@@ -32,6 +32,7 @@ class HutangPiutangSopirResource extends JsonResource
         $jumlahPembayaran = array_sum(array_column($rincian, 'nominal'));
 
         return [
+            'sopir' => $this->sopir ? $this->sopir->nama : $this->sopir_subkon,
             'tanggal' => $this->tanggal_awal,
             'no_transaksi' => $this->no_transaksi,
             'penyewa' => $this->penyewa->nama_perusahaan,

@@ -66,9 +66,9 @@ class LaporanV2Helper
 
     // If for export, get all items
     if ($export) {
-      $orders = $orders->get();
+      $orders = $orders->orderBy('tanggal_awal', 'asc')->get();
     } else {
-      $orders = $orders->paginate();
+      $orders = $orders->orderBy('tanggal_awal', 'asc')->paginate();
     }
 
     return [
