@@ -98,7 +98,7 @@ class ServisModel extends Model
             });
         })
         ;
-        $sort = "created_at DESC";
+        $sort = "tanggal_servis DESC";
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
         return $data->paginate($itemPerPage)->appends("sort", $sort);
     }
@@ -132,7 +132,7 @@ class ServisModel extends Model
             });
         })
         ;
-        $sort = "created_at DESC";
+        $sort = "tanggal_servis DESC";
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
         return $data->paginate($itemPerPage)->appends("sort", $sort);
     }
