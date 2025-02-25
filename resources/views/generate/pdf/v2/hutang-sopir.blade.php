@@ -33,7 +33,7 @@
                     <th>Nama Sopir</th>
                     {{-- <th>Uang Jalan</th> --}}
                     <th>Total Hutang</th>
-                    <th>Sisa Uang Jalan</th>
+                    <th>Total Sisa Uang Jalan</th>
                 </tr>
             </thead>
             <tbody>
