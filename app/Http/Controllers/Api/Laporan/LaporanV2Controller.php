@@ -45,11 +45,12 @@ class LaporanV2Controller extends Controller
             if ($export) {
                 $pdf = App::make('dompdf.wrapper');
                 $pdf->loadView('generate.pdf.v2.hutang-sopir', [
-                    'filename' => 'Laporan Hutang Sopir',
+                    'filename' => 'Laporan Rincian Uang jalan',
                     'orders' => HutangPiutangSopirResource::collection($response['orders'])->toArray($request),
                     'sopir' => implode(", ", array_map(function ($item) {
                         return $item->sopir;
                     }, $response['items'])),
+                    'sopirList' => $response['items'],
                     'tanggalAwal' => $tanggalAwal,
                     'tanggalAkhir' => $tanggalAkhir,
                 ]);
