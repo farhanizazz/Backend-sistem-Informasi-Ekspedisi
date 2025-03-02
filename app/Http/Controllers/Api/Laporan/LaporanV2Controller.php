@@ -9,6 +9,7 @@ use App\DataTransferObjects\HutangSubkonParam;
 use App\DataTransferObjects\KasHarianParam;
 use App\DataTransferObjects\ThrSopirParam;
 use App\Helpers\Laporan\V2\ArmadaRugiLabaHelper;
+use App\Helpers\Laporan\V2\ArmadaRugiLabaPajakHelper;
 use App\Helpers\Laporan\V2\KasHarianHelper;
 use App\Helpers\Laporan\V2\ThrSopirHelper;
 use App\Helpers\LaporanV2Helper;
@@ -227,6 +228,26 @@ class LaporanV2Controller extends Controller
         try {
 
             $service = new ArmadaRugiLabaHelper(
+                param: new ArmadaRugiLabaParam(
+                    tanggalAwal: $request->get('tanggalAwal'),
+                    tanggalAkhir: $request->get('tanggalAkhir'),
+                    armadaId: $request->get('armadaId'),
+                    export: boolval($request->get('export', false))
+                )
+            );
+
+            return $service->execute();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function armadaRugiLabaPajak(Request $request)
+    {
+        try {
+            $service = new ArmadaRugiLabaPajakHelper(
                 param: new ArmadaRugiLabaParam(
                     tanggalAwal: $request->get('tanggalAwal'),
                     tanggalAkhir: $request->get('tanggalAkhir'),
