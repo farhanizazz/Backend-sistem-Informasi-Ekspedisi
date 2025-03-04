@@ -18,7 +18,7 @@ class BukuBesarHelper
   ) {
     // Validate if armadaId exist
     if ($param->rekeningId !== "all") {
-      $this->rekening = ArmadaModel::find($param->rekeningId);
+      $this->rekening = RekeningModel::find($param->rekeningId);
       if (!$this->rekening) {
         throw new \Exception("Armada ID '{$param->rekeningId}' tidak ditemukan");
       }
@@ -32,7 +32,7 @@ class BukuBesarHelper
 
 
     if ($this->param->rekeningId !== "all") {
-      $query->where('master_rekening.id', $this->param->rekeningId);
+      $query->where('master_rekening_id', $this->param->rekeningId);
     }
 
     if ($this->param->tanggalAwal && $this->param->tanggalAkhir) {
@@ -78,11 +78,13 @@ class BukuBesarHelper
     if (count($resources) > 1500) {
       // if record greather than 2000, must adjust memory allocation
       ini_set('memory_limit', '-1');
+      // set execution time to 60 seconds
+      set_time_limit(60);
     }
 
     $total = 0;
     foreach ($resources as $index => $resource) {
-      $total += $resource['debet'] - $resource['kredit'];
+      $total += $resource['kredit'] - $resource['debet'];
       $resource['total'] = $total;
       $resource['no'] = $index + 1;
 
@@ -91,6 +93,15 @@ class BukuBesarHelper
 
     if ($this->param->export) {
       $pdf = app('dompdf.wrapper');
+      $pdf->set_paper('A3', 'landscape');
+      
+      // Enable isHtml5ParserEnabled for better parsing
+      $pdf->set_option('isHtml5ParserEnabled', true);
+
+      // Reduce memory footprint
+      $pdf->set_option('isPhpEnabled', false);
+
+
 
       $tglAwal = format_date($this->param->tanggalAwal);
       $tglAkhir = format_date($this->param->tanggalAkhir);
