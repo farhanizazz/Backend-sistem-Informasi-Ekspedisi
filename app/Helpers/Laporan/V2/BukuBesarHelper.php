@@ -8,6 +8,7 @@ use App\Http\Resources\LaporanV2\BukuBesarCollection;
 use App\Models\Master\ArmadaModel;
 use App\Models\Master\MutasiModel;
 use App\Models\Master\RekeningModel;
+use App\Models\Transaksi\OrderModel;
 use Illuminate\Support\Facades\DB;
 
 class BukuBesarHelper
@@ -49,7 +50,7 @@ class BukuBesarHelper
 
     $query = $query->select([
       DB::raw('tanggal_pembayaran as tanggal'),
-      'master_mutasi.id as no_transaksi',
+      'transaksi_order.no_transaksi',
       'master_mutasi.keterangan',
       DB::raw('CASE WHEN master_mutasi.jenis_transaksi in ("jual", "uang_jalan", "pengeluaran") THEN abs(master_mutasi.nominal) ELSE 0 END as debet'),
       DB::raw('CASE WHEN master_mutasi.jenis_transaksi in ("order") THEN abs(master_mutasi.nominal) ELSE 0 END as kredit'),
@@ -93,8 +94,8 @@ class BukuBesarHelper
 
     if ($this->param->export) {
       $pdf = app('dompdf.wrapper');
-      $pdf->set_paper('A3', 'landscape');
-      
+      // $pdf->set_paper('A3', 'landscape');
+
       // Enable isHtml5ParserEnabled for better parsing
       $pdf->set_option('isHtml5ParserEnabled', true);
 
