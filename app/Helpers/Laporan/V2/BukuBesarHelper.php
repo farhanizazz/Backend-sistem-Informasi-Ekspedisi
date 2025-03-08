@@ -9,6 +9,7 @@ use App\Models\Master\ArmadaModel;
 use App\Models\Master\MutasiModel;
 use App\Models\Master\RekeningModel;
 use App\Models\Transaksi\OrderModel;
+use App\Models\Transaksi\ServisModel;
 use Illuminate\Support\Facades\DB;
 
 class BukuBesarHelper
@@ -29,8 +30,11 @@ class BukuBesarHelper
   public function getResources()
   {
     $query = MutasiModel::query()
-      ->join('transaksi_order', 'transaksi_order.id', '=', 'master_mutasi.transaksi_order_id');
-
+      ->leftJoin('transaksi_order', 'transaksi_order.id', '=', 'master_mutasi.transaksi_order_id')
+      ->leftJoin('servis', function ($q) {
+        $q->on('servis.id', '=', 'master_mutasi.model_id');
+        $q->on('master_mutasi.model_type', 'like', DB::raw('"App%Models%Transaksi%ServisModel"'));
+      });
 
     if ($this->param->rekeningId !== "all") {
       $query->where('master_rekening_id', $this->param->rekeningId);
@@ -50,10 +54,12 @@ class BukuBesarHelper
 
     $query = $query->select([
       DB::raw('tanggal_pembayaran as tanggal'),
-      'transaksi_order.no_transaksi',
+      DB::raw('CASE WHEN transaksi_order.no_transaksi IS NOT NULL THEN transaksi_order.no_transaksi ELSE servis.nomor_nota END as no_transaksi'),
+      'master_mutasi.jenis_transaksi',
+      'master_mutasi.asal_transaksi',
       'master_mutasi.keterangan',
       DB::raw('CASE WHEN master_mutasi.jenis_transaksi in ("jual", "uang_jalan", "pengeluaran") THEN abs(master_mutasi.nominal) ELSE 0 END as debet'),
-      DB::raw('CASE WHEN master_mutasi.jenis_transaksi in ("order") THEN abs(master_mutasi.nominal) ELSE 0 END as kredit'),
+      DB::raw('CASE WHEN master_mutasi.jenis_transaksi in ("order", "pemasukan") THEN abs(master_mutasi.nominal) ELSE 0 END as kredit'),
     ])->orderBy('tanggal_pembayaran', 'asc');
 
     return $query->get()->toArray();
@@ -63,11 +69,12 @@ class BukuBesarHelper
   {
     $mutasiResources = $this->getResources();
 
-
     $firstInit = [
       "no" => 1,
       "tanggal" => $this->param->tanggalAwal,
       "no_transaksi" => "SA",
+      "jenis_transaksi" => "Saldo Awal",
+      "asal_transaksi" => "-",
       "keterangan" => "-",
       "debet" => 0,
       "kredit" => 0,
@@ -147,6 +154,8 @@ class BukuBesarHelper
 
 
       foreach ($mutasiResources as $index => $resource) {
+        $resource['jenis_transaksi'] = ucwords(str_replace("_", " ", $resource['jenis_transaksi']));
+        $resource['asal_transaksi'] = ucwords(str_replace("_", " ", $resource['asal_transaksi']));
         $resource['tanggal'] = format_date($resource['tanggal']);
         $resource['debet'] = rupiah($resource['debet']);
         $resource['kredit'] = rupiah($resource['kredit']);
