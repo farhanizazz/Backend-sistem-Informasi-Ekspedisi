@@ -21,7 +21,7 @@ class BukuBesarHelper
     if ($param->rekeningId !== "all") {
       $this->rekening = RekeningModel::find($param->rekeningId);
       if (!$this->rekening) {
-        throw new \Exception("Armada ID '{$param->rekeningId}' tidak ditemukan");
+        throw new \Exception("Rekening ID '{$param->rekeningId}' tidak ditemukan");
       }
     }
   }
@@ -61,7 +61,7 @@ class BukuBesarHelper
 
   public function execute()
   {
-    $resources = $this->getResources();
+    $mutasiResources = $this->getResources();
 
 
     $firstInit = [
@@ -74,9 +74,48 @@ class BukuBesarHelper
       "total" => 0,
     ];
 
-    $resources = array_merge([$firstInit], $resources);
+    $mutasiResources = array_merge([$firstInit], $mutasiResources);
+    // $detailOrderResources = [];
 
-    if (count($resources) > 1500) {
+    // foreach ($orderResources as $orderResource) {
+    //   $items = [
+    //     [
+    //       "name" => "Biaya Lain Harga Order",
+    //       "items" => $orderResource->biayaLainHargaOrderArr
+    //     ],
+    //     [
+    //       "name" => "Biaya Lain Uang Jalan",
+    //       "items" => $orderResource->biayaLainUangJalanArr
+    //     ],
+    //     [
+    //       "name" => "Biaya Lain Harga Jual",
+    //       "items" => $orderResource->biayaLainHargaJualArr
+    //     ],
+    //   ];
+    //   foreach ($items as $subItems) {
+    //     foreach ($subItems['items'] as $item) {
+    //       $debet = 0;
+    //       $kredit = 0;
+
+    //       if (strtolower($item['sifat']) === 'menambahkan') {
+    //         $kredit = abs($item['nominal']);
+    //       } else {
+    //         $debet = abs($item['nominal']);
+    //       }
+
+    //       $detailOrderResources[] = [
+    //         "no" => count($detailOrderResources) + 1,
+    //         "tipe" => $subItems['name'],
+    //         "no_transaksi" => $orderResource->no_transaksi,
+    //         "keterangan" => $item['nama'],
+    //         "debet" => $debet,
+    //         "kredit" => $kredit,
+    //       ];
+    //     }
+    //   }
+    // }
+
+    if (count($mutasiResources) > 1500) {
       // if record greather than 2000, must adjust memory allocation
       ini_set('memory_limit', '-1');
       // set execution time to 60 seconds
@@ -84,17 +123,16 @@ class BukuBesarHelper
     }
 
     $total = 0;
-    foreach ($resources as $index => $resource) {
+    foreach ($mutasiResources as $index => $resource) {
       $total += $resource['kredit'] - $resource['debet'];
       $resource['total'] = $total;
       $resource['no'] = $index + 1;
 
-      $resources[$index] = $resource;
+      $mutasiResources[$index] = $resource;
     }
 
     if ($this->param->export) {
       $pdf = app('dompdf.wrapper');
-      // $pdf->set_paper('A3', 'landscape');
 
       // Enable isHtml5ParserEnabled for better parsing
       $pdf->set_option('isHtml5ParserEnabled', true);
@@ -108,12 +146,12 @@ class BukuBesarHelper
       $tglAkhir = format_date($this->param->tanggalAkhir);
 
 
-      foreach ($resources as $index => $resource) {
+      foreach ($mutasiResources as $index => $resource) {
         $resource['tanggal'] = format_date($resource['tanggal']);
         $resource['debet'] = rupiah($resource['debet']);
         $resource['kredit'] = rupiah($resource['kredit']);
         $resource['total'] = rupiah($resource['total']);
-        $resources[$index] = $resource;
+        $mutasiResources[$index] = $resource;
       }
 
       if ($this->param->tanggalAwal != $this->param->tanggalAkhir) {
@@ -131,7 +169,7 @@ class BukuBesarHelper
 
       $pdf->loadView('generate.pdf.v2.buku-besar', [
         'filename' => 'Buku Besar',
-        'data' => $resources,
+        'data' => $mutasiResources,
         'rekening' => $rekening,
         'all' => $this->param->rekeningId === 'all',
         'jangkaTanggal' => $jangkaTanggal
@@ -143,7 +181,7 @@ class BukuBesarHelper
     return response()->json([
       'status' => 'success',
       'data' => new BukuBesarCollection(
-        $resources
+        $mutasiResources
       )
     ]);
   }
