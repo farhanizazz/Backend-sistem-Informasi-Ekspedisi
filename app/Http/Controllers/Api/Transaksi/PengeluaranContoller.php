@@ -27,7 +27,7 @@ class PengeluaranContoller extends Controller
         ->when($m_armada_id, function ($query) use ($m_armada_id) {
             return $query->whereIn('master_armada_id', $m_armada_id);
         })
-        ->orderBy('tgl_transaksi', 'asc')
+        ->orderBy('tgl_transaksi', 'desc')
         ->get();
         return response()->json(
             [

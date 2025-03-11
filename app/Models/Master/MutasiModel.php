@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Master\RekeningModel;
 use App\Models\Transaksi\NotaBeliModel;
 use App\Models\Transaksi\OrderModel;
+use App\Models\Transaksi\ServisMutasiModel;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -40,11 +41,18 @@ class MutasiModel extends Model
         return $this->hasOne(OrderModel::class, 'id', 'transaksi_order_id');
     }
 
+    public function servis_mutasi()
+    {
+        return $this->hasOne(ServisMutasiModel::class, 'master_mutasi_id', 'id');
+    }
+
     public function getAll($payload)
     {
         $itemPerPage = $payload['itemPerPage'] ?? 20;
 
-        $data = $this->with(['pembuat', 'master_rekening', 'transaksi_order' => function ($q) {
+        $data = $this->with(['pembuat', 'master_rekening','servis_mutasi.servis'=> function($q){
+            $q->select('id','kategori_servis');
+        }, 'transaksi_order' => function ($q) {
                 $q->select('id', 'no_transaksi');
             }])
             ->when(isset($payload['transaksi_order_id']) && $payload['transaksi_order_id'], function ($query) use ($payload) {

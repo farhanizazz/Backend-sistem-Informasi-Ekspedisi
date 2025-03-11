@@ -109,7 +109,11 @@ class ServisController extends Controller
                 DB::beginTransaction(); 
                 if($request->force == "true"){
                     $service->nota_beli_items()->delete();
+                    $mutasi = $service->servis_mutasi()->get();
                     $service->servis_mutasi()->delete();
+                    foreach ($mutasi as $item) {
+                        $item->master_mutasi()->delete();
+                    }
                     $service->delete();
                 }else{
                     $service->delete();
