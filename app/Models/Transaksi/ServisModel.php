@@ -98,7 +98,8 @@ class ServisModel extends Model
             });
         })
         ;
-        $sort = "tanggal_servis DESC";
+        $sort = $payload['sort'] ?? 'tanggal_servis desc';
+        $data->orderByRaw($sort);
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
         return $data->paginate($itemPerPage)->appends("sort", $sort);
     }
@@ -132,8 +133,9 @@ class ServisModel extends Model
             });
         })
         ;
-        $sort = "tanggal_servis DESC";
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
+        $sort = $payload['sort'] ?? 'tanggal_servis desc';
+        $data->orderByRaw($sort);
         return $data->paginate($itemPerPage)->appends("sort", $sort);
     }
 
