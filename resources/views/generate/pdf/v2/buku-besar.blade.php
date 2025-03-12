@@ -46,10 +46,14 @@
                         <td style="text-align: center">{{ $detail['no'] }}</td>
                         <td style="text-align: center">{{ $detail['tanggal'] }}</td>
                         <td style="text-align: center">{{ $detail['no_transaksi'] }}</td>
-                        <td style="text-align: left">{{ $detail['keterangan'] }}</td>
-                        <td style="text-align: center">{{ $detail['debet'] }}</td>
-                        <td style="text-align: center">{{ $detail['kredit'] }}</td>
-                        <td style="text-align: center">{{ $detail['total'] }}</td>
+                        <td style="text-align: left">
+                            <strong>{{ $detail['asal_transaksi'] }}</strong>
+                            <br>
+                            {{ $detail['jenis_transaksi'] }} : {{ $detail['keterangan'] }}
+                        </td>
+                        <td style="text-align: right">{{ $detail['debet'] }}</td>
+                        <td style="text-align: right">{{ $detail['kredit'] }}</td>
+                        <td style="text-align: right">{{ $detail['total'] }}</td>
                     </tr>
                 @endforeach
             </tbody>
