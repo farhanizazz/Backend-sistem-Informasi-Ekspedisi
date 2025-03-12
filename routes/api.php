@@ -117,15 +117,15 @@ Route::middleware('jwt.verify')->group(function () {
             Route::put("/{id}", [RoleController::class, "update"]);
             Route::delete("/{id}", [RoleController::class, "destroy"]);
         });
-        
-        Route ::group(["prefix" => "laporan/servis"], function () {
+
+        Route::group(["prefix" => "laporan/servis"], function () {
             Route::get("/", [ServisController::class, "index"]);
             Route::post("/", [ServisController::class, "store"]);
             Route::get("/{id}", [ServisController::class, "show"]);
             Route::put("/{id}", [ServisController::class, "update"]);
             Route::delete("/{id}", [ServisController::class, "destroy"]);
-        
-            Route::group(["prefix" => "mutasi"], function(){
+    
+            Route::group(["prefix" => "mutasi"], function () {
                 Route::post("/", [ServisController::class, "createServisMutasi"]);
                 Route::delete("/{id}", [ServisController::class, "deleteServisMutasi"]);
             });
@@ -179,7 +179,7 @@ Route::middleware('jwt.verify')->group(function () {
             Route::put("/{id}", [HutangSopirController::class, "update"]);
             Route::delete("/{id}", [HutangSopirController::class, "destroy"]);
         });
-    
+
         Route::group(['prefix' => 'order'], function () {
             Route::get("/", [OrderController::class, "index"]);
             Route::post("/", [OrderController::class, "store"]);
@@ -194,28 +194,26 @@ Route::middleware('jwt.verify')->group(function () {
             Route::put("/{id}", [ServisController::class, "update"]);
             Route::delete("/{id}", [ServisController::class, "destroy"]);
         });
-        Route ::group(["prefix" => "laporan/nota-beli"], function () {
+        Route::group(["prefix" => "laporan/nota-beli"], function () {
             Route::get("/", [NotaBeliController::class, "index"]);
             Route::post("/", [NotaBeliController::class, "store"]);
             Route::get("/{id}", [NotaBeliController::class, "show"]);
             Route::put("/{id}", [NotaBeliController::class, "update"]);
             Route::delete("/{id}", [NotaBeliController::class, "destroy"]);
         });
-    
-        Route::group(["prefix" => "laporan/invoice"], function(){
+
+        Route::group(["prefix" => "laporan/invoice"], function () {
             Route::get("/", [TagihanController::class, "index"]);
             Route::post("/", [TagihanController::class, "create"]);
             Route::delete("/{id}", [TagihanController::class, "destroy"]);
         });
-    
-        
     });
-    
-    
+
+
     Route::group(['prefix' => 'notifikasi'], function () {
         Route::get("/getReminderPajak", [NotifikasiController::class, "getReminderPajak"]);
     });
-    
+
     Route::group(['prefix' => 'pengeluaran'], function () {
         Route::get("/", [PengeluaranContoller::class, "index"]);
         Route::post("/", [PengeluaranContoller::class, "store"]);
@@ -227,9 +225,9 @@ Route::middleware('jwt.verify')->group(function () {
     Route::post("/logout", [AuthController::class, "logout"]);
 });
 
-Route::get("/log",[LogController::class, "index"]);
+Route::get("/log", [LogController::class, "index"]);
 
-Route::group(['prefix' => 'laporan'], function (){
+Route::group(['prefix' => 'laporan'], function () {
     Route::get("/pemasukan-cv", [LaporanPemasukanCVController::class, "getLaporanPemasukanCV"]);
     Route::get("/pemasukan-kendaraan-sendiri", [LaporanPemasukanKendaraanController::class, "getLaporanPemasukanKendaraanSendiri"]);
     Route::get("/pemasukan-kendaraan-subkon", [LaporanPemasukanKendaraanController::class, "getLaporanPemasukanKendaraanSubkon"]);
@@ -239,14 +237,15 @@ Route::group(['prefix' => 'laporan'], function (){
 });
 
 
-Route::prefix('laporan-v2')->group(function() {
+Route::prefix('laporan-v2')->group(function () {
     Route::get('hutang-sopir', [LaporanV2Controller::class, 'hutangSopir']);
     Route::get('hutang-customer', [LaporanV2Controller::class, 'hutangPiutangCustomer']);
     Route::get('hutang-subkon', [LaporanV2Controller::class, 'hutangPiutangSubkon']);
     Route::get('kas-harian', [LaporanV2Controller::class, 'kasHarian']);
     Route::get('thr-sopir', [LaporanV2Controller::class, 'thrSopir']);
     Route::get('armada-rugi-laba', [LaporanV2Controller::class, 'armadaRugiLaba']);
-    
+    Route::get('armada-rugi-laba-pajak', [LaporanV2Controller::class, 'armadaRugiLabaPajak']);
+    Route::get('buku-besar', [LaporanV2Controller::class, 'bukuBesar']);
 });
 
 // other route force to not found

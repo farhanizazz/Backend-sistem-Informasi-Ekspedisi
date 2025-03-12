@@ -25,11 +25,40 @@
         </table>
     </div>
 
+    <div class="container">
+        <table class="table bordered">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nama Sopir</th>
+                    {{-- <th>Uang Jalan</th> --}}
+                    <th>Total Hutang</th>
+                    <th>Total Sisa Uang Jalan</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($sopirList as $sopirItem)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $sopirItem->sopir }}</td>
+                        {{-- <td>{{ rupiah($sopirItem->totalSisaUangJalan) }}</td> --}}
+                        <td>{{ rupiah($sopirItem->totalHutang) }}</td>
+                        <td>{{ rupiah($sopirItem->sisaUangJalanRange) }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+    </div>
+
     @foreach ($orders as $order)
         <div class="container">
             <div class="header">
                 <table class="table">
                     <tbody>
+                        <tr>
+                            <td style="width: 50%"><strong>Sopir</strong>: {{ $order['sopir'] }}</td>
+                        </tr>
                         <tr>
                             <td style="width: 50%"><strong>Tanggal</strong>: {{ format_date($order['tanggal']) }}</td>
                             <td><strong>Uang Jalan</strong>: {{ rupiah($order['uang_jalan']) }}</td>
@@ -61,13 +90,9 @@
                                                 <td>{{ rupiah($item['nominal']) }}</td>
                                             </tr>
                                         @endforeach
-                                        <tr>
-                                            <td></td>
-                                            <td>
-                                                {{ rupiah($order['biaya_tambahan'] + $order['biaya_kurang']) }}
-                                            </td>
-                                        </tr>
                                     </table>
+                                @else
+                                    -
                                 @endif
                             </td>
                         </tr>
