@@ -110,10 +110,11 @@ class BukuBesarHelper
 
     $perPage = request()->get('per_page', 10);
     $page = request()->get('page', 1) - 1;
+    $startNo = $page * $perPage;
 
     $totalDebetBeforePagination = (clone $query)
       ->offset(0)
-      ->limit($page * $perPage)
+      ->limit($startNo)
       ->select(
         DB::raw($this->_debetQuery() . ' as debet'),
         DB::raw($this->_kreditQuery() . ' as kredit'),
@@ -122,7 +123,7 @@ class BukuBesarHelper
       ->sum();
     $totalKreditBeforePagination = (clone $query)
       ->offset(0)
-      ->limit($page * $perPage)
+      ->limit($startNo)
       ->select(
         DB::raw($this->_debetQuery() . ' as debet'),
         DB::raw($this->_kreditQuery() . ' as kredit'),
@@ -146,7 +147,7 @@ class BukuBesarHelper
       $total += $resource['kredit'];
       $total -= $resource['debet'];
       $resource['total'] = $total;
-      $resource['no'] = $index + 1;
+      $resource['no'] = $startNo + $index + 1;
 
       $mutasiResources[$index] = $resource;
     }
@@ -168,6 +169,11 @@ class BukuBesarHelper
       ->pluck('kredit')
       ->sum();
 
+    $meta = [
+      'links' => $arryMutasiResources->getUrlRange(1, $arryMutasiResources->lastPage()),
+      'total' => $arryMutasiResources->total(),
+    ];
+
     return response()->json([
       'status' => 'success',
       'data' => new BukuBesarCollection(
@@ -175,7 +181,8 @@ class BukuBesarHelper
         $rekening,
         $totalDebetAll,
         $totalKreditAll,
-        $totalKreditAll - $totalDebetAll
+        $totalKreditAll - $totalDebetAll,
+        $meta
       )
     ]);
   }

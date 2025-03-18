@@ -12,13 +12,16 @@ class BukuBesarCollection extends ResourceCollection
   protected $totalKredit;
   protected $totalSaldo;
 
-  public function __construct($collection, $rekening, $totalDebet, $totalKredit, $totalSaldo)
+  protected $meta;
+
+  public function __construct($collection, $rekening, $totalDebet, $totalKredit, $totalSaldo,$meta)
   {
     parent::__construct($collection);
     $this->rekening = $rekening;
     $this->totalDebet = $totalDebet;
     $this->totalKredit = $totalKredit;
     $this->totalSaldo = $totalSaldo;
+    $this->meta = $meta;
   }
 
   /**
@@ -35,6 +38,7 @@ class BukuBesarCollection extends ResourceCollection
       'total_debet' => $this->totalDebet,
       'total_kredit' => $this->totalKredit,
       'total_saldo' => $this->totalSaldo,
+      'meta' => $this->meta
     ];
   }
 }
