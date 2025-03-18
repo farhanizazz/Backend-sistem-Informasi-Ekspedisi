@@ -7,9 +7,18 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class BukuBesarCollection extends ResourceCollection
 {
 
-  public function __construct($collection)
+  protected $rekening;
+  protected $totalDebet;
+  protected $totalKredit;
+  protected $totalSaldo;
+
+  public function __construct($collection, $rekening, $totalDebet, $totalKredit, $totalSaldo)
   {
     parent::__construct($collection);
+    $this->rekening = $rekening;
+    $this->totalDebet = $totalDebet;
+    $this->totalKredit = $totalKredit;
+    $this->totalSaldo = $totalSaldo;
   }
 
   /**
@@ -22,6 +31,10 @@ class BukuBesarCollection extends ResourceCollection
   {
     return [
       'list' => BukuBesarResource::collection($this->collection),
+      'rekening' => $this->rekening,
+      'total_debet' => $this->totalDebet,
+      'total_kredit' => $this->totalKredit,
+      'total_saldo' => $this->totalSaldo,
     ];
   }
 }

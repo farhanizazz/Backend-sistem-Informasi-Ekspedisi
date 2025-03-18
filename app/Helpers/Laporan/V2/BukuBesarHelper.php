@@ -58,16 +58,16 @@ class BukuBesarHelper
       'master_mutasi.jenis_transaksi',
       'master_mutasi.asal_transaksi',
       'master_mutasi.keterangan',
-      DB::raw('CASE WHEN master_mutasi.jenis_transaksi in ("jual", "uang_jalan", "pengeluaran") THEN abs(master_mutasi.nominal) ELSE 0 END as debet'),
-      DB::raw('CASE WHEN master_mutasi.jenis_transaksi in ("order", "pemasukan") THEN abs(master_mutasi.nominal) ELSE 0 END as kredit'),
+      DB::raw($this->_debetQuery() . ' as debet'),
+      DB::raw($this->_kreditQuery() . ' as kredit'),
     ])->orderBy('tanggal_pembayaran', 'asc');
 
-    return $query->get()->toArray();
+    return $query;
   }
 
   public function execute()
   {
-    $mutasiResources = $this->getResources();
+    $query = $this->getResources();
 
     $firstInit = [
       "no" => 1,
@@ -81,117 +81,158 @@ class BukuBesarHelper
       "total" => 0,
     ];
 
-    $mutasiResources = array_merge([$firstInit], $mutasiResources);
-    // $detailOrderResources = [];
-
-    // foreach ($orderResources as $orderResource) {
-    //   $items = [
-    //     [
-    //       "name" => "Biaya Lain Harga Order",
-    //       "items" => $orderResource->biayaLainHargaOrderArr
-    //     ],
-    //     [
-    //       "name" => "Biaya Lain Uang Jalan",
-    //       "items" => $orderResource->biayaLainUangJalanArr
-    //     ],
-    //     [
-    //       "name" => "Biaya Lain Harga Jual",
-    //       "items" => $orderResource->biayaLainHargaJualArr
-    //     ],
-    //   ];
-    //   foreach ($items as $subItems) {
-    //     foreach ($subItems['items'] as $item) {
-    //       $debet = 0;
-    //       $kredit = 0;
-
-    //       if (strtolower($item['sifat']) === 'menambahkan') {
-    //         $kredit = abs($item['nominal']);
-    //       } else {
-    //         $debet = abs($item['nominal']);
-    //       }
-
-    //       $detailOrderResources[] = [
-    //         "no" => count($detailOrderResources) + 1,
-    //         "tipe" => $subItems['name'],
-    //         "no_transaksi" => $orderResource->no_transaksi,
-    //         "keterangan" => $item['nama'],
-    //         "debet" => $debet,
-    //         "kredit" => $kredit,
-    //       ];
-    //     }
-    //   }
-    // }
-
-    if (count($mutasiResources) > 1500) {
-      // if record greather than 2000, must adjust memory allocation
-      ini_set('memory_limit', '-1');
-      // set execution time to 60 seconds
-      set_time_limit(60);
+    $rekening = 'Semua Rekening';
+    if ($this->rekening) {
+      $rekening = "{$this->rekening->nama_bank} ({$this->rekening->atas_nama})";
     }
 
-    $total = 0;
+    if ($this->param->export) {
+      $mutasiResources = array_merge([$firstInit], $query->get()->toArray());
+
+      if (count($mutasiResources) > 1500) {
+        // if record greather than 2000, must adjust memory allocation
+        ini_set('memory_limit', '-1');
+        // set execution time to 60 seconds
+        set_time_limit(60);
+      }
+
+      $total = 0;
+      foreach ($mutasiResources as $index => $resource) {
+        $total += $resource['kredit'] - $resource['debet'];
+        $resource['total'] = $total;
+        $resource['no'] = $index + 1;
+
+        $mutasiResources[$index] = $resource;
+      }
+      return $this->_genPdf($mutasiResources, $rekening);
+    }
+
+
+    $perPage = request()->get('per_page', 10);
+    $page = request()->get('page', 1) - 1;
+
+    $totalDebetBeforePagination = (clone $query)
+      ->offset(0)
+      ->limit($page * $perPage)
+      ->select(
+        DB::raw($this->_debetQuery() . ' as debet'),
+        DB::raw($this->_kreditQuery() . ' as kredit'),
+      )
+      ->pluck('debet')
+      ->sum();
+    $totalKreditBeforePagination = (clone $query)
+      ->offset(0)
+      ->limit($page * $perPage)
+      ->select(
+        DB::raw($this->_debetQuery() . ' as debet'),
+        DB::raw($this->_kreditQuery() . ' as kredit'),
+      )
+      ->pluck('kredit')
+      ->sum();
+
+    $firstInit['total'] = $totalKreditBeforePagination - $totalDebetBeforePagination;
+
+    $arryMutasiResources = (clone $query)->paginate(
+      $perPage,
+      ['*'],
+      'page',
+      $page + 1
+    );
+    $mutasiResources = array_merge([$firstInit], $arryMutasiResources->toArray()['data']);
+
+    // get total before pagination
+    $total = $firstInit['total'];
     foreach ($mutasiResources as $index => $resource) {
-      $total += $resource['kredit'] - $resource['debet'];
+      $total += $resource['kredit'];
+      $total -= $resource['debet'];
       $resource['total'] = $total;
       $resource['no'] = $index + 1;
 
       $mutasiResources[$index] = $resource;
     }
 
-    if ($this->param->export) {
-      $pdf = app('dompdf.wrapper');
+    // total
 
-      // Enable isHtml5ParserEnabled for better parsing
-      $pdf->set_option('isHtml5ParserEnabled', true);
-
-      // Reduce memory footprint
-      $pdf->set_option('isPhpEnabled', false);
-
-
-
-      $tglAwal = format_date($this->param->tanggalAwal);
-      $tglAkhir = format_date($this->param->tanggalAkhir);
-
-
-      foreach ($mutasiResources as $index => $resource) {
-        $resource['jenis_transaksi'] = ucwords(str_replace("_", " ", $resource['jenis_transaksi']));
-        $resource['asal_transaksi'] = ucwords(str_replace("_", " ", $resource['asal_transaksi']));
-        $resource['tanggal'] = format_date($resource['tanggal']);
-        $resource['debet'] = rupiah($resource['debet']);
-        $resource['kredit'] = rupiah($resource['kredit']);
-        $resource['total'] = rupiah($resource['total']);
-        $mutasiResources[$index] = $resource;
-      }
-
-      if ($this->param->tanggalAwal != $this->param->tanggalAkhir) {
-        $jangkaTanggal = "{$tglAwal} s/d {$tglAkhir}";
-      } else if ($this->param->tanggalAwal == null) {
-        $jangkaTanggal = "Semua Tanggal";
-      } else {
-        $jangkaTanggal = "{$tglAwal}";
-      }
-
-      $rekening = 'Semua Rekening';
-      if ($this->rekening) {
-        $rekening = 'Spesifik';
-      }
-
-      $pdf->loadView('generate.pdf.v2.buku-besar', [
-        'filename' => 'Buku Besar',
-        'data' => $mutasiResources,
-        'rekening' => $rekening,
-        'all' => $this->param->rekeningId === 'all',
-        'jangkaTanggal' => $jangkaTanggal
-      ]);
-
-      return $pdf->stream();
-    }
+    $totalDebetAll = (clone $query)
+      ->select(
+        DB::raw($this->_debetQuery() . ' as debet'),
+        DB::raw($this->_kreditQuery() . ' as kredit'),
+      )
+      ->pluck('debet')
+      ->sum();
+    $totalKreditAll = (clone $query)
+      ->select(
+        DB::raw($this->_debetQuery() . ' as debet'),
+        DB::raw($this->_kreditQuery() . ' as kredit'),
+      )
+      ->pluck('kredit')
+      ->sum();
 
     return response()->json([
       'status' => 'success',
       'data' => new BukuBesarCollection(
-        $mutasiResources
+        $mutasiResources,
+        $rekening,
+        $totalDebetAll,
+        $totalKreditAll,
+        $totalKreditAll - $totalDebetAll
       )
     ]);
+  }
+
+  private function _kreditQuery()
+  {
+    return 'CASE WHEN master_mutasi.jenis_transaksi in ("order", "pemasukan") THEN abs(master_mutasi.nominal) ELSE 0 END';
+  }
+
+  private function _debetQuery()
+  {
+    return 'CASE WHEN master_mutasi.jenis_transaksi in ("jual", "uang_jalan", "pengeluaran") THEN abs(master_mutasi.nominal) ELSE 0 END';
+  }
+
+  private function _genPdf($mutasiResources, $rekening)
+  {
+
+    $pdf = app('dompdf.wrapper');
+
+    // Enable isHtml5ParserEnabled for better parsing
+    $pdf->set_option('isHtml5ParserEnabled', true);
+
+    // Reduce memory footprint
+    $pdf->set_option('isPhpEnabled', false);
+
+
+
+    $tglAwal = format_date($this->param->tanggalAwal);
+    $tglAkhir = format_date($this->param->tanggalAkhir);
+
+
+    foreach ($mutasiResources as $index => $resource) {
+      $resource['jenis_transaksi'] = ucwords(str_replace("_", " ", $resource['jenis_transaksi']));
+      $resource['asal_transaksi'] = ucwords(str_replace("_", " ", $resource['asal_transaksi']));
+      $resource['tanggal'] = format_date($resource['tanggal']);
+      $resource['debet'] = rupiah($resource['debet']);
+      $resource['kredit'] = rupiah($resource['kredit']);
+      $resource['total'] = rupiah($resource['total']);
+      $mutasiResources[$index] = $resource;
+    }
+
+    if ($this->param->tanggalAwal != $this->param->tanggalAkhir) {
+      $jangkaTanggal = "{$tglAwal} s/d {$tglAkhir}";
+    } else if ($this->param->tanggalAwal == null) {
+      $jangkaTanggal = "Semua Tanggal";
+    } else {
+      $jangkaTanggal = "{$tglAwal}";
+    }
+
+    $pdf->loadView('generate.pdf.v2.buku-besar', [
+      'filename' => 'Buku Besar',
+      'data' => $mutasiResources,
+      'rekening' => $rekening,
+      'all' => $this->param->rekeningId === 'all',
+      'jangkaTanggal' => $jangkaTanggal
+    ]);
+
+    return $pdf->stream();
   }
 }
