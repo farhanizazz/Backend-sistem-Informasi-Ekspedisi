@@ -192,6 +192,7 @@ class ServisHelper
                 'servis_id',
                 'master_rekening_id',
                 'nominal',
+                'tanggal_pembayaran',
             ]);
 
             // Buat Mutasi baru
@@ -199,7 +200,7 @@ class ServisHelper
                 'asal_transaksi' => 'servis',
                 'model_type' => 'App\\\Models\\\Transaksi\\\ServisModel',
                 'model_id' => $payload['servis_id'],
-                'tanggal_pembayaran' => date('Y-m-d'),
+                'tanggal_pembayaran' => $payload['tanggal_pembayaran'],
                 'nominal' => abs($payload['nominal']),
                 'master_rekening_id' => $payload['master_rekening_id'],
                 'jenis_transaksi' => $payload['nominal'] > 0 ? JenisTransaksiMutasiEnum::PEMASUKAN->value : JenisTransaksiMutasiEnum::PENGELUARAN->value,
