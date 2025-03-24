@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api\Laporan;
 
 use App\DataTransferObjects\ArmadaRugiLabaParam;
+use App\DataTransferObjects\BukuBesarParam;
 use App\DataTransferObjects\HutangCustomerParam;
 use App\DataTransferObjects\HutangSopirParam;
 use App\DataTransferObjects\HutangSubkonParam;
 use App\DataTransferObjects\KasHarianParam;
 use App\DataTransferObjects\ThrSopirParam;
 use App\Helpers\Laporan\V2\ArmadaRugiLabaHelper;
+use App\Helpers\Laporan\V2\ArmadaRugiLabaPajakHelper;
+use App\Helpers\Laporan\V2\BukuBesarHelper;
 use App\Helpers\Laporan\V2\KasHarianHelper;
 use App\Helpers\Laporan\V2\ThrSopirHelper;
 use App\Helpers\LaporanV2Helper;
@@ -45,11 +48,12 @@ class LaporanV2Controller extends Controller
             if ($export) {
                 $pdf = App::make('dompdf.wrapper');
                 $pdf->loadView('generate.pdf.v2.hutang-sopir', [
-                    'filename' => 'Laporan Hutang Sopir',
+                    'filename' => 'Laporan Rincian Uang jalan',
                     'orders' => HutangPiutangSopirResource::collection($response['orders'])->toArray($request),
                     'sopir' => implode(", ", array_map(function ($item) {
                         return $item->sopir;
                     }, $response['items'])),
+                    'sopirList' => $response['items'],
                     'tanggalAwal' => $tanggalAwal,
                     'tanggalAkhir' => $tanggalAkhir,
                 ]);
@@ -230,6 +234,46 @@ class LaporanV2Controller extends Controller
                     tanggalAwal: $request->get('tanggalAwal'),
                     tanggalAkhir: $request->get('tanggalAkhir'),
                     armadaId: $request->get('armadaId'),
+                    export: boolval($request->get('export', false))
+                )
+            );
+
+            return $service->execute();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function armadaRugiLabaPajak(Request $request)
+    {
+        try {
+            $service = new ArmadaRugiLabaPajakHelper(
+                param: new ArmadaRugiLabaParam(
+                    tanggalAwal: $request->get('tanggalAwal'),
+                    tanggalAkhir: $request->get('tanggalAkhir'),
+                    armadaId: $request->get('armadaId'),
+                    export: boolval($request->get('export', false))
+                )
+            );
+
+            return $service->execute();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function bukuBesar(Request $request)
+    {
+        try {
+            $service = new BukuBesarHelper(
+                param: new BukuBesarParam(
+                    tanggalAwal: $request->get('tanggalAwal'),
+                    tanggalAkhir: $request->get('tanggalAkhir'),
+                    rekeningId: $request->get('rekeningId'),
                     export: boolval($request->get('export', false))
                 )
             );
