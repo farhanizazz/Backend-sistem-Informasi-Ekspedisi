@@ -191,6 +191,15 @@ class ServisController extends Controller
      * )
      */
     public function createServisMutasi(CreateServisMutasiRequest $request){
+
+        if (isset($request->validator) && $request->validator->fails()) {
+            return response()->json([
+                    'status' => 'error',
+                    'message' => $request->validator->errors()
+                ]
+            );
+        }
+
         $result = $this->servisHelper->createServisMutasi($request);
         if (!$result['status']) {
             return response()->json([

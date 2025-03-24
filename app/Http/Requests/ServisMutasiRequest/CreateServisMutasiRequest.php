@@ -24,7 +24,8 @@ class CreateServisMutasiRequest extends FormRequest
     return [
         'servis_id' => 'required|exists:servis,id',
         'master_rekening_id' => 'required|exists:master_rekening,id',
-        'nominal' => 'required|integer'
+        'nominal' => 'required|integer',
+        'tanggal_pembayaran' => 'required|date'
     ];
 }
 
@@ -37,6 +38,8 @@ class CreateServisMutasiRequest extends FormRequest
             'master_rekening_id.required' => 'Rekening is required',
             'nominal.required' => 'Nominal is required',
             'nominal.integer' => 'Nominal must be an integer',
+            'tanggal_pembayaran.required' => 'Tanggal Pembayaran is required',
+            'tanggal_pembayaran.date' => 'Tanggal Pembayaran must be a date'
         ];
     }
 
