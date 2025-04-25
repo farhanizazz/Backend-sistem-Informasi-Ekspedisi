@@ -90,10 +90,14 @@ class ServisModel extends Model
             $query->where(function($query) use ($payload){
                 $query->where('nama_toko', 'like', '%'.$payload['search'].'%');
                 $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
+                $query->orWhere('tanggal_servis', 'like', '%' . $payload['search'] . '%');
                 $query->orWhereHas('nota_beli_items', function($query) use($payload){
                     $query->where(function($query) use($payload){
                         $query->where('nama_barang', 'like', '%'.$payload['search'].'%');
                     });
+                });
+                $query->orWhereHas('master_armada', function($query) use ($payload) {
+                    $query->where('nopol', 'like', '%' . $payload['search'] . '%');
                 });
             });
         })
@@ -124,11 +128,15 @@ class ServisModel extends Model
                 $query->orWhere('jumlah_lain', 'like', '%'.$payload['search'].'%');
                 $query->orWhere('total_lain', 'like', '%'.$payload['search'].'%');
                 $query->orWhere('nama_toko', 'like', '%'.$payload['search'].'%');
+                $query->orWhere('tanggal_servis', 'like', '%' . $payload['search'] . '%');
                 $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
                 $query->orWhereHas('nota_beli_items', function($query) use($payload){
                     $query->where(function($query) use($payload){
                         $query->where('nama_barang', 'like', '%'.$payload['search'].'%');
                     });
+                });
+                $query->orWhereHas('master_armada', function($query) use ($payload) {
+                    $query->where('nopol', 'like', '%' . $payload['search'] . '%');
                 });
             });
         })
