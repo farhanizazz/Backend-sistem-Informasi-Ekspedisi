@@ -48,6 +48,7 @@ class OrderController extends Controller
             "nama_penyewa"      => $request->nama_penyewa ?? null,
             "status_lunas"      => $request->status_lunas ?? null,
             "ppn"               => $request->ppn ?? null,
+            "biaya_lain"        => $request->biaya_lain ?? null,
         ];
         return response()->json([
             'status' => 'success',
@@ -106,14 +107,14 @@ class OrderController extends Controller
         ]);
     }
 
-    public function destroy($id,Request $request)
+    public function destroy($id, Request $request)
     {
         try {
             //code...
             DB::beginTransaction();
             $order = OrderModel::find($id);
             if ($order) {
-                if($request->force == "true"){
+                if ($request->force == "true") {
                     $order = OrderModel::where('id', $id)->get();
                     TransaksiTagihanDetModel::whereIn('transaksi_order_id', $order->pluck('id'))->delete();
                     $mutasis = MutasiModel::whereIn('transaksi_order_id', $order->pluck('id'))->get();
@@ -121,16 +122,16 @@ class OrderController extends Controller
                         $mutasi->delete();
                     }
                     OrderModel::where('id', $id)->delete();
-                }else{
+                } else {
                     $order->delete();
                 }
 
-            DB::commit();
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data berhasil dihapus'
-            ]);
-        }
+                DB::commit();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Data berhasil dihapus'
+                ]);
+            }
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
