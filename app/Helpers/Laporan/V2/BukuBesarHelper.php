@@ -55,6 +55,7 @@ class BukuBesarHelper
     $query = $query->select([
       DB::raw('tanggal_pembayaran as tanggal'),
       DB::raw('CASE WHEN transaksi_order.no_transaksi IS NOT NULL THEN transaksi_order.no_transaksi ELSE servis.nomor_nota END as no_transaksi'),
+      DB::raw('SUBSTRING_INDEX(transaksi_order.no_transaksi, ".", 1) as nopol'),
       'master_mutasi.jenis_transaksi',
       'master_mutasi.asal_transaksi',
       'master_mutasi.keterangan',
@@ -72,6 +73,7 @@ class BukuBesarHelper
     $firstInit = [
       "no" => 1,
       "tanggal" => $this->param->tanggalAwal,
+      "nopol" => "-",
       "no_transaksi" => "SA",
       "jenis_transaksi" => "Saldo Awal",
       "asal_transaksi" => "-",
@@ -223,6 +225,28 @@ class BukuBesarHelper
       $resource['total'] = rupiah($resource['total']);
       $mutasiResources[$index] = $resource;
     }
+
+
+    $mutasiResources = collect($mutasiResources)
+      ->groupBy(function ($item) {
+        return $item['tanggal'];
+      })
+      ->map(function ($itemsByTanggal) {
+        return collect($itemsByTanggal)->groupBy('nopol')->map(function ($itemsByNopol, $nopol) {
+          return [
+            'nopol' => $nopol,
+            'items' => array_values($itemsByNopol->map(function ($item) {
+              return collect($item)->except(['tanggal', 'nopol'])->toArray();
+            })->toArray())
+          ];
+        })->values(); // if you want to drop the 'nopol' key
+      })->map(function ($groupedByNopol, $tanggal) {
+        return [
+          'tanggal' => $tanggal,
+          'armadas' => $groupedByNopol
+        ];
+      })->values();
+
 
     if ($this->param->tanggalAwal != $this->param->tanggalAkhir) {
       $jangkaTanggal = "{$tglAwal} s/d {$tglAkhir}";
