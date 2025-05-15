@@ -245,6 +245,8 @@ Route::prefix('laporan-v2')->group(function () {
     Route::get('thr-sopir', [LaporanV2Controller::class, 'thrSopir']);
     Route::get('armada-rugi-laba', [LaporanV2Controller::class, 'armadaRugiLaba']);
     Route::get('armada-rugi-laba-pajak', [LaporanV2Controller::class, 'armadaRugiLabaPajak']);
+    Route::get('armada-rugi-laba-detail', [LaporanV2Controller::class, 'armadaRugiLabaDetail']);
+    Route::get('armada-rugi-laba-detail-pajak', [LaporanV2Controller::class, 'armadaRugiLabaDetailPajak']);
     Route::get('buku-besar', [LaporanV2Controller::class, 'bukuBesar']);
 });
 

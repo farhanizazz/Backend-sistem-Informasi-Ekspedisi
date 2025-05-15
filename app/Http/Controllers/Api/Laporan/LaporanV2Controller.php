@@ -9,6 +9,8 @@ use App\DataTransferObjects\HutangSopirParam;
 use App\DataTransferObjects\HutangSubkonParam;
 use App\DataTransferObjects\KasHarianParam;
 use App\DataTransferObjects\ThrSopirParam;
+use App\Helpers\Laporan\V2\ArmadaRugiLabaDetailHelper;
+use App\Helpers\Laporan\V2\ArmadaRugiLabaDetailPajakHelper;
 use App\Helpers\Laporan\V2\ArmadaRugiLabaHelper;
 use App\Helpers\Laporan\V2\ArmadaRugiLabaPajakHelper;
 use App\Helpers\Laporan\V2\BukuBesarHelper;
@@ -250,6 +252,47 @@ class LaporanV2Controller extends Controller
     {
         try {
             $service = new ArmadaRugiLabaPajakHelper(
+                param: new ArmadaRugiLabaParam(
+                    tanggalAwal: $request->get('tanggalAwal'),
+                    tanggalAkhir: $request->get('tanggalAkhir'),
+                    armadaId: $request->get('armadaId'),
+                    export: boolval($request->get('export', false))
+                )
+            );
+
+            return $service->execute();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function armadaRugiLabaDetail(Request $request)
+    {
+        try {
+
+            $service = new ArmadaRugiLabaDetailHelper(
+                param: new ArmadaRugiLabaParam(
+                    tanggalAwal: $request->get('tanggalAwal'),
+                    tanggalAkhir: $request->get('tanggalAkhir'),
+                    armadaId: $request->get('armadaId'),
+                    export: boolval($request->get('export', false))
+                )
+            );
+
+            return $service->execute();
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function armadaRugiLabaDetailPajak(Request $request)
+    {
+        try {
+            $service = new ArmadaRugiLabaDetailPajakHelper(
                 param: new ArmadaRugiLabaParam(
                     tanggalAwal: $request->get('tanggalAwal'),
                     tanggalAkhir: $request->get('tanggalAkhir'),
