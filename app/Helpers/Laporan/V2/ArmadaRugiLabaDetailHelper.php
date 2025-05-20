@@ -110,7 +110,7 @@ class ArmadaRugiLabaDetailHelper
 
     // Grouping by armada_id and tanggal
     $newResource = $resources->groupBy(function ($item) {
-      return $item->tanggal . '.' . $item->armada_id . '.' . $item->nota;
+      return $item->tanggal . '.' . $item->armada_id;
     });
 
     if ($this->param->export) {

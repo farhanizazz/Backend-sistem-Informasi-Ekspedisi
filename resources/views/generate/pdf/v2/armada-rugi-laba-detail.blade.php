@@ -48,7 +48,7 @@
                     <th style="text-align: center">Harga</th>
                     <th style="text-align: center">Jumlah Satuan</th>
                     <th style="text-align: center">Sub Total</th>
-                    <th style="text-align: center">Total</th>
+                    {{-- <th style="text-align: center">Total</th> --}}
                 </tr>
             </thead>
             <tbody>
@@ -70,14 +70,18 @@
                                 $total -= $detail['sub_total'];
                             }
                         @endphp
-                        <tr>
+                        <tr
+                            @if (!$isNewRow) style="border-bottom: 0;border-top:0" @else style="border-bottom: 0" @endif>
                             @if ($isNewRow)
-                                <td>{{ format_date($detail['tanggal']) }}</td>
-                                <td>{{ $detail['nopol'] }}</td>
-                                <td>{{ $detail['jenis_transaksi'] }}</td>
-                                <td>{{ $detail['nota'] }}</td>
+                                <td style="border-bottom: 0">{{ format_date($detail['tanggal']) }}</td>
+                                <td style="border-bottom: 0">{{ $detail['nopol'] }}</td>
+                                <td style="border-bottom: 0">{{ $detail['jenis_transaksi'] }}</td>
+                                <td style="border-bottom: 0">{{ $detail['nota'] }}</td>
                             @else
-                                <td colspan="4"></td>
+                                <td style="border-bottom: 0; border-top: 0"></td>
+                                <td style="border-bottom: 0; border-top: 0"></td>
+                                <td style="border-bottom: 0; border-top: 0"></td>
+                                <td style="border-bottom: 0; border-top: 0"></td>
                             @endif
                             <td>{{ $detail['keterangan'] }}</td>
                             <td>{{ rupiah($detail['harga']) }}</td>
@@ -89,15 +93,15 @@
                                     <strong>{{ rupiah($detail['sub_total']) }}</strong>
                                 @endif
                             </td>
-                            <td>
+                            {{-- <td>
                                 @if (count($perTanggal) > 1 == false)
                                     <strong>{{ rupiah($total) }}</strong>
                                 @endif
-                            </td>
+                            </td> --}}
                         </tr>
                         @php $isNewRow = false; @endphp
                     @endforeach
-                    @if (count($perTanggal) > 1)
+                    {{-- @if (count($perTanggal) > 1)
                         <tr>
                             <td colspan="4" style="text-align: right"><strong>Total</strong></td>
                             <td></td>
@@ -114,7 +118,7 @@
                                 </strong>
                             </td>
                         </tr>
-                    @endif
+                    @endif --}}
                 @endforeach
             </tbody>
         </table>
