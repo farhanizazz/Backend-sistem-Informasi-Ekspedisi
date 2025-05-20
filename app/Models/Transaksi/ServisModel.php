@@ -39,21 +39,22 @@ class ServisModel extends Model
         return $this->hasMany(ServisMutasiModel::class, 'servis_id');
     }
 
-    public function getAll($payload){
-        $data =$this->with(['master_armada' => function ($query) {
+    public function getAll($payload)
+    {
+        $data = $this->with(['master_armada' => function ($query) {
             $query->select('id', 'nopol');
-        }, 'nota_beli_items', 'nota_beli_items', 'servis_mutasi.master_mutasi.master_rekening'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function($query) use($payload){
+        }, 'nota_beli_items', 'nota_beli_items', 'servis_mutasi.master_mutasi.master_rekening'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function ($query) use ($payload) {
             $query->where('nota_beli_id', $payload['nota_beli_id']);
-        })->when(isset($payload['nama_toko'])&& $payload['nama_toko'],function($query) use($payload){
-            $query->where('nama_toko',$payload['nama_toko']);
-        })->when(isset($payload['tanggal_servis'])&& $payload['tanggal_servis'],function($query) use($payload){
-            $query->where('tanggal_servis',$payload['tanggal_servis']);
+        })->when(isset($payload['nama_toko']) && $payload['nama_toko'], function ($query) use ($payload) {
+            $query->where('nama_toko', $payload['nama_toko']);
+        })->when(isset($payload['tanggal_servis']) && $payload['tanggal_servis'], function ($query) use ($payload) {
+            $query->where('tanggal_servis', $payload['tanggal_servis']);
         })->get();
 
         // hitung total
-        $data->map(function($item){
+        $data->map(function ($item) {
             $total = 0;
-            $item->nota_beli_items->map(function($item) use(&$total){
+            $item->nota_beli_items->map(function ($item) use (&$total) {
                 $total_sub = $item->harga * $item->jumlah;
                 $total += $total_sub;
                 return $item;
@@ -62,9 +63,9 @@ class ServisModel extends Model
         });
 
         // hitung total mutasi
-        $data->map(function($item){
+        $data->map(function ($item) {
             $total = 0;
-            $item->servis_mutasi->map(function($item) use(&$total){
+            $item->servis_mutasi->map(function ($item) use (&$total) {
                 $total += ($item->master_mutasi->nominal ?? 0);
                 return $item;
             });
@@ -74,78 +75,88 @@ class ServisModel extends Model
         return $data;
     }
 
-    public function getAllServis($payload, $itemPerPage = 20){
-        $data =$this->with(['master_armada' => function ($query) {
+    public function getAllServis($payload, $itemPerPage = 20)
+    {
+        $data = $this->with(['master_armada' => function ($query) {
             $query->select('id', 'nopol');
-        }, 'nota_beli_items', 'nota_beli_items', 'servis_mutasi.master_mutasi.master_rekening'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function($query) use($payload){
+        }, 'nota_beli_items', 'nota_beli_items', 'servis_mutasi.master_mutasi.master_rekening'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function ($query) use ($payload) {
             $query->where('nota_beli_id', $payload['nota_beli_id']);
-        })->when(isset($payload['nama_toko'])&& $payload['nama_toko'],function($query) use($payload){
-            $query->where('nama_toko',$payload['nama_toko']);
-        })->when(isset($payload['tanggal_servis'])&& $payload['tanggal_servis'],function($query) use($payload){
-            $query->where('tanggal_servis',$payload['tanggal_servis']);
+        })->when(isset($payload['nama_toko']) && $payload['nama_toko'], function ($query) use ($payload) {
+            $query->where('nama_toko', $payload['nama_toko']);
+        })->when(isset($payload['tanggal_servis']) && $payload['tanggal_servis'], function ($query) use ($payload) {
+            $query->where('tanggal_servis', $payload['tanggal_servis']);
         })
-        ->where('kategori_servis', 'servis')
-        // search
-        ->when(isset($payload['search']) && $payload['search'],function($query) use($payload){
-            $query->where(function($query) use ($payload){
-                $query->where('nama_toko', 'like', '%'.$payload['search'].'%');
-                $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
-                $query->orWhere('tanggal_servis', 'like', '%' . $payload['search'] . '%');
-                $query->orWhereHas('nota_beli_items', function($query) use($payload){
-                    $query->where(function($query) use($payload){
-                        $query->where('nama_barang', 'like', '%'.$payload['search'].'%');
+            ->where('kategori_servis', 'servis')
+            // search
+
+            // when status_pembayaran == 'lunas' => sum nota_beli <= sum servis_mutasi
+            ->when(isset($payload['status_pembayaran']) && $payload['status_pembayaran'] == 'lunas', function ($query) use ($payload) {
+                $query->whereRaw('(SELECT sum(harga * jumlah) FROM nota_beli WHERE nota_beli.servis_id = servis.id) <= (SELECT sum(nominal) FROM servis_mutasi 
+                LEFT JOIN master_mutasi ON master_mutasi.id = servis_mutasi.master_mutasi_id WHERE servis_mutasi.servis_id = servis.id)');
+            })
+            // when status_pembayaran == 'belum_lunas' => sum nota_beli > sum servis_mutasi
+            ->when(isset($payload['status_pembayaran']) && $payload['status_pembayaran'] == 'belum_lunas', function ($query) use ($payload) {
+                $query->whereRaw('(SELECT sum(harga * jumlah) FROM nota_beli WHERE nota_beli.servis_id = servis.id) > (SELECT sum(nominal) FROM servis_mutasi 
+                LEFT JOIN master_mutasi ON master_mutasi.id = servis_mutasi.master_mutasi_id WHERE servis_mutasi.servis_id = servis.id)');
+            })
+
+            ->when(isset($payload['search']) && $payload['search'], function ($query) use ($payload) {
+                $query->where(function ($query) use ($payload) {
+                    $query->where('nama_toko', 'like', '%' . $payload['search'] . '%');
+                    $query->orWhere('nomor_nota', 'like', '%' . $payload['search'] . '%');
+                    $query->orWhere('tanggal_servis', 'like', '%' . $payload['search'] . '%');
+                    $query->orWhereHas('nota_beli_items', function ($query) use ($payload) {
+                        $query->where(function ($query) use ($payload) {
+                            $query->where('nama_barang', 'like', '%' . $payload['search'] . '%');
+                        });
                     });
                 });
-                $query->orWhereHas('master_armada', function($query) use ($payload) {
+                $query->orWhereHas('master_armada', function ($query) use ($payload) {
                     $query->where('nopol', 'like', '%' . $payload['search'] . '%');
                 });
             });
-        })
-        ;
         $sort = $payload['sort'] ?? 'tanggal_servis desc';
         $data->orderByRaw($sort);
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
         return $data->paginate($itemPerPage)->appends("sort", $sort);
     }
 
-    public function getAllLainLain($payload, $itemPerPage = 20){
-        $data =$this->with(['master_armada' => function ($query) {
+    public function getAllLainLain($payload, $itemPerPage = 20)
+    {
+        $data = $this->with(['master_armada' => function ($query) {
             $query->select('id', 'nopol');
-        }, 'nota_beli_items', 'nota_beli_items', 'servis_mutasi.master_mutasi.master_rekening'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function($query) use($payload){
+        }, 'nota_beli_items', 'nota_beli_items', 'servis_mutasi.master_mutasi.master_rekening'])->when(isset($payload['nota_beli_id']) && $payload['nota_beli_id'], function ($query) use ($payload) {
             $query->where('nota_beli_id', $payload['nota_beli_id']);
-        })->when(isset($payload['nama_toko'])&& $payload['nama_toko'],function($query) use($payload){
-            $query->where('nama_toko',$payload['nama_toko']);
-        })->when(isset($payload['tanggal_servis'])&& $payload['tanggal_servis'],function($query) use($payload){
-            $query->where('tanggal_servis',$payload['tanggal_servis']);
+        })->when(isset($payload['nama_toko']) && $payload['nama_toko'], function ($query) use ($payload) {
+            $query->where('nama_toko', $payload['nama_toko']);
+        })->when(isset($payload['tanggal_servis']) && $payload['tanggal_servis'], function ($query) use ($payload) {
+            $query->where('tanggal_servis', $payload['tanggal_servis']);
         })
-        ->where('kategori_servis', 'lain')
-        // search
-        ->when(isset($payload['search']) && $payload['search'],function($query) use($payload){
-            $query->where(function($query) use ($payload){
-                $query->where('nama_tujuan_lain', 'like', '%'.$payload['search'].'%');
-                $query->orWhere('keterangan_lain', 'like', '%'.$payload['search'].'%');
-                $query->orWhere('nominal_lain', 'like', '%'.$payload['search'].'%');
-                $query->orWhere('jumlah_lain', 'like', '%'.$payload['search'].'%');
-                $query->orWhere('total_lain', 'like', '%'.$payload['search'].'%');
-                $query->orWhere('nama_toko', 'like', '%'.$payload['search'].'%');
-                $query->orWhere('tanggal_servis', 'like', '%' . $payload['search'] . '%');
-                $query->orWhere('nomor_nota', 'like', '%'.$payload['search']. '%');
-                $query->orWhereHas('nota_beli_items', function($query) use($payload){
-                    $query->where(function($query) use($payload){
-                        $query->where('nama_barang', 'like', '%'.$payload['search'].'%');
+            ->where('kategori_servis', 'lain')
+            // search
+            ->when(isset($payload['search']) && $payload['search'], function ($query) use ($payload) {
+                $query->where(function ($query) use ($payload) {
+                    $query->where('nama_tujuan_lain', 'like', '%' . $payload['search'] . '%');
+                    $query->orWhere('keterangan_lain', 'like', '%' . $payload['search'] . '%');
+                    $query->orWhere('nominal_lain', 'like', '%' . $payload['search'] . '%');
+                    $query->orWhere('jumlah_lain', 'like', '%' . $payload['search'] . '%');
+                    $query->orWhere('total_lain', 'like', '%' . $payload['search'] . '%');
+                    $query->orWhere('nama_toko', 'like', '%' . $payload['search'] . '%');
+                    $query->orWhere('tanggal_servis', 'like', '%' . $payload['search'] . '%');
+                    $query->orWhere('nomor_nota', 'like', '%' . $payload['search'] . '%');
+                    $query->orWhereHas('nota_beli_items', function ($query) use ($payload) {
+                        $query->where(function ($query) use ($payload) {
+                            $query->where('nama_barang', 'like', '%' . $payload['search'] . '%');
+                        });
                     });
                 });
-                $query->orWhereHas('master_armada', function($query) use ($payload) {
+                $query->orWhereHas('master_armada', function ($query) use ($payload) {
                     $query->where('nopol', 'like', '%' . $payload['search'] . '%');
                 });
             });
-        })
-        ;
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
         $sort = $payload['sort'] ?? 'tanggal_servis desc';
         $data->orderByRaw($sort);
         return $data->paginate($itemPerPage)->appends("sort", $sort);
     }
-
-
 }

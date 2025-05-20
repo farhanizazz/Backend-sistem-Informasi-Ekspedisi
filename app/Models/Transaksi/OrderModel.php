@@ -172,6 +172,19 @@ class OrderModel extends Model
                     $query2->where('nama_perusahaan', 'like', '%' . $filter['nama_penyewa'] . '%');
                 });
             })
+            ->when(isset($filter['biaya_lain']) && $filter['biaya_lain'], function ($query) use ($filter) {
+                $data = DB::select("(SELECT id,nama FROM master_tambahan where nama like '%" . $filter['biaya_lain'] . "%')");
+                if (count($data) == 0) {
+                    return $query->whereRaw('1=0');
+                }
+                $query->where(function ($query2) use ($data) {
+                    foreach ($data as $key => $value) {
+                        $query2->orWhere("biaya_lain_harga_order", "like", '%m_tambahan_id":' . $value->id . ",%")
+                            ->orWhere("biaya_lain_uang_jalan", "like", '%m_tambahan_id":' . $value->id . ",%")
+                            ->orWhere("biaya_lain_harga_jual", "like", '%m_tambahan_id":' . $value->id . ",%");
+                    }
+                });
+            })
             ->when($filter['cari'], function ($query) use ($filter) {
                 $query->where(function ($query2) use ($filter) {
                     $query2->where('no_transaksi', 'like', '%' . $filter['cari'] . '%')
@@ -235,7 +248,7 @@ class OrderModel extends Model
         $data = $data->orderByRaw("tanggal_awal DESC," . (DB::raw("CAST(SUBSTRING_INDEX(no_transaksi, '.', -1) AS UNSIGNED) DESC")));
         $sort = "no_transaksi DESC";
         $itemPerPage = ($itemPerPage > 0) ? $itemPerPage : false;
-        // return $data->paginate($itemPerPage)->appends("sort", $sort);
+        // dd($data->paginate($itemPerPage)->appends("sort", $sort));
         return ($data->paginate($itemPerPage)->appends("sort", $sort));
     }
 
