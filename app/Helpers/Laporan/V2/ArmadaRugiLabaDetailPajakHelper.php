@@ -4,7 +4,7 @@ namespace App\Helpers\Laporan\V2;
 
 use App\Models\Transaksi\OrderModel;
 
-class ArmadaRugiLabaPajakHelper extends ArmadaRugiLabaHelper
+class ArmadaRugiLabaDetailPajakHelper extends ArmadaRugiLabaDetailHelper
 {
   public function getResources($subQueryPemasukan = null)
   {
