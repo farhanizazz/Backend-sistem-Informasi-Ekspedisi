@@ -7,7 +7,7 @@ $data = collect($data)->sortBy('tanggal')->values()->all();
 // group by tanggal dan nopol
 $data = collect($data)
     ->groupBy(function ($item) {
-        return $item['tanggal'] . '.' . $item['nopol'];
+        return $item['tanggal'] . '.' . $item['nopol'] . '.' . $item['nomor_nota'];
     })
     ->values()
     ->all();
@@ -112,11 +112,11 @@ function penyebut($nilai)
                             <td>{{ rupiah($detail['harga']) }}</td>
                             <td>{{ $detail['jumlah'] }}</td>
                             <td>
-                                @if (count($perTanggal) > 1)
+                                {{-- @if (count($perTanggal) > 1) --}}
                                     {{ rupiah($detail['subtotal']) }}
-                                @else
+                                {{-- @else
                                     <strong>{{ rupiah($detail['subtotal']) }}</strong>
-                                @endif
+                                @endif --}}
                             </td>
                             {{-- <td>
                                 @if (count($perTanggal) > 1 == false)
