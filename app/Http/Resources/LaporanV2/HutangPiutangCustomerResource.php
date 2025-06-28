@@ -15,7 +15,9 @@ class HutangPiutangCustomerResource extends JsonResource
     public function toArray($request)
     {
         $rincian = $this->rincian($this->mutasi_order()->get());
-        $jumlahPembayaran = array_sum(array_column($rincian, 'nominal'));
+        $jumlahPembayaran = $this->hitungTotalBiayaLain($this->biaya_lain_harga_jual_arr) + $this->hitungTotalBiayaLain($this->biaya_lain_harga_order_arr) + $this->hitungTotalBiayaLain($this->biaya_lain_uang_jalan_arr);
+        $totalMutasiOrder = $this->mutasi_order->sum('nominal');
+
 
         return [
             'tanggal' => $this->tanggal_awal,
@@ -27,10 +29,10 @@ class HutangPiutangCustomerResource extends JsonResource
             'asal' => $this->asal,
             'tujuan' => $this->tujuan,
             'rincian' => $rincian,
-            'harga_order' => $this->harga_order_bersih,
+            'harga_order' => $this->harga_order,
             'biaya_tambah_kurang' => $jumlahPembayaran,
             'pph' => $this->total_pajak,
-            'sisa_tagihan' => $this->harga_order_bersih - $jumlahPembayaran,
+            'sisa_tagihan' => $this->harga_order_bersih + $jumlahPembayaran - $totalMutasiOrder,
             'status' => $this->status_lunas,
         ];
     }
@@ -47,5 +49,14 @@ class HutangPiutangCustomerResource extends JsonResource
         }
 
         return $rincian;
+    }
+
+    public function hitungTotalBiayaLain($listBiayaLain = [])
+    {
+        $total = 0;
+        foreach ($listBiayaLain as $key => $value) {
+            $total += $value['nominal'];
+        }
+        return $total;
     }
 }
