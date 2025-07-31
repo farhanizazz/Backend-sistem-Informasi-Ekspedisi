@@ -13,7 +13,8 @@ class ArmadaRugiLabaParam
 
     // Validate if parameter empty
     if (empty($armadaId)) {
-      throw new \Exception('Parameter armadaId harus diisi');
+      // throw new \Exception('Parameter armadaId harus diisi');
+      $this->armadaId = 'all';
     }
 
     if (!empty($tanggalAwal) || !empty($tanggalAkhir)) {

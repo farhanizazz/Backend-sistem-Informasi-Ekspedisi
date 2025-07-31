@@ -27,32 +27,36 @@
 
 
     {{-- @foreach ($orders as $order) --}}
-        <div class="container" style="border-bottom: 0">
-            <table class="table bordered table-text-left">
-                <thead>
+    <div class="container" style="border-bottom: 0">
+        <table class="table bordered table-text-left">
+            <thead>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Ref Id</th>
+                    <th>Jenis Transaksi</th>
+                    <th>Nominal</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (count($data) == 0)
                     <tr>
-                        <th>Tanggal</th>
-                        <th>Ref Id</th>
-                        <th>Jenis Transaksi</th>
-                        <th>Nominal</th>
+                        <td style="text-align: center" colspan="4">Rincian tidak tersedia</td>
                     </tr>
-                </thead>
-                <tbody>
-                    @if (count($data) == 0)
-                        <tr>
-                            <td style="text-align: center" colspan="4">Rincian tidak tersedia</td>
-                        </tr>
-                    @endif
-                    @foreach ($data as $index => $detail)
-                        <tr>
-                            <td>{{ format_date($detail['tanggal_pembayaran']) }}</td>
-                            <td>{{ $detail['transaksi_order'] ? $detail['transaksi_order']['no_transaksi'] : '-' }}</td>
-                            <td>{{ $detail['jenis_transaksi']->value }}</td>
+                @endif
+                @foreach ($data as $index => $detail)
+                    <tr>
+                        <td>{{ format_date($detail['tanggal_pembayaran']) }}</td>
+                        <td>{{ $detail['transaksi_order'] ? $detail['transaksi_order']['no_transaksi'] : '-' }}</td>
+                        <td>{{ $detail['jenis_transaksi']->value }}</td>
+                        @if ($detail['jenis_transaksi']->value == 'uang_jalan' || $detail['jenis_transaksi']->value == 'pengeluaran')
+                            <td style="color:red">{{ rupiah($detail['nominal'] * -1) }}</td>
+                        @else
                             <td>{{ rupiah($detail['nominal']) }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                        @endif
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
     {{-- @endforeach --}}
 @endsection
