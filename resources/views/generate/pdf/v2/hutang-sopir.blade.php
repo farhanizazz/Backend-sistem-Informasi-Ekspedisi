@@ -109,7 +109,7 @@
                 @if (count($order['rincian']) == 0)
                     <tr>
                         <td style="text-align: center" colspan="3">Rincian tidak tersedia</td>
-                        <td rowspan="{{ count($order['rincian']) }}">{{ rupiah($order['sisa_uang_jalan']) }}</td>
+                        <td rowspan="{{ count($order['rincian']) + 2}}">{{ rupiah($order['sisa_uang_jalan']) }}</td>
                     </tr>
                 @endif
                 @foreach ($order['rincian'] as $index => $detail)
