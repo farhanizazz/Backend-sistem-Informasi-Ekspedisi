@@ -44,6 +44,6 @@
     }
 
     .page_break {
-        /* page-break-before: always; */
+        page-break-before: always;
     }
 </style>
