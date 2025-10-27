@@ -108,9 +108,13 @@ class OrderModel extends Model
             return [];
         }
         return array_map(function ($data) {
-            $rekeningData = TambahanModel::where('id', $data['m_tambahan_id'])->first();
-            $sifat = $rekeningData->sifat ?? '';
-            $nama = $rekeningData->nama ?? '';
+            $sifat = "";
+            $nama = "";
+            if(isset($data['m_tambahan_id']) || $data['m_tambahan_id'] != null){
+                $rekeningData = TambahanModel::where('id', $data['m_tambahan_id'])->first();
+                $sifat = $rekeningData->sifat ?? '';
+                $nama = $rekeningData->nama ?? '';
+            }
             return array_merge($data, ['sifat' => $sifat, 'nama' => $nama]);
         }, $this->biaya_lain_uang_jalan);
     }
