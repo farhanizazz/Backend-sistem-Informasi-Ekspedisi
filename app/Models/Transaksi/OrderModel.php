@@ -110,8 +110,8 @@ class OrderModel extends Model
         return array_map(function ($data) {
             $sifat = "";
             $nama = "";
-            if(isset($data['m_tambahan_id']) || $data['m_tambahan_id'] != null){
-                $rekeningData = TambahanModel::where('id', $data['m_tambahan_id'])->first();
+            if (!empty($data['m_tambahan_id'])) {
+                $rekeningData = TambahanModel::find($data['m_tambahan_id']);
                 $sifat = $rekeningData->sifat ?? '';
                 $nama = $rekeningData->nama ?? '';
             }
